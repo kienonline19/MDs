@@ -204,7 +204,7 @@ A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 ```
 
-**Bài 30.** Cho ma trận sau, tính vết (trace) bằng `np.trace()`.
+**Bài 30.** Cho ma trận sau, tính tổng các phần tử trên đường chéo chính (main diagonal) của một ma trận bằng `np.trace()`.
 
 ```python
 m = np.array([[5, 1, 2], [0, 3, 4], [0, 0, 6]])
