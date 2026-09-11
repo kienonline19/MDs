@@ -204,7 +204,7 @@ A = np.array([[3, 1], [1, 2]])
 b = np.array([9, 8])
 ```
 
-**Bài 30.** Cho ma trận sau, tính vết (trace) bằng `np.trace()`.
+**Bài 30.** Cho ma trận sau, tính tổng các phần tử trên đường chéo chính (main diagonal) của một ma trận bằng `np.trace()`.
 
 ```python
 m = np.array([[5, 1, 2], [0, 3, 4], [0, 0, 6]])
@@ -286,6 +286,6 @@ col_index = np.array([0, 1])
 
 ---
 
-### Gợi ý sư phạm
-- Các bài 26 và 33–40 là những bài dễ gây hiểu nhầm nhất (nhân element-wise vs. nhân ma trận, và broadcasting) — nên dành thời gian giảng kỹ và cho học sinh tự in `shape` ra để kiểm chứng trước khi tính.
-- Có thể chia lớp làm hai nhóm: nhóm giải Phần 1–3 (cơ bản đến trung bình), nhóm giải Phần 4–5 (nâng cao hơn) nếu thời gian tiết học có hạn.
+### Ghi chú
+- Các bài 26 và 33–40 là những bài dễ gây hiểu nhầm nhất (nhân element-wise vs. nhân ma trận, và broadcasting) — nên dành thời gian in `shape` ra để kiểm chứng trước khi tính.
+- Phần 1–3 (cơ bản đến trung bình), Phần 4–5 (nâng cao hơn)
