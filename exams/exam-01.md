@@ -29,7 +29,7 @@ assert is_armstrong(370) == True
 
 ## Bài 2 (Dễ–Trung bình) — Loại bỏ phần tử trùng lặp trong mảng đã sắp xếp [Hai con trỏ]
 
-**Đề bài:** Cho một mảng số nguyên đã sắp xếp tăng dần (có thể chứa phần tử trùng lặp). Viết hàm dùng kỹ thuật **hai con trỏ** (một con trỏ đọc `read`, một con trỏ ghi `write`) để loại bỏ các phần tử trùng lặp ngay trong mảng, chỉ giữ lại mỗi giá trị một lần, và trả về mảng kết quả. Không dùng `set()` hay `dict` để khử trùng.
+**Đề bài:** Cho một mảng số nguyên đã sắp xếp tăng dần (có thể chứa phần tử trùng lặp). Viết hàm dùng kỹ thuật **hai con trỏ** (một con trỏ đọc `read`, một con trỏ ghi `write`) để loại bỏ các phần tử trùng lặp ngay trong mảng, chỉ giữ lại mỗi giá trị một lần, và trả về mảng kết quả. Không dùng `set()` hay `dict` để xóa trùng lặp.
 
 **Ràng buộc:** mảng đầu vào đã sắp xếp tăng dần; `0 <= len(arr) <= 10^5`.
 
