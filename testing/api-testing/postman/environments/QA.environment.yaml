@@ -1,0 +1,6 @@
+name: QA
+values:
+  - key: base_url
+    value: ''
+  - key: post_id
+    value: ''

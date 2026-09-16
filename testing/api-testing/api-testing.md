@@ -58,7 +58,7 @@
 
 4. Theo dõi hành vi người dùng
 
-- Token: 1 chuỗi ký tự server cấp cho client để chứng minh danh tính hay quyền truy cập
+- Token: 1 chuỗi ký tự server cấp cho client để nhận dạng người dùng hay giới hạn quyền truy cập
 
 - Session (phiên làm việc): 1 cách lưu trạng thái người dùng ở phía server, giúp server "nhớ" được thông tin của client qua nhiều request khác nhau
 
@@ -68,5 +68,18 @@
 #### Test API với Postman
 
 - Link tải Postman trên windows: https://www.postman.com/downloads/
-- Cài và continue with Google
+- Hướng dẫn cài đặt postman: https://learning.postman.com/docs/getting-started/installation/install-app
 
+- Cài và continue with Google
+- Mở một working dir để làm việc trên nó
+
+- Collection trong postman là tập hợp các HTTP Request liên quan đến nhau được gom nhóm lại để dễ quản lý
+- Environment: nơi tạo các biến sử dụng khi thực hiện request
+
+- Hướng dẫn tạo và sử dụng môi trường trong postman: https://learning.postman.com/docs/use/send-requests/variables/managing-environments
+
+- Tạo và chỉnh sửa biến trong 1 môi trường: https://learning.postman.com/docs/use/send-requests/variables/environment-variables
+
+- Sử dụng free online REST API: https://jsonplaceholder.typicode.com dùng cho thực hành và kiểm thử
+
+![ảnh minh họa request đầu tiên với postman](Images/request00.png)

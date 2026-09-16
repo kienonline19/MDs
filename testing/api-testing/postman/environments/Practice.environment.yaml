@@ -1,0 +1,7 @@
+name: Practice
+values:
+  - key: base_url
+    value: ''
+  - key: post_id
+    value: ''
+color: 180
