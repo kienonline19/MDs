@@ -1,1869 +1,1408 @@
-<!doctype html>
-<html lang="vi">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Bài trắc nghiệm tương tác 30 câu về REST API, HTTP và API Testing, có chấm điểm và giải thích từng câu.">
-  <meta name="theme-color" content="#0b1830">
-  <title>API Testing Lab — Trắc nghiệm 30 câu</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1830'/%3E%3Cpath d='M18 20h28v8H26v8h20v8H18z' fill='%232dd4bf'/%3E%3Ccircle cx='46' cy='40' r='5' fill='%23fb923c'/%3E%3C/svg%3E">
-  <style>
-    :root {
-      color-scheme: light;
-      --ink: #12213a;
-      --muted: #61708a;
-      --navy: #0b1830;
-      --navy-2: #132747;
-      --paper: #f5f8fc;
-      --card: #ffffff;
-      --line: #dce4ef;
-      --teal: #0f9f8f;
-      --teal-soft: #e5f8f5;
-      --orange: #f07b3f;
-      --orange-soft: #fff2e9;
-      --green: #16845b;
-      --green-soft: #e8f7ef;
-      --red: #c13d4b;
-      --red-soft: #fff0f1;
-      --blue: #2764d7;
-      --blue-soft: #eaf1ff;
-      --shadow: 0 18px 48px rgba(22, 42, 76, 0.12);
-      --radius: 22px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-width: 320px;
-      background:
-        radial-gradient(circle at 8% -10%, rgba(45, 212, 191, 0.16), transparent 28rem),
-        radial-gradient(circle at 96% 12%, rgba(240, 123, 63, 0.12), transparent 24rem),
-        var(--paper);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    code,
-    .mono {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    }
-
-    code {
-      padding: 0.14em 0.38em;
-      border: 1px solid #d9e2ef;
-      border-radius: 6px;
-      background: #f1f5fa;
-      color: #1c416d;
-      font-size: 0.92em;
-      overflow-wrap: anywhere;
-    }
-
-    .skip-link {
-      position: fixed;
-      z-index: 100;
-      top: 10px;
-      left: 10px;
-      transform: translateY(-150%);
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: white;
-      color: var(--navy);
-      box-shadow: var(--shadow);
-      font-weight: 800;
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    .topbar {
-      position: sticky;
-      z-index: 20;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      min-height: 76px;
-      padding: 12px clamp(18px, 4vw, 54px);
-      border-bottom: 1px solid rgba(220, 228, 239, 0.82);
-      background: rgba(245, 248, 252, 0.88);
-      backdrop-filter: blur(18px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      display: grid;
-      flex: 0 0 auto;
-      width: 44px;
-      height: 44px;
-      place-items: center;
-      border-radius: 13px;
-      background: var(--navy);
-      color: #5eead4;
-      box-shadow: 0 8px 18px rgba(11, 24, 48, 0.18);
-      font: 800 0.78rem/1 "SFMono-Regular", Consolas, monospace;
-      letter-spacing: -0.04em;
-    }
-
-    .brand-copy {
-      min-width: 0;
-    }
-
-    .brand-copy strong {
-      display: block;
-      overflow: hidden;
-      font-size: 1rem;
-      line-height: 1.25;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .brand-copy span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .top-stats {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .stat-pill {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.9);
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .stat-pill strong {
-      color: var(--ink);
-      font-size: 1rem;
-    }
-
-    .app-shell {
-      display: grid;
-      grid-template-columns: minmax(240px, 280px) minmax(0, 860px);
-      align-items: start;
-      justify-content: center;
-      gap: clamp(24px, 4vw, 52px);
-      width: min(1240px, 100%);
-      margin: 0 auto;
-      padding: clamp(24px, 4vw, 54px);
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 104px;
-      display: grid;
-      gap: 16px;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 30px rgba(26, 45, 78, 0.07);
-    }
-
-    .progress-panel {
-      display: grid;
-      grid-template-columns: 94px 1fr;
-      align-items: center;
-      gap: 16px;
-      padding: 20px;
-    }
-
-    .progress-ring {
-      --progress: 0deg;
-      position: relative;
-      display: grid;
-      width: 88px;
-      height: 88px;
-      place-items: center;
-      border-radius: 50%;
-      background: conic-gradient(var(--teal) var(--progress), #e3e9f1 0);
-    }
-
-    .progress-ring::before {
-      position: absolute;
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      background: white;
-      content: "";
-    }
-
-    .progress-ring strong {
-      position: relative;
-      z-index: 1;
-      font-size: 1.08rem;
-    }
-
-    .progress-copy span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .progress-copy strong {
-      display: block;
-      margin: 2px 0 0;
-      font-size: 1.36rem;
-      line-height: 1.2;
-    }
-
-    .progress-copy small {
-      color: var(--muted);
-    }
-
-    .question-map-wrap {
-      padding: 18px;
-    }
-
-    .panel-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 0 0 12px;
-      font-size: 0.88rem;
-      letter-spacing: 0.02em;
-    }
-
-    .panel-title span {
-      color: var(--muted);
-      font-size: 0.74rem;
-      font-weight: 700;
-    }
-
-    .question-map {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-
-    .map-button {
-      display: grid;
-      min-width: 0;
-      aspect-ratio: 1;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: #f8fafc;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 800;
-      transition: 160ms ease;
-    }
-
-    .map-button:hover {
-      border-color: #9eb1ca;
-      color: var(--ink);
-      transform: translateY(-1px);
-    }
-
-    .map-button.current {
-      border-color: var(--navy);
-      background: var(--navy);
-      color: white;
-      box-shadow: 0 5px 12px rgba(11, 24, 48, 0.2);
-    }
-
-    .map-button.correct:not(.current) {
-      border-color: #9dd8bd;
-      background: var(--green-soft);
-      color: var(--green);
-    }
-
-    .map-button.wrong:not(.current) {
-      border-color: #f0afb6;
-      background: var(--red-soft);
-      color: var(--red);
-    }
-
-    .shortcuts {
-      padding: 16px 18px;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    .shortcuts p {
-      margin: 0 0 8px;
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .shortcuts kbd {
-      display: inline-grid;
-      min-width: 25px;
-      min-height: 25px;
-      margin-right: 2px;
-      place-items: center;
-      border: 1px solid #cbd6e4;
-      border-bottom-width: 2px;
-      border-radius: 6px;
-      background: white;
-      color: var(--ink);
-      font: 700 0.72rem/1 system-ui, sans-serif;
-    }
-
-    .reset-button {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font-weight: 750;
-    }
-
-    .reset-button:hover {
-      border-color: #f0afb6;
-      background: var(--red-soft);
-      color: var(--red);
-    }
-
-    .quiz-column {
-      min-width: 0;
-    }
-
-    .quiz-card {
-      overflow: hidden;
-      border: 1px solid rgba(213, 224, 237, 0.95);
-      border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow);
-    }
-
-    .request-strip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 46px;
-      padding: 10px 22px;
-      background: var(--navy);
-      color: #dce8fa;
-      font-size: 0.78rem;
-      overflow: hidden;
-    }
-
-    .method-badge {
-      flex: 0 0 auto;
-      padding: 3px 8px;
-      border-radius: 5px;
-      background: #2dd4bf;
-      color: #062822;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-    }
-
-    .request-path {
-      overflow: hidden;
-      color: #b9cbe5;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .status-light {
-      width: 8px;
-      height: 8px;
-      margin-left: auto;
-      border-radius: 50%;
-      background: #fb923c;
-      box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.14);
-    }
-
-    .quiz-body {
-      padding: clamp(22px, 5vw, 46px);
-    }
-
-    .question-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .eyebrow {
-      color: var(--teal);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-    }
-
-    .topic-badge {
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: var(--blue-soft);
-      color: #315ca9;
-      font-size: 0.75rem;
-      font-weight: 800;
-    }
-
-    .question-title {
-      margin: 0 0 26px;
-      max-width: 760px;
-      color: var(--ink);
-      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-      line-height: 1.35;
-      letter-spacing: -0.025em;
-    }
-
-    .options {
-      display: grid;
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      border: 0;
-    }
-
-    .option {
-      position: relative;
-      display: grid;
-      grid-template-columns: 42px minmax(0, 1fr);
-      align-items: center;
-      gap: 14px;
-      min-height: 64px;
-      padding: 11px 16px 11px 12px;
-      border: 1.5px solid var(--line);
-      border-radius: 15px;
-      background: #fbfcfe;
-      cursor: pointer;
-      transition: border-color 150ms ease, background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
-    }
-
-    .option:hover {
-      border-color: #9db0c8;
-      background: white;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(31, 54, 89, 0.07);
-    }
-
-    .option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .option-key {
-      display: grid;
-      width: 38px;
-      height: 38px;
-      place-items: center;
-      border: 1px solid #cfdae8;
-      border-radius: 10px;
-      background: white;
-      color: #52647e;
-      font-weight: 900;
-    }
-
-    .option-text {
-      min-width: 0;
-      font-weight: 650;
-      overflow-wrap: anywhere;
-    }
-
-    .option.selected {
-      border-color: var(--blue);
-      background: var(--blue-soft);
-      box-shadow: 0 0 0 3px rgba(39, 100, 215, 0.09);
-    }
-
-    .option.selected .option-key {
-      border-color: var(--blue);
-      background: var(--blue);
-      color: white;
-    }
-
-    .option.locked {
-      cursor: default;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .option.correct {
-      border-color: #6dc99f;
-      background: var(--green-soft);
-    }
-
-    .option.correct .option-key {
-      border-color: var(--green);
-      background: var(--green);
-      color: white;
-    }
-
-    .option.incorrect {
-      border-color: #e38e98;
-      background: var(--red-soft);
-    }
-
-    .option.incorrect .option-key {
-      border-color: var(--red);
-      background: var(--red);
-      color: white;
-    }
-
-    .option:focus-within {
-      outline: 3px solid rgba(39, 100, 215, 0.2);
-      outline-offset: 2px;
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 26px;
-    }
-
-    .action-group {
-      display: flex;
-      gap: 10px;
-      margin-left: auto;
-    }
-
-    .button {
-      min-height: 48px;
-      padding: 0 20px;
-      border: 0;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 850;
-      transition: 150ms ease;
-    }
-
-    .button:focus-visible,
-    .map-button:focus-visible,
-    .reset-button:focus-visible {
-      outline: 3px solid rgba(39, 100, 215, 0.26);
-      outline-offset: 2px;
-    }
-
-    .button.primary {
-      background: var(--navy);
-      color: white;
-      box-shadow: 0 8px 18px rgba(11, 24, 48, 0.2);
-    }
-
-    .button.primary:hover:not(:disabled) {
-      background: var(--navy-2);
-      transform: translateY(-1px);
-    }
-
-    .button.primary:disabled {
-      background: #bac4d1;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .button.secondary {
-      border: 1px solid var(--line);
-      background: white;
-      color: var(--ink);
-    }
-
-    .button.secondary:hover:not(:disabled) {
-      border-color: #9db0c8;
-      background: #f8fafc;
-    }
-
-    .button.secondary:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .feedback {
-      display: none;
-      margin-top: 28px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: #f9fbfd;
-      animation: reveal 260ms ease both;
-    }
-
-    .feedback.visible {
-      display: block;
-    }
-
-    @keyframes reveal {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .feedback-head {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .feedback-icon {
-      display: grid;
-      flex: 0 0 auto;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border-radius: 50%;
-      color: white;
-      font-weight: 900;
-    }
-
-    .feedback.correct-feedback .feedback-icon {
-      background: var(--green);
-    }
-
-    .feedback.wrong-feedback .feedback-icon {
-      background: var(--red);
-    }
-
-    .feedback-head strong {
-      display: block;
-      line-height: 1.25;
-    }
-
-    .feedback-head span {
-      color: var(--muted);
-      font-size: 0.86rem;
-    }
-
-    .learning-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .learning-block {
-      min-width: 0;
-      padding: 20px;
-    }
-
-    .learning-block + .learning-block {
-      border-left: 1px solid var(--line);
-    }
-
-    .learning-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 900;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .learning-label::before {
-      width: 8px;
-      height: 8px;
-      border-radius: 2px;
-      background: var(--teal);
-      content: "";
-    }
-
-    .learning-block.example .learning-label::before {
-      background: var(--orange);
-    }
-
-    .learning-block p {
-      margin: 0;
-      color: #31415a;
-    }
-
-    .result-card {
-      display: none;
-      overflow: hidden;
-      border: 1px solid rgba(213, 224, 237, 0.95);
-      border-radius: var(--radius);
-      background: white;
-      box-shadow: var(--shadow);
-    }
-
-    .result-card.visible {
-      display: block;
-      animation: reveal 300ms ease both;
-    }
-
-    .result-hero {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      align-items: center;
-      gap: clamp(24px, 5vw, 50px);
-      padding: clamp(28px, 6vw, 56px);
-      background:
-        linear-gradient(135deg, rgba(45, 212, 191, 0.12), transparent 42%),
-        var(--navy);
-      color: white;
-    }
-
-    .score-ring {
-      --score-progress: 0deg;
-      position: relative;
-      display: grid;
-      width: 170px;
-      height: 170px;
-      place-items: center;
-      border-radius: 50%;
-      background: conic-gradient(#2dd4bf var(--score-progress), rgba(255, 255, 255, 0.13) 0);
-    }
-
-    .score-ring::before {
-      position: absolute;
-      width: 138px;
-      height: 138px;
-      border-radius: 50%;
-      background: var(--navy);
-      content: "";
-    }
-
-    .score-value {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-
-    .score-value strong {
-      display: block;
-      font-size: 2.6rem;
-      line-height: 1;
-    }
-
-    .score-value span {
-      color: #a9bdd9;
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .result-copy .eyebrow {
-      color: #5eead4;
-    }
-
-    .result-copy h2 {
-      margin: 6px 0 10px;
-      font-size: clamp(1.65rem, 3vw, 2.3rem);
-      line-height: 1.2;
-    }
-
-    .result-copy p {
-      max-width: 560px;
-      margin: 0;
-      color: #c5d4e8;
-    }
-
-    .result-details {
-      padding: clamp(24px, 5vw, 42px);
-    }
-
-    .result-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 26px;
-    }
-
-    .metric {
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #fbfcfe;
-    }
-
-    .metric span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.8rem;
-      font-weight: 750;
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 2px;
-      font-size: 1.45rem;
-    }
-
-    .result-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .noscript {
-      max-width: 760px;
-      margin: 24px auto;
-      padding: 18px;
-      border: 1px solid #e38e98;
-      border-radius: 12px;
-      background: var(--red-soft);
-      color: var(--red);
-    }
-
-    @media (max-width: 900px) {
-      .app-shell {
-        grid-template-columns: 1fr;
-        padding-top: 24px;
-      }
-
-      .sidebar {
-        position: static;
-        grid-template-columns: minmax(210px, 0.8fr) minmax(280px, 1.2fr);
-      }
-
-      .shortcuts,
-      .reset-button {
-        display: none;
-      }
-
-      .question-map-wrap {
-        padding: 15px;
-      }
-
-      .question-map {
-        grid-template-columns: repeat(10, 1fr);
-        gap: 5px;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .topbar {
-        min-height: 68px;
-        padding: 10px 16px;
-      }
-
-      .brand-copy span,
-      .stat-pill:first-child {
-        display: none;
-      }
-
-      .stat-pill {
-        padding: 7px 10px;
-      }
-
-      .app-shell {
-        gap: 18px;
-        padding: 18px 14px 32px;
-      }
-
-      .sidebar {
-        grid-template-columns: 1fr;
-      }
-
-      .progress-panel {
-        grid-template-columns: 70px 1fr;
-        padding: 14px 16px;
-      }
-
-      .progress-ring {
-        width: 64px;
-        height: 64px;
-      }
-
-      .progress-ring::before {
-        width: 50px;
-        height: 50px;
-      }
-
-      .progress-ring strong {
-        font-size: 0.9rem;
-      }
-
-      .progress-copy strong {
-        font-size: 1.12rem;
-      }
-
-      .question-map-wrap {
-        display: none;
-      }
-
-      .request-strip {
-        padding-inline: 16px;
-      }
-
-      .quiz-body {
-        padding: 22px 17px 20px;
-      }
-
-      .option {
-        grid-template-columns: 38px minmax(0, 1fr);
-        gap: 10px;
-        padding-right: 12px;
-      }
-
-      .option-key {
-        width: 34px;
-        height: 34px;
-      }
-
-      .actions {
-        align-items: stretch;
-      }
-
-      .action-group {
-        display: grid;
-        grid-template-columns: 1fr 1.25fr;
-        width: 100%;
-        margin: 0;
-      }
-
-      .button {
-        padding-inline: 12px;
-      }
-
-      .learning-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .learning-block + .learning-block {
-        border-top: 1px solid var(--line);
-        border-left: 0;
-      }
-
-      .result-hero {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-      }
-
-      .score-ring {
-        width: 150px;
-        height: 150px;
-      }
-
-      .score-ring::before {
-        width: 120px;
-        height: 120px;
-      }
-
-      .result-metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .result-actions {
-        display: grid;
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    @media print {
-      .topbar,
-      .sidebar,
-      .actions {
-        display: none !important;
-      }
-
-      body {
-        background: white;
-      }
-
-      .app-shell {
-        display: block;
-        padding: 0;
-      }
-
-      .quiz-card,
-      .result-card {
-        box-shadow: none;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>REST API &amp; HTTP practice quiz</title>
+<meta name="description" content="Practice quiz on REST APIs and HTTP: requests, methods, status codes, cookies, tokens, sessions, JSON and API testing, with instant feedback and explanations.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232743C4'/%3E%3Cpath d='M7 11h17M20 7l4 4-4 4M25 21H8M12 17l-4 4 4 4' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+:root{
+  --paper:#EDF0F4;
+  --surface:#FFFFFF;
+  --surface-2:#F7F9FC;
+  --ink:#18202B;
+  --muted:#5A6574;
+  --rule:#D3DAE3;
+  --rule-strong:#B6C0CC;
+  --accent:#2743C4;
+  --accent-hover:#1D349E;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#E6EAFB;
+  --ok:#1D7443;
+  --ok-soft:#E1F2E7;
+  --bad:#BE2F28;
+  --bad-soft:#FBE7E5;
+  --code-bg:#F2F5F9;
+  --syn-str:#8A4A0B;
+  --syn-num:#7236A8;
+  --font-text:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-code:"Atkinson Hyperlegible Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --radius-lg:14px;
+  --radius:10px;
+  --radius-sm:6px;
+  --gutter:clamp(16px,4vw,32px);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#111923;
+    --surface:#17212D;
+    --surface-2:#1B2633;
+    --ink:#E4EAF1;
+    --muted:#9AA7B6;
+    --rule:#2A3746;
+    --rule-strong:#3D4C5D;
+    --accent:#8FA3FF;
+    --accent-hover:#B0BEFF;
+    --accent-ink:#0E1633;
+    --accent-soft:#222E52;
+    --ok:#5DCB92;
+    --ok-soft:#163427;
+    --bad:#FF8B82;
+    --bad-soft:#3B2023;
+    --code-bg:#111A24;
+    --syn-str:#E6B37C;
+    --syn-num:#CDA6F5;
+  }
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font-family:var(--font-text);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{color:inherit}
+code,kbd,pre{font-family:var(--font-code)}
+pre{margin:0}
+h1,h2{text-wrap:balance}
+p,li{text-wrap:pretty}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[tabindex="-1"]:focus:not(:focus-visible){outline:none}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.wrap{width:100%;max-width:1180px;margin-inline:auto;padding-inline:var(--gutter)}
+
+/* Header */
+.site-head{background:var(--surface);border-bottom:1px solid var(--rule)}
+.site-head__row{display:flex;align-items:center;min-height:56px}
+.brand{margin:0;display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:1.0625rem}
+.brand svg{width:26px;height:26px;flex:none}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:44px;padding:.625rem 1.125rem;border:1.5px solid transparent;border-radius:var(--radius);font-weight:700;font-size:1rem;line-height:1.2;cursor:pointer;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.btn--primary{background:var(--accent);color:var(--accent-ink)}
+.btn--primary:hover{background:var(--accent-hover)}
+.btn--ghost{background:var(--surface);border-color:var(--rule-strong);color:var(--ink)}
+.btn--ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn--ghost:disabled:hover{border-color:var(--rule-strong);color:var(--ink)}
+.btn--lg{min-height:52px;padding:.8rem 1.6rem;font-size:1.125rem}
+.btn--sm{min-height:38px;padding:.4rem .9rem;font-size:.9375rem}
+
+/* Start screen */
+.start{padding-block:clamp(36px,7vw,96px)}
+.start__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,6vw,80px);align-items:center}
+.start__title{margin:0 0 1.25rem;max-width:12ch;font-size:clamp(2.5rem,5.4vw,4rem);line-height:1.02;letter-spacing:-.025em;font-weight:700}
+.lede{margin:0 0 2rem;max-width:46ch;font-size:1.1875rem;line-height:1.6;color:var(--muted)}
+.settings{margin:0 0 1.75rem;padding:0;border:0;display:flex;flex-wrap:wrap;gap:.5rem 1.75rem}
+.check{display:inline-flex;align-items:center;gap:.6rem;min-height:36px;cursor:pointer}
+.check input{width:1.2rem;height:1.2rem;margin:0;accent-color:var(--accent);cursor:pointer}
+.hint{margin:1.25rem 0 0;font-size:.9375rem;color:var(--muted)}
+kbd{display:inline-block;min-width:1.6em;padding:0 .4em;border:1px solid var(--rule-strong);border-bottom-width:2px;border-radius:5px;background:var(--surface);color:var(--ink);font-size:.8125rem;line-height:1.55;text-align:center}
+@media (hover:none){.kbd-hint{display:none}}
+
+/* HTTP exchange figure (start + results) */
+.exchange{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden}
+.exchange__part{position:relative}
+.exchange__part+.exchange__part{border-top:1px dashed var(--rule-strong);background:var(--surface-2)}
+.exchange__tag{position:absolute;top:13px;right:16px;font-size:.8125rem;font-weight:700;color:var(--muted);pointer-events:none}
+.exchange__code{padding:16px 22px;font-size:.9375rem;line-height:1.7;overflow-x:auto;white-space:pre;tab-size:2}
+
+/* Syntax tokens */
+.t-method{color:var(--accent);font-weight:700}
+.t-path{font-weight:500}
+.t-proto,.t-hname,.t-comment{color:var(--muted)}
+.t-comment{font-style:italic}
+.t-ok{color:var(--ok);font-weight:700}
+.t-bad{color:var(--bad);font-weight:700}
+.t-info{color:var(--accent);font-weight:700}
+.t-key{color:var(--accent)}
+.t-str{color:var(--syn-str)}
+.t-num,.t-lit{color:var(--syn-num)}
+
+/* Quiz screen */
+.quiz{padding-block:22px 56px}
+.quiz__bar{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;margin-bottom:16px}
+.progress{flex:1 1 220px;height:8px;border-radius:99px;background:var(--rule);overflow:hidden}
+.progress__fill{width:0;height:100%;border-radius:inherit;background:var(--accent);transition:width .3s ease}
+.tally{margin:0;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.9375rem;color:var(--muted)}
+.tally b{color:var(--ink);font-variant-numeric:tabular-nums}
+.tally__ok b{color:var(--ok)}
+.tally__bad b{color:var(--bad)}
+
+.qnav{margin-bottom:18px}
+.qnav__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:6px}
+.qdot{display:block;width:100%;height:34px;padding:0;border:1.5px solid var(--rule);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);font-size:.8125rem;font-weight:700;font-variant-numeric:tabular-nums;cursor:pointer}
+.qdot:hover{border-color:var(--accent);color:var(--ink)}
+.qdot.is-correct{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.qdot.is-wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through;text-decoration-thickness:2px}
+.qdot.is-skipped{border-style:dashed;border-color:var(--rule-strong)}
+.qdot.is-current{border-color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.qdot.is-current:not(.is-correct):not(.is-wrong){color:var(--ink)}
+.qnav__legend{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.8125rem;color:var(--muted)}
+.legend{display:inline-flex;align-items:center;gap:6px}
+.swatch{display:inline-block;width:12px;height:12px;border:1.5px solid var(--rule-strong);border-radius:3px;background:var(--surface)}
+.swatch--ok{background:var(--ok-soft);border-color:var(--ok)}
+.swatch--bad{background:var(--bad-soft);border-color:var(--bad)}
+
+.confirm{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;margin-bottom:16px;padding:14px 18px;border:1.5px solid var(--accent);border-radius:var(--radius);background:var(--accent-soft)}
+.confirm p{margin:0;font-weight:700}
+.confirm__actions{display:flex;flex-wrap:wrap;gap:10px}
+
+.console{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-lg);scroll-margin-top:16px}
+.pane{min-width:0}
+.pane--r{border-left:1px solid var(--rule);background:var(--surface-2);border-radius:0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0}
+.pane__sticky{position:sticky;top:16px;scroll-margin-top:16px}
+.pane__head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;min-height:54px;padding:12px 24px;border-bottom:1px solid var(--rule)}
+.pane__title{margin:0;font-size:1rem;font-weight:700;white-space:nowrap}
+.q-topic{padding:.2rem .7rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:.8125rem;font-weight:700;white-space:nowrap}
+.pane__body{padding:24px}
+.q-text{margin:0 0 1.25rem;max-width:60ch;font-size:1.3125rem;line-height:1.45;font-weight:700;letter-spacing:-.005em}
+.code{margin:0 0 1.25rem;padding:14px 16px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--code-bg);font-size:.875rem;line-height:1.65;overflow-x:auto;white-space:pre;tab-size:2}
+:not(pre)>code{padding:.06em .35em;border:1px solid var(--rule);border-radius:5px;background:var(--code-bg);font-size:.86em;overflow-wrap:anywhere;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+code.nowrap{white-space:nowrap}
+
+.options{display:grid;gap:10px}
+.option{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:14px;width:100%;margin:0;padding:13px 16px;border:1.5px solid var(--rule);border-radius:var(--radius);background:var(--surface);color:var(--ink);text-align:left;font-size:1.0625rem;line-height:1.45;cursor:pointer;transition:border-color .15s ease,background-color .15s ease}
+.option:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.option:disabled{cursor:default;color:var(--ink)}
+.option__key{display:grid;place-items:center;width:28px;height:28px;margin-top:-2px;border:1.5px solid var(--rule-strong);border-radius:var(--radius-sm);color:var(--muted);font-size:.875rem;font-weight:700}
+.option:hover:not(:disabled) .option__key{border-color:var(--accent);color:var(--accent)}
+.option__text{overflow-wrap:anywhere}
+.option__mark{width:1.25rem;font-weight:700;text-align:center}
+.option.is-correct{border-color:var(--ok);background:var(--ok-soft)}
+.option.is-correct .option__key{border-color:var(--ok);background:var(--ok);color:var(--surface)}
+.option.is-correct .option__mark::before{content:"✓";color:var(--ok)}
+.option.is-wrong{border-color:var(--bad);background:var(--bad-soft)}
+.option.is-wrong .option__key{border-color:var(--bad);background:var(--bad);color:var(--surface)}
+.option.is-wrong .option__mark::before{content:"✗";color:var(--bad)}
+.option.is-dim{opacity:.72}
+
+/* Response pane: the verdict arrives as an HTTP status line */
+.status{margin:0;font-family:var(--font-code);font-size:clamp(1.5rem,2.4vw,1.875rem);line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.status__proto{color:var(--muted);font-weight:400}
+.status__code{display:inline-block}
+.status--ok .status__code{color:var(--ok)}
+.status--bad .status__code{color:var(--bad)}
+.status--idle .status__code{color:var(--rule-strong)}
+.verdict{margin:.6rem 0 1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--rule);font-size:1.125rem;font-weight:700}
+.empty{margin:.75rem 0 0;max-width:34ch;color:var(--muted)}
+.explain{max-width:62ch;line-height:1.65}
+.explain p{margin:0 0 .8rem}
+.explain ul,.explain ol{margin:0 0 .9rem;padding-left:1.3rem}
+.explain li{margin:.3rem 0;padding-left:.15rem}
+.explain li::marker{color:var(--muted)}
+.explain>:last-child{margin-bottom:0}
+.reveal .status__code{animation:arrive .34s cubic-bezier(.2,.7,.2,1) both}
+.reveal .verdict,.reveal .explain{animation:fade .3s ease-out .08s both}
+@keyframes arrive{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.quiz__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.quiz__foot .hint{margin:0;text-align:center}
+
+/* Results screen */
+.results{padding-block:clamp(32px,6vw,72px)}
+.results__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;margin-bottom:clamp(40px,6vw,72px)}
+.results__title{margin:0 0 1rem;max-width:15ch;font-size:clamp(2.125rem,4.4vw,3.25rem);line-height:1.06;letter-spacing:-.022em}
+.results__actions{display:flex;flex-wrap:wrap;gap:10px}
+.results__cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(28px,5vw,64px);align-items:start}
+.h2{margin:0 0 1rem;font-size:1.3125rem;line-height:1.3}
+.topics{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.topic__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.topic__name{font-weight:700}
+.topic__score{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;border-radius:99px;background:var(--rule);overflow:hidden}
+.bar__fill{height:100%;border-radius:inherit;background:var(--ok)}
+.missed{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.missed li{border-bottom:1px solid var(--rule)}
+.missed__item{display:grid;grid-template-columns:2.25rem minmax(0,1fr) auto;align-items:baseline;gap:12px;width:100%;padding:12px 4px;border:0;background:none;color:var(--ink);text-align:left;line-height:1.45;cursor:pointer}
+.missed__item:hover .missed__q{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.missed__num{color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+.pill{padding:.1rem .55rem;border-radius:99px;font-size:.8125rem;font-weight:700;white-space:nowrap}
+.pill--bad{background:var(--bad-soft);color:var(--bad)}
+.pill--skip{border:1px solid var(--rule-strong);color:var(--muted)}
+.noscript{padding-block:48px;font-size:1.125rem}
+
+@media (max-width:960px){
+  .console{grid-template-columns:1fr}
+  .pane--r{border-left:0;border-top:1px solid var(--rule);border-radius:0 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px)}
+  .pane__sticky{position:static}
+  .quiz__foot .hint{display:none}
+}
+@media (max-width:900px){
+  .start__grid,.results__top,.results__cols{grid-template-columns:1fr}
+  .start__grid{align-items:start}
+}
+@media (max-width:760px){
+  .qnav__list{display:flex;gap:6px;margin:-5px -5px 0;padding:5px 5px 9px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+  .qnav__list li{flex:0 0 40px}
+  .qnav__legend{margin-top:4px}
+}
+@media (max-width:560px){
+  .pane__head{padding:10px 16px}
+  .pane__body{padding:18px 16px}
+  .q-text{font-size:1.1875rem}
+  .option{gap:12px;padding:12px;font-size:1rem}
+  .exchange__code{padding:14px 16px;font-size:.8125rem}
+  .quiz__foot{position:sticky;bottom:0;z-index:2;margin-inline:calc(-1 * var(--gutter));padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--rule)}
+  .quiz__foot .btn{flex:1}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#quiz">Đi tới câu hỏi</a>
+<header class="site-head">
+  <div class="wrap site-head__row">
+    <p class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M7 11h17M20 7l4 4-4 4M25 21H8M12 17l-4 4 4 4" stroke="var(--accent-ink)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>REST &amp; HTTP quiz</span>
+    </p>
+  </div>
+</header>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">API</div>
-      <div class="brand-copy">
-        <strong>API Testing Lab</strong>
-        <span>30 câu thực hành nền tảng</span>
+<main>
+  <noscript><p class="wrap noscript">This quiz runs in your browser and needs JavaScript. Turn JavaScript on, then reload the page.</p></noscript>
+
+  <!-- Start -->
+  <section class="screen start" id="screen-start" aria-labelledby="start-title">
+    <div class="wrap start__grid">
+      <div>
+        <h1 class="start__title" id="start-title">REST API &amp; HTTP practice quiz</h1>
+        <p class="lede"><span id="start-count">40</span> questions on how applications exchange data over the web. Choose an answer to each one and you’ll see right away whether it’s correct, and why.</p>
+        <fieldset class="settings">
+          <legend class="visually-hidden">Quiz settings</legend>
+          <label class="check"><input type="checkbox" id="opt-shuffle-q"> Shuffle question order</label>
+          <label class="check"><input type="checkbox" id="opt-shuffle-a" checked> Shuffle answer choices</label>
+        </fieldset>
+        <button class="btn btn--primary btn--lg" id="btn-start" type="button">Start the quiz</button>
+        <p class="hint kbd-hint">Keyboard: press <kbd>A</kbd>–<kbd>D</kbd> or <kbd>1</kbd>–<kbd>4</kbd> to answer, and <kbd>←</kbd> <kbd>→</kbd> to move between questions.</p>
+      </div>
+      <figure class="exchange" aria-label="Example HTTP exchange that lists the quiz topics">
+        <div class="exchange__part"><span class="exchange__tag">Request</span><pre class="exchange__code"><code id="start-req"></code></pre></div>
+        <div class="exchange__part"><span class="exchange__tag">Response</span><pre class="exchange__code"><code id="start-res"></code></pre></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Quiz -->
+  <section class="screen quiz" id="screen-quiz" aria-labelledby="quiz-title" hidden>
+    <h1 class="visually-hidden" id="quiz-title">REST API &amp; HTTP practice quiz</h1>
+    <div class="wrap">
+      <div class="quiz__bar">
+        <div class="progress" id="progress" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0">
+          <div class="progress__fill" id="progress-fill"></div>
+        </div>
+        <p class="tally">
+          <span><b id="t-answered">0</b> of <b id="t-total">40</b> answered</span>
+          <span class="tally__ok"><b id="t-ok">0</b> correct</span>
+          <span class="tally__bad"><b id="t-bad">0</b> incorrect</span>
+        </p>
+        <button class="btn btn--ghost btn--sm" id="btn-finish" type="button">Finish quiz</button>
+        <button class="btn btn--ghost btn--sm" id="btn-to-results" type="button" hidden>Back to results</button>
+      </div>
+
+      <nav class="qnav" aria-label="Jump to a question">
+        <ol class="qnav__list" id="qnav"></ol>
+        <p class="qnav__legend" aria-hidden="true">
+          <span class="legend"><i class="swatch swatch--ok"></i>Correct</span>
+          <span class="legend"><i class="swatch swatch--bad"></i>Incorrect</span>
+          <span class="legend"><i class="swatch"></i>Not answered</span>
+        </p>
+      </nav>
+
+      <div class="confirm" id="confirm" role="alertdialog" aria-labelledby="confirm-text" hidden>
+        <p id="confirm-text"></p>
+        <div class="confirm__actions">
+          <button class="btn btn--primary btn--sm" id="confirm-finish" type="button">Finish quiz</button>
+          <button class="btn btn--ghost btn--sm" id="confirm-goto" type="button"></button>
+        </div>
+      </div>
+
+      <div class="console" id="console">
+        <div class="pane pane--q">
+          <div class="pane__head">
+            <h2 class="pane__title" id="q-count">Question 1 of 40</h2>
+            <span class="q-topic" id="q-topic"></span>
+          </div>
+          <div class="pane__body">
+            <p class="q-text" id="q-text"></p>
+            <pre class="code" id="q-code" hidden><code id="q-code-inner"></code></pre>
+            <div class="options" id="q-options" role="group" aria-labelledby="q-text"></div>
+          </div>
+        </div>
+        <div class="pane pane--r">
+          <div class="pane__sticky" id="response" tabindex="-1" role="region" aria-labelledby="response-title">
+            <div class="pane__head"><h2 class="pane__title" id="response-title">Response</h2></div>
+            <div class="pane__body" id="response-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz__foot">
+        <button class="btn btn--ghost" id="btn-prev" type="button">Previous</button>
+        <p class="hint kbd-hint">Shortcuts: <kbd>A</kbd>–<kbd>D</kbd> to answer, <kbd>←</kbd> <kbd>→</kbd> to move</p>
+        <button class="btn btn--primary" id="btn-next" type="button">Next question</button>
       </div>
     </div>
-    <div class="top-stats" aria-label="Thống kê bài làm">
-      <div class="stat-pill"><span>Đã làm</span><strong id="headerAnswered">0/30</strong></div>
-      <div class="stat-pill"><span>Điểm</span><strong id="headerScore">0</strong></div>
+  </section>
+
+  <!-- Results -->
+  <section class="screen results" id="screen-results" aria-labelledby="res-title" hidden>
+    <div class="wrap">
+      <div class="results__top">
+        <div>
+          <h1 class="results__title" id="res-title"></h1>
+          <p class="lede" id="res-msg"></p>
+          <div class="results__actions">
+            <button class="btn btn--primary" id="btn-retry" type="button"></button>
+            <button class="btn btn--ghost" id="btn-review" type="button">Review all answers</button>
+            <button class="btn btn--ghost" id="btn-restart" type="button">Start over</button>
+          </div>
+        </div>
+        <figure class="exchange" aria-label="Your results as an HTTP response">
+          <div class="exchange__part"><span class="exchange__tag">Request</span><pre class="exchange__code"><code id="res-req"></code></pre></div>
+          <div class="exchange__part"><span class="exchange__tag">Response</span><pre class="exchange__code"><code id="res-res"></code></pre></div>
+        </figure>
+      </div>
+      <div class="results__cols">
+        <section aria-labelledby="topics-title">
+          <h2 class="h2" id="topics-title">Score by topic</h2>
+          <ul class="topics" id="res-topics"></ul>
+        </section>
+        <section aria-labelledby="missed-title">
+          <h2 class="h2" id="missed-title">Questions to review</h2>
+          <ul class="missed" id="res-missed"></ul>
+          <p class="empty" id="res-none" hidden>Every answer was correct. Start over with shuffled questions to practice again.</p>
+        </section>
+      </div>
     </div>
-  </header>
+  </section>
+</main>
 
-  <noscript>
-    <div class="noscript">Trang trắc nghiệm cần JavaScript để chấm đáp án và hiển thị giải thích. Hãy bật JavaScript rồi tải lại trang.</div>
-  </noscript>
+<div class="visually-hidden" id="sr-status" aria-live="polite"></div>
 
-  <main class="app-shell" id="quiz">
-    <aside class="sidebar" aria-label="Tiến độ bài trắc nghiệm">
-      <section class="panel progress-panel">
-        <div class="progress-ring" id="progressRing" aria-hidden="true">
-          <strong id="progressPercent">0%</strong>
-        </div>
-        <div class="progress-copy">
-          <span>Tiến độ</span>
-          <strong><span id="answeredCount">0</span> / 30 câu</strong>
-          <small id="remainingText">Còn 30 câu chưa chấm</small>
-        </div>
-      </section>
+<script>
+(() => {
+  "use strict";
 
-      <section class="panel question-map-wrap">
-        <h2 class="panel-title">Danh sách câu <span>Chọn để xem lại</span></h2>
-        <nav class="question-map" id="questionMap" aria-label="Chọn câu hỏi"></nav>
-      </section>
+  const QUESTIONS = [
+ {
+  "topic": "REST & HTTP basics",
+  "q": "What is a REST API (Web API)?",
+  "code": null,
+  "options": [
+   "A programming language used to build websites",
+   "A database that stores data for web applications",
+   "A browser feature that displays HTML pages",
+   "A way for applications to communicate and exchange data with each other over the internet, using HTTP/HTTPS"
+  ],
+  "answer": 3,
+  "explain": "**A REST API lets different applications talk to each other.** A mobile app, a website or another server sends HTTP/HTTPS requests to the API and receives data in return.\n• It’s not a programming language: REST APIs can be written in Python, C#, Java, JavaScript, Dart and more.\n• It’s not a database: an API usually sits in front of a database and controls how the data is accessed.\n• It’s not a browser feature: any program (an API client like Postman, a Python script, a mobile app) can call an API, with or without a browser."
+ },
+ {
+  "topic": "REST & HTTP basics",
+  "q": "Based on the notes, which formula describes a REST API call?",
+  "code": null,
+  "options": [
+   "HTML + CSS + JavaScript",
+   "Client + server + database",
+   "Cookie + token + session",
+   "URL (endpoint) + HTTP method + request/response data"
+  ],
+  "answer": 3,
+  "explain": "**REST API = URL (endpoint) + HTTP method + request/response data.**\nExample: `GET https://api.example.com/users/42`\n• The URL says which resource: user 42.\n• The method says what to do: GET means read it.\n• The data is what travels with the request or comes back, usually JSON such as `{\"id\": 42, \"name\": \"Alice\"}`.\nThe other formulas describe something else: web-page technologies (HTML, CSS, JavaScript), the parts of a system (client, server, database), and ways to keep track of users (cookie, token, session)."
+ },
+ {
+  "topic": "REST & HTTP basics",
+  "q": "In the client–server model, which sequence is correct?",
+  "code": null,
+  "options": [
+   "The server sends a response first → the client sends a request → the server processes it",
+   "The client sends an HTTP request → the server receives and processes it → the server sends back an HTTP response",
+   "The server sends requests to the client, and the client sends back responses",
+   "The client and server exchange data at random, without requests"
+  ],
+  "answer": 1,
+  "explain": "**In HTTP, the client starts the exchange.** The browser or app sends a request; the server processes it and replies with a response (HTML, JSON, an image…).\nEvery HTTP response answers a request, so the server never replies first, and the roles are never swapped: the client asks, the server answers.\n**Testing tip:** an API client such as Postman follows the same model. You build the request (method, URL, headers, body), send it, then inspect the response (status code, headers, body)."
+ },
+ {
+  "topic": "REST & HTTP basics",
+  "q": "What can a server send back in an HTTP response?",
+  "code": null,
+  "options": [
+   "Only JSON",
+   "Only HTML pages",
+   "Many kinds of content: HTML, CSS, JavaScript, JSON, images and more",
+   "Only plain text, never files"
+  ],
+  "answer": 2,
+  "explain": "**An HTTP response can carry many kinds of content.** The `Content-Type` response header tells the client what the body contains, for example:\n• `text/html` for a web page\n• `text/css` for a stylesheet\n• `text/javascript` for a script\n• `application/json` for API data\n• `image/png` for an image\nREST APIs usually return JSON, but HTTP itself isn’t limited to it. That’s exactly how a browser loads a whole website over HTTP."
+ },
+ {
+  "topic": "REST & HTTP basics",
+  "q": "Which statement best describes how HTTP and REST APIs are related?",
+  "code": null,
+  "options": [
+   "REST APIs replaced HTTP, so modern APIs no longer need it",
+   "HTTP only loads websites, so REST APIs use a completely different protocol",
+   "HTTP is the foundation of REST APIs: they use HTTP’s URLs, methods, headers and status codes to exchange data",
+   "REST and HTTP are two names for exactly the same thing"
+  ],
+  "answer": 2,
+  "explain": "**HTTP is the foundation for building REST APIs**, as the notes say.\nREST is a style for designing APIs; HTTP is the protocol that carries the messages. A REST API reuses HTTP’s building blocks:\n• URLs identify resources\n• methods (GET, POST, PUT, PATCH, DELETE) express actions\n• headers carry extra information\n• status codes report the result\nThe same protocol loads web pages in a browser; REST APIs simply use it for application-to-application data exchange. The two are closely related, but they aren’t the same thing, and neither replaces the other."
+ },
+ {
+  "topic": "HTTP requests",
+  "q": "Which list shows the four parts of an HTTP request described in the notes?",
+  "code": "POST /api/products HTTP/1.1\nHost: api.example.com\nContent-Type: application/json\nContent-Length: 27\n\n{\"name\": \"Pen\", \"price\": 5}",
+  "options": [
+   "Status code, headers, body, cookie",
+   "Method, URL/path, headers, body (optional)",
+   "Method, status code, token, session",
+   "URL, HTML, CSS, JavaScript"
+  ],
+  "answer": 1,
+  "explain": "**Request = method + URL/path + headers + body (optional).** In the example:\n• Method: `POST`\n• Path: `/api/products`\n• Headers: `Host`, `Content-Type`, `Content-Length`\n• Body: the JSON after the blank line\nStatus codes appear only in responses, never in requests, which rules out two of the options. Cookies and tokens can travel inside headers, but they aren’t separate parts of the request. HTML, CSS and JavaScript are content a server may send back, not parts of a request."
+ },
+ {
+  "topic": "HTTP requests",
+  "q": "Which part of an HTTP request carries extra information such as the data format or login credentials?",
+  "code": null,
+  "options": [
+   "The method",
+   "The headers",
+   "The URL path",
+   "The status code"
+  ],
+  "answer": 1,
+  "explain": "**Headers are name–value pairs of extra information** sent along with the request. Common examples:\n• `Content-Type: application/json` says the body is JSON\n• `Accept: application/json` asks for JSON in the response\n• `Authorization: Bearer <token>` carries credentials\nThe method names the action and the path names the resource. Status codes exist only in responses."
+ },
+ {
+  "topic": "HTTP requests",
+  "q": "A user submits a registration form (username and password) with POST. Following the notes and good practice, where should this data go?",
+  "code": null,
+  "options": [
+   "In the request body",
+   "In the URL, e.g. `/register?username=alice&password=123456`",
+   "In the response status code",
+   "In the name of the HTTP method"
+  ],
+  "answer": 0,
+  "explain": "**POST, PUT and PATCH send their data in the body**, for example `{\"username\": \"alice\", \"password\": \"123456\"}`.\nPutting a password in the URL is bad practice: URLs are saved in browser history and in server and proxy logs, so the password can leak even over HTTPS.\nThe status code is written by the server in its response, and the method only names the action, so neither can carry form data."
+ },
+ {
+  "topic": "HTTP requests",
+  "q": "In the URL `https://api.shop.com/products/15?currency=usd`, which part is the path that identifies the resource?",
+  "code": null,
+  "options": [
+   "`https://`",
+   "`api.shop.com`",
+   "`/products/15`",
+   "`?currency=usd`"
+  ],
+  "answer": 2,
+  "explain": "**The path `/products/15` points to the resource: product number 15.**\n• `https://` names the scheme: which protocol to use (here HTTPS, HTTP with encryption).\n• `api.shop.com` is the host: which server to contact.\n• `/products/15` is the path: which resource on that server.\n• `?currency=usd` is the query string: extra parameters, such as filters or options.\n**Testing tip:** a typo in the path, such as `/prodcuts/15`, usually returns `404 Not Found`."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "A mobile app needs to show a list of products from the server. Which HTTP method should it use?",
+  "code": null,
+  "options": [
+   "POST",
+   "GET",
+   "PUT",
+   "DELETE"
+  ],
+  "answer": 1,
+  "explain": "**GET retrieves data**, for example `GET /products` for the list or `GET /products/15` for a single product.\nGET is a “safe” method: it should only read data, never be used to change it. It normally has no body; filters go in the query string instead, as in `GET /products?category=phone`.\nPOST creates data, PUT replaces a resource and DELETE removes one. All three change data, which isn’t what showing a list needs."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "A client accidentally sends the same `POST /orders` request (with an identical body) three times. What is the most likely result?",
+  "code": null,
+  "options": [
+   "Only one order is created, because HTTP automatically ignores repeated requests",
+   "The first order is replaced twice with the same data",
+   "Three separate orders may be created",
+   "The server must answer the second and third requests with `404 Not Found`"
+  ],
+  "answer": 2,
+  "explain": "**POST is not idempotent.** As the notes say, repeated POST calls may create different records: each call is handled as a new “create” action, so three calls can produce three orders with three different IDs.\nThat’s why double-clicking a “Place order” button can create duplicates unless the app guards against it, for example by disabling the button or having the server reject a repeated request key.\nReplacing a resource with the same data describes PUT, and nothing in HTTP makes repeated POST requests return 404.\n**Testing tip:** always check what happens when the same POST request is sent twice."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "What does it mean that PUT is idempotent?",
+  "code": "PUT /users/42\nContent-Type: application/json\n\n{\"name\": \"Alice\", \"age\": 21}",
+  "options": [
+   "PUT can be called only once for each resource",
+   "Sending the same PUT request once or many times leaves the resource in the same final state",
+   "Every PUT call creates a new record",
+   "PUT never changes data on the server"
+  ],
+  "answer": 1,
+  "explain": "**Idempotent means that repeating an identical request has the same effect as sending it once.**\nAfter the first request above, user 42 is `{\"name\": \"Alice\", \"age\": 21}`. The second and third identical requests write exactly the same data, so nothing changes any further.\n• PUT can be sent as many times as you like; being safe to repeat is the whole point.\n• Creating a new record on every call is how POST behaves, not PUT.\n• PUT does change data: the first call replaces the resource."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "User 42 is `{\"name\": \"Alice\", \"email\": \"alice@mail.com\", \"age\": 20}`. You want to change only the age to 21, sending just that field. Which method fits best?",
+  "code": null,
+  "options": [
+   "PATCH",
+   "PUT",
+   "GET",
+   "POST"
+  ],
+  "answer": 0,
+  "explain": "**PATCH updates only specific fields**, so there’s no need to send the whole object: `PATCH /users/42` with the body `{\"age\": 21}` leaves `name` and `email` unchanged.\n• PUT replaces the entire resource, so it expects the complete object: name, email and age.\n• GET only reads data.\n• POST is for creating new data or triggering an action, not for editing selected fields of an existing user.\nNote: unlike PUT, PATCH isn’t guaranteed to be idempotent. A patch such as “add a tag to the list” adds another tag every time it’s sent."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "Product 7 is currently `{\"name\": \"Pen\", \"price\": 5, \"stock\": 100}`. A tester sends the PUT request below, which leaves out `stock`. Under the strict meaning of PUT, what should the tester expect?",
+  "code": "PUT /products/7\nContent-Type: application/json\n\n{\"name\": \"Pen\", \"price\": 6}",
+  "options": [
+   "Only `price` changes, and `stock` is guaranteed to stay at 100",
+   "The product is replaced by exactly what was sent, so `stock` may be lost, unless the API rejects the incomplete body",
+   "A new product is created with a new ID",
+   "The server automatically turns the request into a GET"
+  ],
+  "answer": 1,
+  "explain": "**PUT replaces the entire resource with the data you send.** Because `stock` is missing, a strict implementation saves the product without it (removed, or reset to a default such as `null`). Many APIs validate PUT bodies instead and answer `400 Bad Request` when a required field is missing.\n• “Only the sent fields change” describes PATCH; PUT makes no such promise.\n• Product 7 already exists and the request targets its URL, so nothing is created under a new ID. (PUT can create a resource, but only at the exact URL you send it to.)\n• HTTP never silently turns a PUT into a GET.\n**Testing tip:** send the complete object when testing PUT, and add a test that leaves out a field to see how the API handles it."
+ },
+ {
+  "topic": "HTTP methods",
+  "q": "Following REST conventions, which request should a tester use to remove comment 15?",
+  "code": null,
+  "options": [
+   "`GET /comments/15/delete`",
+   "`POST /comments/15` with an empty body",
+   "`PATCH /comments` with no ID",
+   "`DELETE /comments/15`"
+  ],
+  "answer": 3,
+  "explain": "**DELETE removes the resource identified by the URL**, here `/comments/15`. A successful delete typically returns `200 OK` or `204 No Content`.\n• Deleting through GET breaks the rule that GET must be read-only. Browsers, search-engine crawlers and link-preview tools open GET links automatically, so data could be deleted by accident.\n• A POST with an empty body doesn’t say “delete”; its meaning depends entirely on the server.\n• PATCH updates fields of a resource, and without an ID it doesn’t even say which comment."
+ },
+ {
+  "topic": "Status codes",
+  "q": "What does status code `201 Created` mean?",
+  "code": null,
+  "options": [
+   "The request succeeded and a new resource was created",
+   "The request succeeded, but nothing on the server changed",
+   "The client isn’t logged in",
+   "The server ran into an internal error"
+  ],
+  "answer": 0,
+  "explain": "**201 means success, and something new was created.** It’s the typical answer to a successful POST: `POST /users` returns `201 Created`, often with the new user (including its generated `id`) in the body and a `Location` header pointing to it.\n• `200 OK` is the general success code, for example for a GET.\n• A client that isn’t logged in gets `401`.\n• An internal server error is `500`."
+ },
+ {
+  "topic": "Status codes",
+  "q": "A tester calls `GET /users/99999`, but no user with that ID exists. Which status code should the API return?",
+  "code": null,
+  "options": [
+   "`400 Bad Request`",
+   "`403 Forbidden`",
+   "`404 Not Found`",
+   "`500 Internal Server Error`"
+  ],
+  "answer": 2,
+  "explain": "**404 means the requested resource doesn’t exist.** The request itself is fine; the server just can’t find user 99999. A mistyped path such as `/usres/1` usually returns 404 as well.\n• 400 is for invalid or malformed requests.\n• 403 means the server knows who you are but won’t allow the action.\n• 500 means something broke on the server, and a missing record isn’t a crash.\n**Testing tip:** include a “non-existent ID” case for every endpoint that takes an ID."
+ },
+ {
+  "topic": "Status codes",
+  "q": "A client sends the POST request below. Its JSON body is malformed: the closing `}` is missing. Which status code is most appropriate?",
+  "code": "POST /users\nContent-Type: application/json\n\n{\"name\": \"Bob\", \"age\": 20",
+  "options": [
+   "`200 OK`",
+   "`404 Not Found`",
+   "`500 Internal Server Error`",
+   "`400 Bad Request`"
+  ],
+  "answer": 3,
+  "explain": "**400 means the client sent an invalid request.** Broken JSON can’t be parsed, so the server should reject it and say why. The mistake is on the client’s side, which is why the code starts with 4.\n• 200 would wrongly report success.\n• 404 is for a resource that doesn’t exist, and `/users` does exist.\n• 500 signals a server bug. An API that answers malformed input with 500 has a defect worth reporting.\n400 is also widely used for invalid field values, such as an email without “@”. Some APIs use `422 Unprocessable Content` for that case instead."
+ },
+ {
+  "topic": "Status codes",
+  "q": "A request to `GET /profile` arrives without any token or login cookie. Which status code should the API return?",
+  "code": null,
+  "options": [
+   "`403 Forbidden`",
+   "`404 Not Found`",
+   "`201 Created`",
+   "`401 Unauthorized`"
+  ],
+  "answer": 3,
+  "explain": "**401 means “not logged in” or “authentication failed”**: a missing, invalid or expired token, or a wrong password. Despite the name “Unauthorized”, 401 really means unauthenticated: the server doesn’t know who you are.\n• 403 is for a user the server has identified who lacks permission.\n• 404 would wrongly suggest that `/profile` doesn’t exist.\n• 201 is for successfully created resources."
+ },
+ {
+  "topic": "Status codes",
+  "q": "Bob is logged in with a valid token, but his role is “student”. He calls `DELETE /admin/users/5`, which only admins may use. Which status code is correct?",
+  "code": null,
+  "options": [
+   "`403 Forbidden`",
+   "`401 Unauthorized`",
+   "`200 OK`",
+   "`400 Bad Request`"
+  ],
+  "answer": 0,
+  "explain": "**403 means identity verified, but access denied.** The token is valid, so the server knows it’s Bob; his role just doesn’t allow this action.\nA handy way to remember the difference:\n• 401: “Who are you?” Log in first.\n• 403: “I know who you are, but you’re not allowed.”\nA `200 OK` here would mean the deletion went through, which would be a serious security bug. `400` is for malformed requests, and Bob’s request is well-formed.\n**Testing tip:** call every protected endpoint with a user who lacks permission, and expect 403."
+ },
+ {
+  "topic": "Status codes",
+  "q": "While handling a valid request, the server code crashes with an unhandled exception (for example, it reads a value that is unexpectedly null). Which status code is expected?",
+  "code": null,
+  "options": [
+   "`400 Bad Request`",
+   "`500 Internal Server Error`",
+   "`401 Unauthorized`",
+   "`404 Not Found`"
+  ],
+  "answer": 1,
+  "explain": "**500 means something went wrong on the server.** The client’s request can be perfectly valid; the server simply failed to complete it.\n400, 401 and 404 all describe a problem with the request (invalid data, missing authentication, a resource that doesn’t exist), and none of those is the case here.\n**Testing tip:** a 500 almost always points to a bug. Even for bad input, a well-built API should answer with a clear 4xx error, never with 500."
+ },
+ {
+  "topic": "Status codes",
+  "q": "What do status codes starting with 4 (4xx) and 5 (5xx) indicate?",
+  "code": null,
+  "options": [
+   "4xx: success; 5xx: redirection",
+   "4xx: a client-side error; 5xx: a server-side error",
+   "4xx: a server-side error; 5xx: a client-side error",
+   "Both mean the request succeeded with a warning"
+  ],
+  "answer": 1,
+  "explain": "**The first digit gives the category:**\n• 1xx: informational\n• 2xx: success, such as `200` and `201`\n• 3xx: redirection (the client must take a further step, such as following a new URL)\n• 4xx: client error, such as `400`, `401`, `403` and `404`\n• 5xx: server error, such as `500`\n**Testing tip:** when a test fails, the class is your first clue about where to look: usually the request or test data for 4xx, and the server for 5xx."
+ },
+ {
+  "topic": "Statelessness & HTTPS",
+  "q": "What does “HTTP is stateless” mean?",
+  "code": null,
+  "options": [
+   "HTTP can’t send any data describing the state of an object",
+   "Each request is independent, and the server doesn’t automatically remember previous requests",
+   "The server permanently stores every request a client has ever made",
+   "An HTTP request can never be sent twice"
+  ],
+  "answer": 1,
+  "explain": "**Stateless means every request stands on its own.** Even if you logged in a second ago, the next request carries no built-in memory of it. That’s why each request must include something that identifies the client, such as a cookie or a token, and it’s why cookies, tokens and sessions exist.\n• Statelessness doesn’t limit the data you can send: JSON can describe any state, as in `{\"status\": \"shipped\"}`.\n• The server isn’t required to store past requests, and even when it keeps logs, they don’t keep the user logged in.\n• Any request can be sent again; idempotent methods such as PUT are designed to make repeats harmless."
+ },
+ {
+  "topic": "Statelessness & HTTPS",
+  "q": "What is HTTPS?",
+  "code": null,
+  "options": [
+   "A different protocol with its own methods and status codes that replaces HTTP",
+   "A version of HTTP that can only transfer JSON",
+   "HTTP with a built-in database for storing sessions",
+   "HTTP plus encryption (TLS, formerly SSL) that protects data while it travels"
+  ],
+  "answer": 3,
+  "explain": "**HTTPS = HTTP + encryption.** The messages are the same (same methods, headers and status codes); they just travel inside an encrypted TLS connection. This protects passwords, tokens and cookies from eavesdroppers, for example on public Wi-Fi.\n• HTTPS doesn’t change what HTTP can carry: HTML, JSON, images and so on.\n• Sessions are stored by the server application, not by the protocol.\nBy default, HTTP uses port 80 and HTTPS uses port 443."
+ },
+ {
+  "topic": "Statelessness & HTTPS",
+  "q": "Which statement about SSL and TLS is correct?",
+  "code": null,
+  "options": [
+   "SSL is outdated and insecure; TLS is its modern, trusted successor used by HTTPS today",
+   "SSL is the newest protocol and has replaced TLS",
+   "HTTPS works without either SSL or TLS",
+   "TLS is used only for email, never for websites"
+  ],
+  "answer": 0,
+  "explain": "**TLS replaced SSL.** Every public SSL version (2.0 and 3.0) is deprecated because of serious weaknesses; for example, the POODLE attack (2014) broke SSL 3.0. HTTPS today uses TLS 1.2 or TLS 1.3, and the older TLS 1.0 and 1.1 are deprecated too.\nPeople still say “SSL certificate” out of habit, but those certificates are used with TLS.\nWithout TLS, an HTTPS connection would just be plain HTTP. TLS also protects email, but securing websites and APIs is its best-known job."
+ },
+ {
+  "topic": "Statelessness & HTTPS",
+  "q": "While testing, you notice the login API also works over plain `http://` instead of `https://`. Why is this a security problem?",
+  "code": null,
+  "options": [
+   "Plain HTTP doesn’t support the POST method",
+   "Status codes aren’t available over plain HTTP",
+   "JSON can’t be sent over plain HTTP",
+   "The username, password and returned token travel unencrypted and can be intercepted"
+  ],
+  "answer": 3,
+  "explain": "**Without TLS, everything is sent as readable text.** Anyone on the network path, for example on the same public Wi-Fi, could capture the credentials or steal the token or cookie and impersonate the user.\nPlain HTTP supports exactly the same methods, status codes and JSON bodies; the only thing missing is the encryption.\n**Testing tip:** check that sensitive endpoints refuse plain HTTP or redirect to HTTPS, and that login cookies carry the `Secure` attribute so they’re sent only over HTTPS."
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "Which description of a cookie is correct?",
+  "code": null,
+  "options": [
+   "A small piece of data that the server sends and the browser stores, then sends back with later requests so the server can recognize the user",
+   "A large file downloaded in advance to make pages load faster",
+   "A special HTTP method for logging in",
+   "The encryption algorithm used by HTTPS"
+  ],
+  "answer": 0,
+  "explain": "**Cookies work around HTTP’s statelessness.** The server sends a cookie once; the browser stores it and automatically attaches it to later requests to the same site, so the server can tell who is calling.\nCookies are small (browsers generally allow about 4 KB per cookie). They aren’t HTTP methods, and encryption is TLS’s job, not the cookie’s."
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "Which pair of headers sets a cookie and then sends it back?",
+  "code": "# 1) Login response (excerpt)\nHTTP/1.1 200 OK\nSet-Cookie: session_id=abc123; HttpOnly; Secure\n\n# 2) Browser’s next request\nGET /cart HTTP/1.1\nHost: shop.example.com\nCookie: session_id=abc123",
+  "options": [
+   "The server sends `Set-Cookie` in its response; the browser sends `Cookie` in later requests",
+   "The server sends `Cookie`; the browser sends `Set-Cookie`",
+   "The server sends `Authorization`; the browser sends `Cookie`",
+   "The server sends `Content-Type`; the browser sends `Accept`"
+  ],
+  "answer": 0,
+  "explain": "**`Set-Cookie` goes from server to browser; `Cookie` goes from browser to server.** In the example, the login response sets `session_id=abc123`, and the next request carries it back.\n• `Authorization` is a request header for credentials such as tokens; servers don’t use it to set cookies.\n• `Content-Type` and `Accept` describe data formats, not cookies.\nThe `HttpOnly` attribute stops page scripts from reading the cookie, and `Secure` means it’s sent only over HTTPS.\n**Testing tip:** in your API client, check the cookies returned by the login response, then confirm they’re sent with the requests that follow."
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "Which of these is **not** a use of cookies listed in the notes?",
+  "code": null,
+  "options": [
+   "Encrypting the data sent between client and server",
+   "Keeping a user logged in",
+   "Saving a shopping cart on an e-commerce site",
+   "Remembering language or display preferences"
+  ],
+  "answer": 0,
+  "explain": "**Encryption is handled by HTTPS (TLS), not by cookies.** The notes list four uses of cookies:\n• keeping users logged in\n• saving shopping carts\n• remembering language or interface preferences\n• tracking user behavior\nA cookie is just a small piece of stored data; it doesn’t encrypt anything by itself."
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "What is a token?",
+  "code": null,
+  "options": [
+   "A special HTTP method that replaces GET and POST",
+   "A status code meaning “login successful”",
+   "A file on the server that lists every API endpoint",
+   "A string issued by the server to the client, used to identify the user or limit what they can access"
+  ],
+  "answer": 3,
+  "explain": "**A token works like a digital pass.** After a successful login, the server issues a string (JWT is a popular format). The client stores it and sends it with each request, and the server checks it to know who the user is and what they may do.\nTokens usually expire; calling an API with an expired token should return `401`.\nA token isn’t a method, a status code or a documentation file."
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "In a token-based API, where is the access token most commonly sent when calling a protected endpoint?",
+  "code": "GET /api/orders\nAuthorization: Bearer eyJhbGciOiJIUzI1NiJ9...",
+  "options": [
+   "In the request’s status code",
+   "In the URL path, in place of the resource name",
+   "In the `Authorization` header, as `Authorization: Bearer <token>`",
+   "In the `Content-Type` header"
+  ],
+  "answer": 2,
+  "explain": "**The standard pattern is `Authorization: Bearer <token>`**, the Bearer scheme defined in RFC 6750.\n• Requests don’t have status codes; only responses do.\n• Tokens in URLs are discouraged because URLs end up in logs and browser history, and replacing the resource name would break the path.\n• `Content-Type` describes the format of the body, not credentials.\n**Testing checklist** for a protected endpoint:\n• valid token: 2xx\n• missing token: 401\n• invalid or expired token: 401\n• valid token without permission: 403"
+ },
+ {
+  "topic": "Cookies, tokens & sessions",
+  "q": "What is the key difference between a session and a cookie?",
+  "code": null,
+  "options": [
+   "Sessions are stored in the browser; cookies are stored on the server",
+   "Both are stored only on the server",
+   "Session data is stored on the server; the cookie lives in the browser and usually holds only the session ID",
+   "Sessions work only over HTTPS, and cookies work only over plain HTTP"
+  ],
+  "answer": 2,
+  "explain": "**A session is the server’s memory of a user; the cookie is the browser’s key to that memory.** A typical flow:\n1. The user logs in, and the server creates a session (user ID, cart…) with an ID.\n2. The server responds with `Set-Cookie: session_id=abc123`.\n3. Each later request carries `Cookie: session_id=abc123`, so the server finds the session and “remembers” the user.\nBoth work over HTTP and HTTPS, though login cookies should always be marked `Secure` so they’re sent only over HTTPS."
+ },
+ {
+  "topic": "JSON",
+  "q": "What is JSON?",
+  "code": null,
+  "options": [
+   "A programming language that runs only in web browsers",
+   "An HTTP method for sending data",
+   "A structured text format for storing and exchanging data between systems",
+   "A binary format for images"
+  ],
+  "answer": 2,
+  "explain": "**JSON (JavaScript Object Notation) is plain, structured text.** Its syntax comes from JavaScript, but it’s language-independent: Python, C#, Java, Dart and many others can read and write it. That’s why REST APIs commonly use it for request and response bodies, marked with the header `Content-Type: application/json`.\nJSON can’t run code, so it isn’t a programming language; it isn’t an HTTP method; and it’s text, not a binary image format."
+ },
+ {
+  "topic": "JSON",
+  "q": "Which of the following is valid JSON?",
+  "code": null,
+  "options": [
+   "`{\"name\": \"Alice\", \"age\": 20, \"isStudent\": true}`",
+   "`{'name': 'Alice', 'age': 20}`",
+   "`{name: \"Alice\", age: 20}`",
+   "`{\"name\": \"Alice\", \"age\": 20,}`"
+  ],
+  "answer": 0,
+  "explain": "**JSON syntax is strict:**\n• Keys must be strings in double quotes, so the version with unquoted keys (`name:`) is invalid. That’s allowed in a JavaScript object, but not in JSON.\n• Strings must use double quotes, so the single-quoted version is invalid.\n• A comma can’t follow the last item, so the version ending in `20,}` is invalid.\n• `true`, `false` and `null` are written in lowercase without quotes, as in the valid example.\n**Testing tip:** check a request body with a JSON validator (or `JSON.parse` in JavaScript, `json.loads` in Python) before sending it. Many `400 Bad Request` errors are just syntax mistakes."
+ },
+ {
+  "topic": "JSON",
+  "q": "Which of these is **not** a valid JSON value?",
+  "code": null,
+  "options": [
+   "`null`",
+   "`[1, 2, 3]`",
+   "`undefined`",
+   "`false`"
+  ],
+  "answer": 2,
+  "explain": "**JSON has six kinds of values:** string, number, boolean (`true` or `false`), `null`, object `{…}` and array `[…]`.\n`undefined` exists in JavaScript but not in JSON. Functions and dates aren’t JSON values either; dates are usually sent as strings in ISO 8601 format, such as `\"2025-01-15T08:30:00Z\"`."
+ },
+ {
+  "topic": "JSON",
+  "q": "Look at this API response body. Which statement is correct?",
+  "code": "{\n  \"id\": 42,\n  \"name\": \"Alice\",\n  \"roles\": [\"student\", \"editor\"],\n  \"address\": {\"city\": \"Springfield\", \"zip\": \"12345\"},\n  \"active\": true\n}",
+  "options": [
+   "`roles` is a string, `address` is an array and `active` is a string",
+   "`id` is a string, because every JSON value is text",
+   "The body is invalid, because JSON objects can’t be nested",
+   "`roles` is an array, `address` is an object and `active` is a boolean"
+  ],
+  "answer": 3,
+  "explain": "**Read the brackets and quotes:**\n• `[…]` is an array: `roles`\n• `{…}` is an object: `address`. Objects and arrays can be nested inside each other.\n• `true` without quotes is a boolean: `active`\n• `42` without quotes is a number: `id`. With quotes, `\"42\"` would be a string.\n**Testing tip:** check data types, not just values. If the documentation says `id` is a number but the API returns `\"42\"`, that’s a bug that can break client apps."
+ },
+ {
+  "topic": "API testing",
+  "q": "The API documentation says `POST /users` returns `201` when a user is created. Which set of checks makes the strongest test for a valid request?",
+  "code": null,
+  "options": [
+   "The status is `201`, the body contains the new user with a generated `id`, and a follow-up `GET /users/{id}` returns that user",
+   "Only that some response arrives, whatever its status code",
+   "The status is `500`, because that means the data was saved",
+   "The status is `404`, because the user didn’t exist before the request"
+  ],
+  "answer": 0,
+  "explain": "**A solid API test checks three things:**\n1. The status code: `201 Created`, as documented.\n2. The response body: the expected fields, the right data types and a newly generated `id`.\n3. The side effect: the data really exists, so `GET /users/{id}` returns it with `200 OK`.\nChecking only that “a response arrived” proves nothing, since an error is a response too. `500` always signals a server error, never success, and `404` reports a missing resource; it has nothing to do with creating one."
+ },
+ {
+  "topic": "API testing",
+  "q": "A tester sends `DELETE /users/42` twice. The first call returns `204 No Content` and the user is deleted; the second returns `404 Not Found`. How should this be interpreted?",
+  "code": null,
+  "options": [
+   "It’s a bug, because an idempotent method must always return the same status code",
+   "The second call re-created user 42 and then deleted it again",
+   "This is normal: DELETE is idempotent in terms of server state. After either call, user 42 is gone; only the response differs",
+   "DELETE isn’t idempotent, so the second call must have deleted a different user"
+  ],
+  "answer": 2,
+  "explain": "**Idempotency is about the effect on the server, not about getting identical responses.** The HTTP standard (RFC 9110) defines GET, PUT and DELETE, among others, as idempotent. After the first call and after the second, the server is in the same state: user 42 doesn’t exist.\nReturning 404 for the second call is common and acceptable; some APIs return 204 again.\nA real bug would be the second call deleting something else, or failing with `500`."
+ },
+ {
+  "topic": "API testing",
+  "q": "Given that HTTP is stateless, which test sequence best checks that an endpoint is really protected by login?",
+  "code": null,
+  "options": [
+   "Log in once, then assume every later request is authenticated because the server remembers the client",
+   "Log in to get a token or cookie, call the protected endpoint with it (expect `200`), then call it again without it (expect `401`)",
+   "Call the protected endpoint without logging in and expect `200`",
+   "Test only the login endpoint, since protected endpoints don’t need their own tests"
+  ],
+  "answer": 1,
+  "explain": "**Because HTTP is stateless, the server recognizes you only if each request carries the credential.**\n• The positive test (with the token or cookie, expect 200) proves the credential works.\n• The negative test (without it, expect 401) proves the endpoint is really protected.\nAssuming “the server remembers me” is exactly what statelessness rules out. Getting 200 without logging in would mean the endpoint is unprotected, which is a security bug. And every protected endpoint needs its own checks, since any one of them might be misconfigured.\nWorth adding: an invalid or expired token (expect 401) and a valid token without permission (expect 403)."
+ },
+ {
+  "topic": "API testing",
+  "q": "A tester sends `POST /users` with a correct JSON body, but the API rejects it with `415 Unsupported Media Type`. Which request header is most likely missing or wrong?",
+  "code": null,
+  "options": [
+   "`Accept: text/html`",
+   "`Authorization: application/json`",
+   "`Set-Cookie: format=json`",
+   "`Content-Type: application/json`"
+  ],
+  "answer": 3,
+  "explain": "**`Content-Type` tells the server what format the request body is in.** If it’s missing or wrong, the server can’t tell that the body is JSON. Depending on the framework, the API answers `415 Unsupported Media Type` (as here) or `400 Bad Request`.\n• `Accept` says which format the client wants back, and asking for `text/html` doesn’t help here.\n• `Authorization` carries credentials, not a data format.\n• `Set-Cookie` is a response header that servers send; clients don’t use it in requests."
+ }
+];
+  const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const TOPICS = [...new Set(QUESTIONS.map((q) => q.topic))];
+  const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (sel) => document.querySelector(sel);
 
-      <section class="panel shortcuts">
-        <p>Phím tắt</p>
-        <div><kbd>A</kbd>–<kbd>D</kbd> chọn và chấm · <kbd>Enter</kbd> sang câu tiếp</div>
-      </section>
+  const el = {
+    start: $("#screen-start"), quiz: $("#screen-quiz"), results: $("#screen-results"),
+    startTitle: $("#start-title"), startCount: $("#start-count"), startReq: $("#start-req"), startRes: $("#start-res"),
+    shuffleQ: $("#opt-shuffle-q"), shuffleA: $("#opt-shuffle-a"), btnStart: $("#btn-start"),
+    progress: $("#progress"), fill: $("#progress-fill"),
+    tAnswered: $("#t-answered"), tTotal: $("#t-total"), tOk: $("#t-ok"), tBad: $("#t-bad"),
+    btnFinish: $("#btn-finish"), btnToResults: $("#btn-to-results"), nav: $("#qnav"),
+    confirm: $("#confirm"), confirmText: $("#confirm-text"), confirmFinish: $("#confirm-finish"), confirmGoto: $("#confirm-goto"),
+    console: $("#console"), qCount: $("#q-count"), qTopic: $("#q-topic"), qText: $("#q-text"),
+    qCode: $("#q-code"), qCodeInner: $("#q-code-inner"), options: $("#q-options"),
+    response: $("#response"), responseBody: $("#response-body"),
+    btnPrev: $("#btn-prev"), btnNext: $("#btn-next"),
+    resTitle: $("#res-title"), resMsg: $("#res-msg"), resReq: $("#res-req"), resRes: $("#res-res"),
+    resTopics: $("#res-topics"), resMissed: $("#res-missed"), resNone: $("#res-none"),
+    btnRetry: $("#btn-retry"), btnReview: $("#btn-review"), btnRestart: $("#btn-restart"),
+    sr: $("#sr-status"),
+  };
 
-      <button class="reset-button" id="resetButton" type="button">Làm lại từ đầu</button>
-    </aside>
+  const state = { order: [], opt: {}, answers: {}, pos: 0, finished: false, missed: [] };
 
-    <section class="quiz-column" aria-live="polite">
-      <article class="quiz-card" id="questionCard">
-        <div class="request-strip" aria-hidden="true">
-          <span class="method-badge">GET</span>
-          <span class="request-path mono">/learning/api-testing/questions/<span id="endpointNumber">1</span></span>
-          <span class="status-light"></span>
-        </div>
+  /* ---------- text helpers ---------- */
+  const escapeHTML = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-        <div class="quiz-body">
-          <div class="question-meta">
-            <span class="eyebrow" id="questionNumber">Câu 1 / 30</span>
-            <span class="topic-badge" id="topicBadge">REST API</span>
-          </div>
+  // `code` and **bold** in trusted question text (escaped first, so data can never inject markup)
+  const inline = (s) => escapeHTML(s)
+    .replace(/`([^`]+)`/g, (_, c) => (c.length <= 36 ? `<code class="nowrap">${c}</code>` : `<code>${c}</code>`))
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
-          <h1 class="question-title" id="questionTitle" tabindex="-1"></h1>
+  const plain = (s) => s.replace(/\*\*|`/g, "");
 
-          <fieldset class="options" id="optionsGroup">
-            <legend class="sr-only">Chọn một đáp án</legend>
-          </fieldset>
-
-          <div class="feedback" id="feedbackPanel" role="status">
-            <div class="feedback-head">
-              <div class="feedback-icon" id="feedbackIcon" aria-hidden="true"></div>
-              <div>
-                <strong id="feedbackTitle"></strong>
-                <span id="correctAnswerText"></span>
-              </div>
-            </div>
-            <div class="learning-grid">
-              <section class="learning-block">
-                <span class="learning-label">Giải thích dễ hiểu</span>
-                <p id="explanationText"></p>
-              </section>
-              <section class="learning-block example">
-                <span class="learning-label">Ví dụ thực tế</span>
-                <p id="exampleText"></p>
-              </section>
-            </div>
-          </div>
-
-          <div class="actions">
-            <div class="action-group">
-              <button class="button secondary" id="previousButton" type="button">Câu trước</button>
-              <button class="button primary" id="nextButton" type="button" hidden>Câu tiếp theo</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="result-card" id="resultCard">
-        <div class="result-hero">
-          <div class="score-ring" id="scoreRing" aria-hidden="true">
-            <div class="score-value">
-              <strong id="finalPercent">0%</strong>
-              <span id="finalFraction">0 / 30 đúng</span>
-            </div>
-          </div>
-          <div class="result-copy">
-            <span class="eyebrow">Hoàn thành bài trắc nghiệm</span>
-            <h2 id="resultTitle">Kết quả của bạn</h2>
-            <p id="resultMessage"></p>
-          </div>
-        </div>
-        <div class="result-details">
-          <div class="result-metrics">
-            <div class="metric"><span>Trả lời đúng</span><strong id="correctMetric">0</strong></div>
-            <div class="metric"><span>Trả lời sai</span><strong id="wrongMetric">0</strong></div>
-            <div class="metric"><span>Mức độ</span><strong id="levelMetric">—</strong></div>
-          </div>
-          <div class="result-actions">
-            <button class="button primary" id="reviewWrongButton" type="button">Xem lại câu sai</button>
-            <button class="button secondary" id="reviewAllButton" type="button">Xem lại từ câu 1</button>
-            <button class="button secondary" id="restartButton" type="button">Làm lại bài</button>
-          </div>
-        </div>
-      </article>
-    </section>
-  </main>
-
-  <script>
-    "use strict";
-
-    const questions = [
-      {
-        topic: "REST API",
-        question: "Mô tả nào chính xác nhất về REST API?",
-        options: [
-          "Một cơ sở dữ liệu chuyên lưu nội dung JSON",
-          "Một phong cách thiết kế Web API, thường sử dụng HTTP/HTTPS để thao tác với tài nguyên",
-          "Một ngôn ngữ lập trình dành riêng cho backend",
-          "Một công cụ chỉ dùng để kiểm tra giao diện website"
-        ],
-        correct: 1,
-        explanation: "REST là một phong cách kiến trúc để thiết kế Web API. API thường biểu diễn dữ liệu thành các tài nguyên có URL riêng và dùng HTTP method để cho biết hành động cần thực hiện.",
-        example: "Ứng dụng bán hàng có tài nguyên <code>/products</code>. Client dùng <code>GET /products</code> để lấy sản phẩm và <code>POST /products</code> để tạo sản phẩm; REST không phải cơ sở dữ liệu hay ngôn ngữ lập trình."
-      },
-      {
-        topic: "Endpoint",
-        question: "Trong một REST API, endpoint <code>/users/15</code> thường biểu diễn điều gì?",
-        options: [
-          "Phương thức HTTP thứ 15",
-          "Header của người dùng",
-          "Tài nguyên người dùng có mã định danh 15",
-          "Status code của response"
-        ],
-        correct: 2,
-        explanation: "URL hoặc path xác định tài nguyên mà client muốn thao tác. Phần <code>15</code> thường là mã định danh của một người dùng cụ thể trong tập hợp <code>users</code>.",
-        example: "Khi mở trang hồ sơ, frontend có thể gọi <code>GET /users/15</code>. Server tìm người dùng ID 15 rồi trả JSON như <code>{&quot;id&quot;:15,&quot;name&quot;:&quot;Kien&quot;}</code>."
-      },
-      {
-        topic: "HTTP Method",
-        question: "Thành phần nào cho server biết client muốn lấy, tạo, cập nhật hay xóa tài nguyên?",
-        options: [
-          "HTTP method",
-          "Status code",
-          "Response body",
-          "Cookie expiration"
-        ],
-        correct: 0,
-        explanation: "HTTP method mô tả ý định của request: <code>GET</code> để đọc, <code>POST</code> để tạo hoặc thực hiện hành động, <code>PUT/PATCH</code> để cập nhật và <code>DELETE</code> để xóa.",
-        example: "Cùng endpoint <code>/orders/20</code>, <code>GET</code> lấy đơn hàng, <code>PATCH</code> sửa trạng thái và <code>DELETE</code> yêu cầu xóa. URL giống nhau nhưng method làm hành động khác nhau."
-      },
-      {
-        topic: "GET",
-        question: "Bạn cần lấy thông tin người dùng có ID 15 mà không thay đổi dữ liệu. Request nào phù hợp nhất?",
-        options: [
-          "<code>POST /users/15</code>",
-          "<code>DELETE /users/15</code>",
-          "<code>PATCH /users/15</code>",
-          "<code>GET /users/15</code>"
-        ],
-        correct: 3,
-        explanation: "<code>GET</code> dùng để đọc dữ liệu. Một GET request đúng thiết kế không nên tạo, sửa hay xóa trạng thái của tài nguyên trên server.",
-        example: "Mỗi lần người dùng mở trang cá nhân, ứng dụng gọi <code>GET /users/15</code>. Dù gọi lại nhiều lần, thông tin tài khoản không bị thay đổi chỉ vì request này."
-      },
-      {
-        topic: "POST",
-        question: "Bạn cần tạo một người dùng mới. Request nào phù hợp nhất theo cách thiết kế REST thông dụng?",
-        options: [
-          "<code>GET /users</code>",
-          "<code>POST /users</code>",
-          "<code>PUT /users</code>",
-          "<code>DELETE /users</code>"
-        ],
-        correct: 1,
-        explanation: "<code>POST</code> thường gửi dữ liệu của tài nguyên mới đến endpoint đại diện cho một tập hợp. Server tạo ID và trả thông tin tài nguyên vừa tạo.",
-        example: "Form đăng ký gửi <code>POST /users</code> với body <code>{&quot;name&quot;:&quot;Kien&quot;,&quot;email&quot;:&quot;kien@example.com&quot;}</code>. Server có thể trả <code>201 Created</code> cùng ID mới."
-      },
-      {
-        topic: "PUT & PATCH",
-        question: "Điểm khác nhau chính giữa <code>PUT</code> và <code>PATCH</code> là gì?",
-        options: [
-          "<code>PUT</code> chỉ lấy dữ liệu, còn <code>PATCH</code> xóa dữ liệu",
-          "<code>PUT</code> chỉ dùng cho JSON, còn <code>PATCH</code> chỉ dùng cho HTML",
-          "<code>PUT</code> thường thay thế toàn bộ tài nguyên, còn <code>PATCH</code> cập nhật một phần",
-          "Hai method luôn có ý nghĩa hoàn toàn giống nhau"
-        ],
-        correct: 2,
-        explanation: "<code>PUT</code> thường gửi biểu diễn đầy đủ để thay thế tài nguyên, còn <code>PATCH</code> chỉ gửi các trường cần đổi. Khi test phải dựa thêm vào hợp đồng cụ thể của API.",
-        example: "Hồ sơ có tên, email và địa chỉ. Đổi riêng địa chỉ có thể dùng <code>PATCH /users/15</code> với body chỉ chứa <code>address</code>; dùng PUT thường phải gửi lại cả tên và email."
-      },
-      {
-        topic: "DELETE",
-        question: "Request nào phù hợp nhất để xóa người dùng có ID 15?",
-        options: [
-          "<code>DELETE /users/15</code>",
-          "<code>POST /users/15/delete-all</code>",
-          "<code>GET /users/15/delete</code>",
-          "<code>PATCH /users</code>"
-        ],
-        correct: 0,
-        explanation: "<code>DELETE</code> là method tiêu chuẩn để yêu cầu xóa tài nguyên được xác định bởi URL. API có thể xóa thật hoặc đánh dấu đã xóa tùy quy tắc nghiệp vụ.",
-        example: "Quản trị viên xóa tài khoản ID 15 bằng <code>DELETE /users/15</code>. Sau đó tester gọi lại <code>GET /users/15</code> và mong đợi <code>404</code> nếu tài nguyên không còn truy cập được."
-      },
-      {
-        topic: "Request Header",
-        question: "Trong HTTP request, header <code>Content-Type: application/json</code> cho biết điều gì?",
-        options: [
-          "Client chỉ chấp nhận response có status code 200",
-          "Request phải được gửi bằng HTTPS",
-          "Server đang sử dụng session",
-          "Dữ liệu trong request body có định dạng JSON"
-        ],
-        correct: 3,
-        explanation: "<code>Content-Type</code> mô tả định dạng của nội dung đang được gửi trong body. Server dựa vào đó để chọn cách đọc và phân tích dữ liệu.",
-        example: "Khi gửi body <code>{&quot;name&quot;:&quot;Kien&quot;}</code>, client đặt <code>Content-Type: application/json</code>. Nếu lại khai báo form data, server có thể không parse được và trả lỗi."
-      },
-      {
-        topic: "Authorization",
-        question: "Header nào thường được dùng để gửi access token tới API?",
-        options: [
-          "<code>Content-Length: abc123</code>",
-          "<code>Authorization: Bearer abc123</code>",
-          "<code>Host: Bearer abc123</code>",
-          "<code>Accept: token/abc123</code>"
-        ],
-        correct: 1,
-        explanation: "Access token thường được đặt trong header <code>Authorization</code> theo lược đồ <code>Bearer</code>. Server đọc token để xác thực client và kiểm tra quyền.",
-        example: "Ứng dụng gọi <code>GET /profile</code> kèm <code>Authorization: Bearer eyJ...</code>. Không gửi token hoặc gửi token hết hạn thường khiến API trả <code>401 Unauthorized</code>."
-      },
-      {
-        topic: "Query Parameter",
-        question: "Với request <code>GET /products?category=coffee&amp;page=2</code>, phần <code>category=coffee&amp;page=2</code> được gọi là gì?",
-        options: [
-          "Query parameters",
-          "Response headers",
-          "Request body",
-          "Status message"
-        ],
-        correct: 0,
-        explanation: "Phần sau dấu <code>?</code> là query string, gồm các cặp key–value. Nó thường dùng để lọc, sắp xếp, tìm kiếm hoặc phân trang mà không đổi endpoint chính.",
-        example: "Trang danh sách cà phê thứ hai gọi <code>GET /products?category=coffee&amp;page=2</code>. Tester nên kiểm tra kết quả chỉ chứa đúng nhóm coffee và metadata cho đúng trang 2."
-      },
-      {
-        topic: "JSON",
-        question: "Đâu là JSON hợp lệ?",
-        options: [
-          "<code>{name: &quot;Kien&quot;, age: 25}</code>",
-          "<code>{'name': 'Kien', 'age': 25}</code>",
-          "<code>{&quot;name&quot;: &quot;Kien&quot;, &quot;age&quot;: 25}</code>",
-          "<code>{&quot;name&quot;: &quot;Kien&quot;, &quot;age&quot;: 25,}</code>"
-        ],
-        correct: 2,
-        explanation: "Trong JSON, key và giá trị chuỗi phải dùng dấu ngoặc kép. JSON cũng không cho phép dấu phẩy thừa sau phần tử cuối cùng.",
-        example: "Nếu tester gửi body có key không đặt trong ngoặc kép hoặc dùng dấu nháy đơn, JSON parser của server có thể từ chối request trước khi logic tạo người dùng được chạy."
-      },
-      {
-        topic: "JSON Type",
-        question: "Giá trị nào không được JSON hỗ trợ trực tiếp?",
-        options: [
-          "<code>null</code>",
-          "<code>undefined</code>",
-          "<code>false</code>",
-          "<code>25.5</code>"
-        ],
-        correct: 1,
-        explanation: "JSON hỗ trợ string, number, object, array, boolean và <code>null</code>. <code>undefined</code> là khái niệm của JavaScript chứ không phải một giá trị hợp lệ trong JSON.",
-        example: "Trong JavaScript, thuộc tính có giá trị <code>undefined</code> có thể bị bỏ qua khi dùng <code>JSON.stringify</code>. Nếu muốn diễn tả “chưa có giá trị” rõ ràng với API, thường dùng <code>null</code> theo đặc tả."
-      },
-      {
-        topic: "Status Code",
-        question: "API trả về <code>HTTP/1.1 200 OK</code>. Điều này thường có nghĩa gì?",
-        options: [
-          "Request đã được xử lý thành công",
-          "Một tài nguyên chắc chắn vừa được tạo",
-          "Client chưa được xác thực",
-          "Server chắc chắn không trả response body"
-        ],
-        correct: 0,
-        explanation: "<code>200 OK</code> báo request đã được xử lý thành công. Tuy nhiên tester vẫn phải kiểm tra body và nghiệp vụ vì status đúng chưa đảm bảo dữ liệu đúng.",
-        example: "<code>GET /users/15</code> trả 200 cùng hồ sơ người dùng. Nếu body lại chứa dữ liệu của user 16 thì test vẫn phải fail dù status code là 200."
-      },
-      {
-        topic: "201 Created",
-        question: "Sau khi <code>POST /users</code> tạo người dùng thành công, status code nào phù hợp nhất?",
-        options: [
-          "<code>204 No Content</code>",
-          "<code>400 Bad Request</code>",
-          "<code>404 Not Found</code>",
-          "<code>201 Created</code>"
-        ],
-        correct: 3,
-        explanation: "<code>201 Created</code> thể hiện server đã tạo một tài nguyên mới thành công. Response thường kèm dữ liệu tài nguyên và đôi khi có header <code>Location</code>.",
-        example: "Sau <code>POST /users</code>, API trả <code>201</code>, body có <code>id: 15</code> và <code>Location: /users/15</code>. Tester kiểm tra ID tồn tại và URL đó lấy được đúng user mới."
-      },
-      {
-        topic: "204 No Content",
-        question: "Một request được xử lý thành công nhưng server chủ ý không trả response body. Status code nào phù hợp nhất?",
-        options: [
-          "<code>201 Created</code>",
-          "<code>204 No Content</code>",
-          "<code>401 Unauthorized</code>",
-          "<code>500 Internal Server Error</code>"
-        ],
-        correct: 1,
-        explanation: "<code>204 No Content</code> cho biết thao tác thành công và response không có body. Client không nên cố parse JSON từ một response 204.",
-        example: "API xóa sản phẩm bằng <code>DELETE /products/20</code> rồi trả 204. Tester xác nhận body rỗng và gọi GET lại để kiểm tra sản phẩm không còn tồn tại."
-      },
-      {
-        topic: "400 Bad Request",
-        question: "Client gửi request thiếu trường bắt buộc và không đúng hợp đồng API. Trong các lựa chọn sau, status code nào phù hợp nhất?",
-        options: [
-          "<code>200 OK</code>",
-          "<code>403 Forbidden</code>",
-          "<code>400 Bad Request</code>",
-          "<code>500 Internal Server Error</code>"
-        ],
-        correct: 2,
-        explanation: "<code>400 Bad Request</code> thường báo dữ liệu request không hợp lệ. Một số API dùng <code>422</code> cho lỗi validation, vì vậy kết quả mong đợi phải theo tài liệu API.",
-        example: "Endpoint đăng ký yêu cầu email nhưng client chỉ gửi password. API có thể trả 400 cùng lỗi <code>email is required</code>; trả 500 sẽ sai vì đây là lỗi dữ liệu phía client."
-      },
-      {
-        topic: "401 Unauthorized",
-        question: "Client gọi một endpoint được bảo vệ nhưng không gửi token đăng nhập. Status code nào thường được mong đợi?",
-        options: [
-          "<code>401 Unauthorized</code>",
-          "<code>201 Created</code>",
-          "<code>404 Not Found</code>",
-          "<code>500 Internal Server Error</code>"
-        ],
-        correct: 0,
-        explanation: "<code>401 Unauthorized</code> thường có nghĩa client chưa cung cấp thông tin xác thực hợp lệ. Tên mã hơi dễ gây nhầm, nhưng trọng tâm là authentication.",
-        example: "Gọi <code>GET /profile</code> mà không có header Authorization phải bị từ chối với 401. Nếu API vẫn trả hồ sơ, đó có thể là lỗ hổng bảo mật nghiêm trọng."
-      },
-      {
-        topic: "403 Forbidden",
-        question: "Người dùng đã đăng nhập nhưng tài khoản thông thường cố truy cập chức năng chỉ dành cho quản trị viên. Status code nào phù hợp nhất?",
-        options: [
-          "<code>200 OK</code>",
-          "<code>400 Bad Request</code>",
-          "<code>401 Unauthorized</code>",
-          "<code>403 Forbidden</code>"
-        ],
-        correct: 3,
-        explanation: "<code>403 Forbidden</code> nghĩa là server đã nhận biết client nhưng client không có quyền thực hiện hành động. Đây là vấn đề authorization, không phải thiếu authentication.",
-        example: "Token của user thường gọi <code>DELETE /admin/users/15</code>. API nên trả 403; token admin có thể được phép. Tester cần thử cả hai vai trò để phát hiện lỗi phân quyền."
-      },
-      {
-        topic: "404 Not Found",
-        question: "Client gọi <code>/users/9999</code>, nhưng người dùng 9999 không tồn tại. Status code nào thường phù hợp nhất?",
-        options: [
-          "<code>201 Created</code>",
-          "<code>404 Not Found</code>",
-          "<code>401 Unauthorized</code>",
-          "<code>500 Internal Server Error</code>"
-        ],
-        correct: 1,
-        explanation: "<code>404 Not Found</code> cho biết server không tìm thấy tài nguyên tại URL được yêu cầu. Nó cũng có thể xuất hiện khi path của endpoint bị viết sai.",
-        example: "Tester gọi <code>GET /users/9999</code> bằng một ID chắc chắn không tồn tại. Response mong đợi là 404 và thông báo lỗi rõ ràng, không phải 200 với một object rỗng nếu đặc tả không nói vậy."
-      },
-      {
-        topic: "500 Server Error",
-        question: "API phát sinh lỗi không mong muốn khi xử lý request do lỗi phía server. Status code nào phù hợp nhất?",
-        options: [
-          "<code>204 No Content</code>",
-          "<code>400 Bad Request</code>",
-          "<code>500 Internal Server Error</code>",
-          "<code>403 Forbidden</code>"
-        ],
-        correct: 2,
-        explanation: "<code>500 Internal Server Error</code> biểu thị server gặp lỗi ngoài dự kiến khi xử lý request hợp lệ hoặc chưa xử lý lỗi đúng cách.",
-        example: "Database mất kết nối trong lúc API đọc đơn hàng và server không có cách xử lý phù hợp. API có thể trả 500; response không nên làm lộ stack trace, mật khẩu hay câu lệnh SQL."
-      },
-      {
-        topic: "Stateless",
-        question: "Phát biểu “HTTP là stateless” có nghĩa là gì?",
-        options: [
-          "Mỗi request độc lập và HTTP không tự ghi nhớ các request trước",
-          "HTTP luôn lưu toàn bộ lịch sử request trong cookie",
-          "Client chỉ được gửi một request trong mỗi phiên",
-          "Server không thể lưu bất kỳ dữ liệu nào"
-        ],
-        correct: 0,
-        explanation: "Bản thân HTTP không tự liên kết request hiện tại với request trước. Nếu ứng dụng muốn ghi nhớ đăng nhập hoặc giỏ hàng, nó phải bổ sung cookie, session hoặc token.",
-        example: "Sau khi đăng nhập, request <code>GET /cart</code> vẫn cần gửi session cookie hoặc token. Nếu không có dấu hiệu nhận diện này, server không tự biết request mới thuộc người vừa đăng nhập."
-      },
-      {
-        topic: "Session",
-        question: "Trong cơ chế đăng nhập bằng session, cách triển khai nào phổ biến nhất?",
-        options: [
-          "Trình duyệt lưu toàn bộ cơ sở dữ liệu người dùng trong cookie",
-          "Server lưu mật khẩu trong URL của mọi request",
-          "Server lưu dữ liệu session, còn trình duyệt giữ session ID trong cookie",
-          "Client gửi lại username và password trong mọi request"
-        ],
-        correct: 2,
-        explanation: "Server tạo một session chứa thông tin cần thiết rồi đưa session ID cho trình duyệt. Trình duyệt gửi lại ID; server dùng nó để tìm đúng phiên làm việc.",
-        example: "Sau login, server lưu <code>abc123 → user_id 15</code> trong Redis và gửi cookie <code>session_id=abc123</code>. Request tiếp theo mang cookie này nên server nhận ra user 15."
-      },
-      {
-        topic: "Cookie",
-        question: "Phát biểu nào chính xác nhất về cookie?",
-        options: [
-          "Cookie luôn là access token dạng JWT",
-          "Cookie là dữ liệu nhỏ được lưu ở trình duyệt và có thể tự động được gửi trong các request phù hợp",
-          "Cookie chỉ tồn tại ở server",
-          "Mọi cookie đều giúp server xác định chính xác danh tính người dùng"
-        ],
-        correct: 1,
-        explanation: "Cookie là dữ liệu nhỏ ở trình duyệt. Trình duyệt tự gửi cookie khi domain, path, thời hạn và các thuộc tính bảo mật phù hợp; cookie không nhất thiết dùng để đăng nhập.",
-        example: "Website có thể lưu <code>language=vi</code> để nhớ ngôn ngữ, hoặc lưu <code>session_id=abc123</code> để duy trì đăng nhập. Chỉ cookie thứ hai trong ví dụ này liên quan đến danh tính phiên."
-      },
-      {
-        topic: "Access Token",
-        question: "Vai trò chính của access token trong API là gì?",
-        options: [
-          "Chứng minh danh tính hoặc quyền truy cập của client",
-          "Thay thế URL của endpoint",
-          "Quy định định dạng JSON",
-          "Mã hóa toàn bộ cơ sở dữ liệu"
-        ],
-        correct: 0,
-        explanation: "Access token là bằng chứng mà client trình cho API. Server xác minh token còn hiệu lực và xem token có đủ phạm vi hoặc quyền để truy cập tài nguyên hay không.",
-        example: "Ứng dụng mobile nhận access token sau login rồi gửi token khi gọi API đơn hàng. Token hết hạn phải bị từ chối; client có thể dùng refresh token theo thiết kế để xin access token mới."
-      },
-      {
-        topic: "HTTPS",
-        question: "HTTPS chủ yếu bổ sung điều gì so với HTTP?",
-        options: [
-          "Tự động sửa mọi lỗi của API",
-          "Tự động cấp quyền quản trị viên cho client",
-          "Bắt buộc mọi response phải là JSON",
-          "Mã hóa và bảo vệ dữ liệu trên đường truyền bằng TLS"
-        ],
-        correct: 3,
-        explanation: "HTTPS dùng TLS để mã hóa dữ liệu khi truyền, bảo vệ tính toàn vẹn và hỗ trợ xác minh server. Nó không thay thế việc kiểm tra quyền hay validation trong ứng dụng.",
-        example: "Khi đăng nhập qua Wi-Fi công cộng, HTTPS giúp người nghe lén không đọc được password trên đường truyền. Nhưng API vẫn phải kiểm tra password đúng và user có quyền gì."
-      },
-      {
-        topic: "Positive Testing",
-        question: "Khi kiểm thử <code>POST /users</code> với dữ liệu hợp lệ, cách kiểm tra nào đầy đủ nhất?",
-        options: [
-          "Chỉ kiểm tra response trả về thật nhanh",
-          "Kiểm tra status code, headers, response body/schema và xác nhận tài nguyên được tạo đúng",
-          "Chỉ kiểm tra status code là 201",
-          "Chỉ kiểm tra response body có chứa tên người dùng"
-        ],
-        correct: 1,
-        explanation: "Một test tốt phải kiểm tra cả giao thức, hợp đồng dữ liệu và tác động nghiệp vụ. Chỉ status code đúng chưa chứng minh tài nguyên đã được lưu chính xác.",
-        example: "Sau khi POST user, tester kiểm tra 201, <code>Content-Type</code>, schema, email đúng và password không bị trả về. Sau đó gọi <code>GET /users/{id}</code> để xác nhận dữ liệu thực sự tồn tại."
-      },
-      {
-        topic: "Negative Testing",
-        question: "Bạn muốn kiểm tra validation của API tạo tài khoản. Test case nào phù hợp nhất?",
-        options: [
-          "Gửi request hợp lệ nhiều lần và chỉ nhìn thời gian phản hồi",
-          "Gọi endpoint lấy danh sách sản phẩm",
-          "Lần lượt bỏ từng trường bắt buộc, gửi dữ liệu sai định dạng và kiểm tra lỗi trả về",
-          "Chỉ kiểm tra màu sắc nút đăng ký trên giao diện"
-        ],
-        correct: 2,
-        explanation: "Negative testing cố ý gửi dữ liệu không hợp lệ để kiểm tra API từ chối an toàn và trả lỗi hữu ích. Nên tách từng trường hợp để biết chính xác quy tắc nào hỏng.",
-        example: "Với trường email, thử bỏ trống, thiếu ký tự <code>@</code>, quá dài và đã tồn tại. Mỗi request cần được so với status và error code đã nêu trong đặc tả."
-      },
-      {
-        topic: "Authorization Test",
-        question: "Cách kiểm tra phân quyền cho endpoint <code>DELETE /users/15</code> nào tốt nhất?",
-        options: [
-          "Thử không có token, token người dùng thường và token quản trị viên; đối chiếu kết quả với đặc tả",
-          "Chỉ thử bằng token quản trị viên vì trường hợp đó sẽ thành công",
-          "Đặt token trong URL để dễ quan sát",
-          "Chỉ kiểm tra response body mà bỏ qua status code"
-        ],
-        correct: 0,
-        explanation: "Kiểm thử phân quyền phải bao phủ nhiều trạng thái danh tính và vai trò. Mục tiêu là chứng minh người được phép có thể làm, còn người không được phép chắc chắn bị chặn.",
-        example: "Không token nên nhận 401, token user thường nên nhận 403 và token admin có thể nhận 204 theo đặc tả. Tester còn xác nhận user thường không bị xóa sau hai request bị từ chối."
-      },
-      {
-        topic: "Contract Testing",
-        question: "API trả <code>200 OK</code>, nhưng response body thiếu trường <code>id</code> bắt buộc theo đặc tả. Kết luận nào đúng?",
-        options: [
-          "Test vẫn pass vì status code 200 là đủ",
-          "Không thể kiểm tra response body trong API testing",
-          "Chỉ frontend mới cần quan tâm đến trường <code>id</code>",
-          "Test phải fail vì response không đúng hợp đồng dù status code thành công"
-        ],
-        correct: 3,
-        explanation: "API contract quy định không chỉ status mà còn cấu trúc, kiểu và trường dữ liệu. Thiếu trường bắt buộc có thể làm client lỗi nên test phải phát hiện.",
-        example: "Frontend dùng <code>id</code> để mở trang chi tiết. Nếu API chỉ trả tên dù status 200, nút “Xem hồ sơ” có thể tạo URL <code>/users/undefined</code>; contract test cần fail sớm."
-      },
-      {
-        topic: "Test Workflow",
-        question: "Thứ tự nào mô tả đúng nhất một quy trình API testing cơ bản?",
-        options: [
-          "Gửi request → đoán kết quả → bỏ qua đặc tả → kết thúc",
-          "Đọc đặc tả → chuẩn bị dữ liệu → gửi request → kiểm tra status, headers, body và tác động dữ liệu",
-          "Thiết kế giao diện → chọn màu → gửi request → kiểm tra ảnh",
-          "Gửi mọi method tới mọi URL và xem request nào không lỗi"
-        ],
-        correct: 1,
-        explanation: "Đặc tả cho biết đầu vào và kết quả mong đợi. Sau khi chuẩn bị dữ liệu, tester gửi request rồi so sánh toàn bộ response và trạng thái hệ thống với kỳ vọng.",
-        example: "Test tạo đơn hàng bắt đầu từ tài liệu endpoint, tạo sẵn sản phẩm và user, gửi POST, kiểm tra 201/schema/tổng tiền, rồi truy vấn database hoặc GET đơn hàng để xác nhận dữ liệu."
-      }
-    ];
-
-    const letters = ["A", "B", "C", "D"];
-    const state = {
-      current: 0,
-      selections: Array(questions.length).fill(null),
-      checked: Array(questions.length).fill(false),
-      results: Array(questions.length).fill(null),
-      showingResult: false
-    };
-
-    const elements = {
-      questionCard: document.getElementById("questionCard"),
-      resultCard: document.getElementById("resultCard"),
-      questionTitle: document.getElementById("questionTitle"),
-      questionNumber: document.getElementById("questionNumber"),
-      topicBadge: document.getElementById("topicBadge"),
-      endpointNumber: document.getElementById("endpointNumber"),
-      optionsGroup: document.getElementById("optionsGroup"),
-      nextButton: document.getElementById("nextButton"),
-      previousButton: document.getElementById("previousButton"),
-      feedbackPanel: document.getElementById("feedbackPanel"),
-      feedbackIcon: document.getElementById("feedbackIcon"),
-      feedbackTitle: document.getElementById("feedbackTitle"),
-      correctAnswerText: document.getElementById("correctAnswerText"),
-      explanationText: document.getElementById("explanationText"),
-      exampleText: document.getElementById("exampleText"),
-      questionMap: document.getElementById("questionMap"),
-      progressRing: document.getElementById("progressRing"),
-      progressPercent: document.getElementById("progressPercent"),
-      answeredCount: document.getElementById("answeredCount"),
-      remainingText: document.getElementById("remainingText"),
-      headerAnswered: document.getElementById("headerAnswered"),
-      headerScore: document.getElementById("headerScore"),
-      resetButton: document.getElementById("resetButton"),
-      scoreRing: document.getElementById("scoreRing"),
-      finalPercent: document.getElementById("finalPercent"),
-      finalFraction: document.getElementById("finalFraction"),
-      resultTitle: document.getElementById("resultTitle"),
-      resultMessage: document.getElementById("resultMessage"),
-      correctMetric: document.getElementById("correctMetric"),
-      wrongMetric: document.getElementById("wrongMetric"),
-      levelMetric: document.getElementById("levelMetric"),
-      reviewWrongButton: document.getElementById("reviewWrongButton"),
-      reviewAllButton: document.getElementById("reviewAllButton"),
-      restartButton: document.getElementById("restartButton")
-    };
-
-    function createQuestionMap() {
-      elements.questionMap.innerHTML = "";
-      questions.forEach((_, index) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "map-button";
-        button.textContent = String(index + 1);
-        button.setAttribute("aria-label", `Đi đến câu ${index + 1}`);
-        button.addEventListener("click", () => goToQuestion(index));
-        elements.questionMap.appendChild(button);
-      });
+  // Paragraphs, "• " bullet lists and "1. " numbered lists
+  function block(s) {
+    const out = [];
+    let list = null;
+    const close = () => { if (list) { out.push(`</${list}>`); list = null; } };
+    const open = (tag) => { if (list !== tag) { close(); out.push(`<${tag}>`); list = tag; } };
+    for (const raw of s.split("\n")) {
+      const line = raw.trim();
+      let m;
+      if (line.startsWith("• ")) { open("ul"); out.push(`<li>${inline(line.slice(2))}</li>`); }
+      else if ((m = line.match(/^\d+\.\s+(.*)$/))) { open("ol"); out.push(`<li>${inline(m[1])}</li>`); }
+      else { close(); if (line) out.push(`<p>${inline(line)}</p>`); }
     }
+    close();
+    return out.join("");
+  }
 
-    function renderQuestion(focusTitle = false) {
-      const question = questions[state.current];
-      const selected = state.selections[state.current];
-      const isChecked = state.checked[state.current];
+  /* ---------- HTTP / JSON highlighting ---------- */
+  const JSON_TOKEN = /("(?:[^"\\\n]|\\.)*")(\s*:)?|(-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|\b(true|false|null)\b/g;
+  const METHOD_LINE = /^(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)(\s+)(\S+)(.*)$/;
+  const STATUS_LINE = /^(HTTP\/\d(?:\.\d)?)(\s+)([1-5]\d\d)(.*)$/;
+  const HEADER_LINE = /^([A-Za-z][A-Za-z0-9-]*)(:\s*)(.*)$/;
 
-      state.showingResult = false;
-      elements.resultCard.classList.remove("visible");
-      elements.questionCard.hidden = false;
-      elements.questionNumber.textContent = `Câu ${state.current + 1} / ${questions.length}`;
-      elements.topicBadge.textContent = question.topic;
-      elements.endpointNumber.textContent = String(state.current + 1);
-      elements.questionTitle.innerHTML = question.question;
-      elements.optionsGroup.innerHTML = "";
-
-      question.options.forEach((option, optionIndex) => {
-        const label = document.createElement("label");
-        label.className = "option";
-        if (selected === optionIndex) label.classList.add("selected");
-        if (isChecked) {
-          label.classList.add("locked");
-          if (optionIndex === question.correct) label.classList.add("correct");
-          if (selected === optionIndex && optionIndex !== question.correct) label.classList.add("incorrect");
-        }
-
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = `question-${state.current}`;
-        input.value = String(optionIndex);
-        input.checked = selected === optionIndex;
-        input.disabled = isChecked;
-        input.setAttribute("aria-label", `${letters[optionIndex]}. ${stripTags(option)}`);
-        input.addEventListener("change", () => selectOption(optionIndex));
-
-        const key = document.createElement("span");
-        key.className = "option-key";
-        key.textContent = letters[optionIndex];
-        key.setAttribute("aria-hidden", "true");
-
-        const text = document.createElement("span");
-        text.className = "option-text";
-        text.innerHTML = option;
-
-        label.append(input, key, text);
-        elements.optionsGroup.appendChild(label);
-      });
-
-      elements.previousButton.disabled = state.current === 0;
-      elements.nextButton.hidden = !isChecked;
-      elements.nextButton.textContent = state.current === questions.length - 1 ? "Xem kết quả" : "Câu tiếp theo";
-
-      if (isChecked) {
-        showFeedback();
+  function highlightJSONLine(line) {
+    let out = "", last = 0, m;
+    JSON_TOKEN.lastIndex = 0;
+    while ((m = JSON_TOKEN.exec(line))) {
+      out += escapeHTML(line.slice(last, m.index));
+      if (m[1] !== undefined) {
+        out += m[2] !== undefined
+          ? `<span class="t-key">${escapeHTML(m[1])}</span>${escapeHTML(m[2])}`
+          : `<span class="t-str">${escapeHTML(m[1])}</span>`;
+      } else if (m[3] !== undefined) {
+        out += `<span class="t-num">${m[3]}</span>`;
       } else {
-        elements.feedbackPanel.className = "feedback";
+        out += `<span class="t-lit">${m[4]}</span>`;
       }
+      last = JSON_TOKEN.lastIndex;
+    }
+    return out + escapeHTML(line.slice(last));
+  }
 
-      updateDashboard();
-      if (focusTitle) {
-        elements.questionTitle.focus({ preventScroll: true });
-        window.scrollTo({ top: 0, behavior: "smooth" });
+  function highlightCode(text) {
+    return text.split("\n").map((line) => {
+      let m;
+      if (line.startsWith("#")) return `<span class="t-comment">${escapeHTML(line)}</span>`;
+      if ((m = line.match(METHOD_LINE))) {
+        return `<span class="t-method">${m[1]}</span>${m[2]}<span class="t-path">${escapeHTML(m[3])}</span><span class="t-proto">${escapeHTML(m[4])}</span>`;
       }
-    }
-
-    function selectOption(optionIndex) {
-      if (state.checked[state.current]) return;
-      state.selections[state.current] = optionIndex;
-      checkCurrentAnswer();
-    }
-
-    function checkCurrentAnswer() {
-      const selected = state.selections[state.current];
-      if (selected === null || state.checked[state.current]) return;
-
-      const correct = selected === questions[state.current].correct;
-      state.checked[state.current] = true;
-      state.results[state.current] = correct;
-      renderQuestion(false);
-      elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-
-    function showFeedback() {
-      const question = questions[state.current];
-      const isCorrect = state.results[state.current];
-      const answerLetter = letters[question.correct];
-      const answerText = stripTags(question.options[question.correct]);
-
-      elements.feedbackPanel.className = `feedback visible ${isCorrect ? "correct-feedback" : "wrong-feedback"}`;
-      elements.feedbackIcon.textContent = isCorrect ? "✓" : "!";
-      elements.feedbackTitle.textContent = isCorrect ? "Chính xác!" : "Chưa đúng — cùng xem lại";
-      elements.correctAnswerText.textContent = `Đáp án đúng: ${answerLetter}. ${answerText}`;
-      elements.explanationText.innerHTML = question.explanation;
-      elements.exampleText.innerHTML = question.example;
-    }
-
-    function nextQuestion() {
-      if (!state.checked[state.current]) return;
-      if (state.current === questions.length - 1) {
-        showResults();
-        return;
+      if ((m = line.match(STATUS_LINE))) {
+        const cls = m[3][0] === "2" ? "t-ok" : (m[3][0] === "4" || m[3][0] === "5") ? "t-bad" : "t-info";
+        return `<span class="t-proto">${m[1]}</span>${m[2]}<span class="${cls}">${m[3]}${escapeHTML(m[4])}</span>`;
       }
-      goToQuestion(state.current + 1);
-    }
-
-    function previousQuestion() {
-      if (state.current > 0) goToQuestion(state.current - 1);
-    }
-
-    function goToQuestion(index) {
-      state.current = Math.max(0, Math.min(index, questions.length - 1));
-      renderQuestion(true);
-    }
-
-    function updateDashboard() {
-      const answered = state.checked.filter(Boolean).length;
-      const score = state.results.filter(result => result === true).length;
-      const percent = Math.round((answered / questions.length) * 100);
-      const remaining = questions.length - answered;
-
-      elements.progressRing.style.setProperty("--progress", `${percent * 3.6}deg`);
-      elements.progressPercent.textContent = `${percent}%`;
-      elements.answeredCount.textContent = String(answered);
-      elements.remainingText.textContent = remaining === 0 ? "Đã chấm đủ 30 câu" : `Còn ${remaining} câu chưa chấm`;
-      elements.headerAnswered.textContent = `${answered}/${questions.length}`;
-      elements.headerScore.textContent = String(score);
-
-      Array.from(elements.questionMap.children).forEach((button, index) => {
-        button.className = "map-button";
-        if (index === state.current && !state.showingResult) button.classList.add("current");
-        if (state.results[index] === true) button.classList.add("correct");
-        if (state.results[index] === false) button.classList.add("wrong");
-        const status = state.checked[index] ? (state.results[index] ? "đúng" : "sai") : "chưa chấm";
-        button.setAttribute("aria-label", `Câu ${index + 1}, ${status}`);
-      });
-    }
-
-    function showResults() {
-      const answered = state.checked.filter(Boolean).length;
-      if (answered < questions.length) {
-        const firstUnanswered = state.checked.findIndex(value => !value);
-        goToQuestion(firstUnanswered);
-        return;
+      if ((m = line.match(HEADER_LINE))) {
+        return `<span class="t-hname">${escapeHTML(m[1])}</span>${escapeHTML(m[2])}${escapeHTML(m[3])}`;
       }
+      return highlightJSONLine(line);
+    }).join("\n");
+  }
 
-      const score = state.results.filter(result => result === true).length;
-      const wrong = questions.length - score;
-      const percent = Math.round((score / questions.length) * 100);
-      const result = getResultCopy(score);
+  const byteLength = (s) => new TextEncoder().encode(s).length;
 
-      state.showingResult = true;
-      elements.questionCard.hidden = true;
-      elements.resultCard.classList.add("visible");
-      elements.scoreRing.style.setProperty("--score-progress", `${percent * 3.6}deg`);
-      elements.finalPercent.textContent = `${percent}%`;
-      elements.finalFraction.textContent = `${score} / ${questions.length} đúng`;
-      elements.resultTitle.textContent = result.title;
-      elements.resultMessage.textContent = result.message;
-      elements.correctMetric.textContent = String(score);
-      elements.wrongMetric.textContent = String(wrong);
-      elements.levelMetric.textContent = result.level;
-      elements.reviewWrongButton.textContent = wrong === 0 ? "Xem lại câu bất kỳ" : `Xem lại ${wrong} câu sai`;
-      updateDashboard();
-      elements.resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  function jsonResponse(obj) {
+    const body = JSON.stringify(obj, null, 2);
+    return `HTTP/1.1 200 OK\nContent-Type: application/json\nContent-Length: ${byteLength(body)}\n\n${body}`;
+  }
+
+  /* ---------- small utilities ---------- */
+  function shuffle(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
+    return a;
+  }
 
-    function getResultCopy(score) {
-      if (score >= 27) {
-        return {
-          level: "Rất vững",
-          title: "Bạn đã nắm rất chắc nền tảng!",
-          message: "Bạn phân biệt tốt HTTP, REST, xác thực và tư duy kiểm thử. Hãy tiếp tục thực hành trên API thật để biến kiến thức thành phản xạ."
-        };
-      }
-      if (score >= 22) {
-        return {
-          level: "Khá tốt",
-          title: "Nền tảng của bạn khá tốt",
-          message: "Bạn đã hiểu phần lớn khái niệm quan trọng. Hãy xem lại những câu sai, đặc biệt là status code, phân quyền và kiểm tra hợp đồng response."
-        };
-      }
-      if (score >= 16) {
-        return {
-          level: "Đang tiến bộ",
-          title: "Bạn đã có nền tảng cần thiết",
-          message: "Bạn hiểu luồng request–response nhưng cần luyện thêm các tình huống thực tế. Phần giải thích và ví dụ sẽ giúp bạn kết nối lý thuyết với cách test."
-        };
-      }
-      return {
-        level: "Cần ôn lại",
-        title: "Hãy củng cố từng phần một",
-        message: "Bắt đầu lại từ HTTP request/response, method và status code; sau đó học tiếp JSON, cookie, token và session. Đừng vội — hiểu chắc từng lớp sẽ dễ hơn."
-      };
+  function announce(text) {
+    el.sr.textContent = "";
+    window.setTimeout(() => { el.sr.textContent = text; }, 40);
+  }
+
+  function scrollIntoViewIfNeeded(node) {
+    const r = node.getBoundingClientRect();
+    if (r.top < 0 || r.top > window.innerHeight * 0.5) {
+      node.scrollIntoView({ block: "start", behavior: motionOK ? "smooth" : "auto" });
     }
+  }
 
-    function reviewWrong() {
-      const firstWrong = state.results.findIndex(result => result === false);
-      goToQuestion(firstWrong === -1 ? 0 : firstWrong);
+  const current = () => state.order[state.pos];
+  const isAnswered = (id) => state.answers[id] !== undefined;
+  const isCorrect = (id) => state.answers[id] === QUESTIONS[id].answer;
+  const letterOf = (id, oi) => LETTERS[state.opt[id].indexOf(oi)];
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+  function show(name) {
+    el.start.hidden = name !== "start";
+    el.quiz.hidden = name !== "quiz";
+    el.results.hidden = name !== "results";
+    window.scrollTo(0, 0);
+    const heading = { start: el.startTitle, quiz: el.qCount, results: el.resTitle }[name];
+    heading.setAttribute("tabindex", "-1");
+    heading.focus({ preventScroll: true });
+  }
+
+  /* ---------- start screen ---------- */
+  function renderStart() {
+    const topics = {};
+    for (const t of TOPICS) topics[t] = QUESTIONS.filter((q) => q.topic === t).length;
+    el.startCount.textContent = QUESTIONS.length;
+    el.startReq.innerHTML = highlightCode("GET /quiz HTTP/1.1\nHost: quiz.example.com\nAccept: application/json");
+    el.startRes.innerHTML = highlightCode(jsonResponse({
+      questions: QUESTIONS.length,
+      topics,
+      feedback: "after every answer",
+    }));
+  }
+
+  /* ---------- quiz session ---------- */
+  function startSession(ids) {
+    state.order = el.shuffleQ.checked ? shuffle(ids) : ids.slice();
+    state.opt = {};
+    for (const id of state.order) {
+      const base = QUESTIONS[id].options.map((_, i) => i);
+      state.opt[id] = el.shuffleA.checked ? shuffle(base) : base;
     }
-
-    function restartQuiz(askForConfirmation = true) {
-      const hasProgress = state.checked.some(Boolean) || state.selections.some(value => value !== null);
-      if (askForConfirmation && hasProgress && !window.confirm("Bạn muốn xóa toàn bộ kết quả và làm lại từ đầu?")) return;
-
-      state.current = 0;
-      state.selections.fill(null);
-      state.checked.fill(false);
-      state.results.fill(null);
-      state.showingResult = false;
-      renderQuestion(true);
-    }
-
-    function stripTags(html) {
-      const temporary = document.createElement("div");
-      temporary.innerHTML = html;
-      return temporary.textContent || temporary.innerText || "";
-    }
-
-    function handleKeyboard(event) {
-      if (event.altKey || event.ctrlKey || event.metaKey || state.showingResult) return;
-      const key = event.key.toUpperCase();
-
-      if (letters.includes(key) && !state.checked[state.current]) {
-        event.preventDefault();
-        selectOption(letters.indexOf(key));
-        const input = elements.optionsGroup.querySelector(`input[value="${letters.indexOf(key)}"]`);
-        if (input) input.focus();
-      }
-
-      if (event.key === "Enter") {
-        const activeTag = document.activeElement ? document.activeElement.tagName : "";
-        if (activeTag === "BUTTON") return;
-        if (state.checked[state.current]) {
-          event.preventDefault();
-          nextQuestion();
-        }
-      }
-    }
-
-    elements.nextButton.addEventListener("click", nextQuestion);
-    elements.previousButton.addEventListener("click", previousQuestion);
-    elements.resetButton.addEventListener("click", () => restartQuiz(true));
-    elements.restartButton.addEventListener("click", () => restartQuiz(false));
-    elements.reviewWrongButton.addEventListener("click", reviewWrong);
-    elements.reviewAllButton.addEventListener("click", () => goToQuestion(0));
-    document.addEventListener("keydown", handleKeyboard);
-
-    createQuestionMap();
+    state.answers = {};
+    state.pos = 0;
+    state.finished = false;
+    hideConfirm();
+    buildNav();
+    show("quiz");
     renderQuestion(false);
-  </script>
+    announce(`Question 1 of ${state.order.length}. ${plain(QUESTIONS[current()].q)}`);
+  }
+
+  function buildNav() {
+    el.nav.innerHTML = "";
+    state.order.forEach((_, p) => {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "qdot";
+      b.textContent = String(p + 1);
+      b.addEventListener("click", () => goTo(p));
+      li.appendChild(b);
+      el.nav.appendChild(li);
+    });
+  }
+
+  function renderQuestion(animate) {
+    const id = current();
+    const q = QUESTIONS[id];
+    const chosen = state.answers[id];
+    const answered = chosen !== undefined;
+    const locked = answered || state.finished;
+
+    el.qCount.textContent = `Question ${state.pos + 1} of ${state.order.length}`;
+    el.qTopic.textContent = q.topic;
+    el.qText.innerHTML = inline(q.q);
+    if (q.code) {
+      el.qCodeInner.innerHTML = highlightCode(q.code);
+      el.qCode.hidden = false;
+    } else {
+      el.qCodeInner.textContent = "";
+      el.qCode.hidden = true;
+    }
+
+    el.options.innerHTML = "";
+    state.opt[id].forEach((oi, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "option";
+      b.dataset.oi = String(oi);
+      let note = "";
+      if (locked) {
+        b.disabled = true;
+        if (oi === q.answer) {
+          b.classList.add("is-correct");
+          note = chosen === oi ? ", your answer, correct" : ", correct answer";
+        } else if (chosen === oi) {
+          b.classList.add("is-wrong");
+          note = ", your answer, incorrect";
+        } else {
+          b.classList.add("is-dim");
+        }
+      } else {
+        b.addEventListener("click", () => choose(id, oi));
+      }
+      b.innerHTML =
+        `<span class="option__key" aria-hidden="true">${LETTERS[i]}</span>` +
+        `<span class="option__text"><span class="visually-hidden">${LETTERS[i]}: </span>${inline(q.options[oi])}` +
+        (note ? `<span class="visually-hidden">${note}</span>` : "") + `</span>` +
+        `<span class="option__mark" aria-hidden="true"></span>`;
+      el.options.appendChild(b);
+    });
+
+    renderResponse(id, animate);
+    renderProgress();
+    renderNav();
+  }
+
+  function renderResponse(id, animate) {
+    const q = QUESTIONS[id];
+    const chosen = state.answers[id];
+    const status = (kind, code) =>
+      `<p class="status status--${kind}"><span class="status__proto">HTTP/1.1</span> <span class="status__code">${code}</span></p>`;
+    let html;
+
+    if (chosen === undefined && !state.finished) {
+      html = status("idle", "···") +
+        `<p class="empty">Choose an answer to get a response: whether it’s correct, and why.</p>`;
+    } else {
+      const right = letterOf(id, q.answer);
+      let verdict;
+      if (chosen === undefined) {
+        html = status("idle", "···");
+        verdict = `You didn’t answer this one. The correct answer is ${right}.`;
+      } else if (chosen === q.answer) {
+        html = status("ok", "200 OK");
+        verdict = `Correct. The answer is ${right}.`;
+      } else {
+        html = status("bad", "400 Bad Request");
+        verdict = `Incorrect. You chose ${letterOf(id, chosen)}; the correct answer is ${right}.`;
+      }
+      html += `<p class="verdict">${verdict}</p><div class="explain">${block(q.explain)}</div>`;
+    }
+
+    el.responseBody.innerHTML = html;
+    el.responseBody.classList.remove("reveal");
+    if (animate && motionOK) {
+      void el.responseBody.offsetWidth; // restart the animation
+      el.responseBody.classList.add("reveal");
+    }
+  }
+
+  function renderProgress() {
+    const total = state.order.length;
+    let answered = 0, ok = 0;
+    for (const id of state.order) {
+      if (isAnswered(id)) { answered++; if (isCorrect(id)) ok++; }
+    }
+    el.fill.style.width = `${total ? (answered / total) * 100 : 0}%`;
+    el.progress.setAttribute("aria-valuemax", String(total));
+    el.progress.setAttribute("aria-valuenow", String(answered));
+    el.tAnswered.textContent = answered;
+    el.tTotal.textContent = total;
+    el.tOk.textContent = ok;
+    el.tBad.textContent = answered - ok;
+  }
+
+  function renderNav() {
+    const dots = el.nav.querySelectorAll(".qdot");
+    state.order.forEach((id, p) => {
+      const d = dots[p];
+      const a = isAnswered(id);
+      const c = a && isCorrect(id);
+      d.classList.toggle("is-correct", c);
+      d.classList.toggle("is-wrong", a && !c);
+      d.classList.toggle("is-skipped", !a && state.finished);
+      d.classList.toggle("is-current", p === state.pos);
+      d.setAttribute("aria-label", `Question ${p + 1}, ${a ? (c ? "correct" : "incorrect") : "not answered"}`);
+      if (p === state.pos) d.setAttribute("aria-current", "step");
+      else d.removeAttribute("aria-current");
+    });
+    const list = el.nav;
+    const cur = dots[state.pos];
+    if (cur && list.scrollWidth > list.clientWidth + 1) {
+      const lr = list.getBoundingClientRect(), cr = cur.getBoundingClientRect();
+      let delta = 0;
+      if (cr.left < lr.left + 8) delta = cr.left - lr.left - 8;
+      else if (cr.right > lr.right - 8) delta = cr.right - lr.right + 8;
+      if (delta) list.scrollBy({ left: delta, behavior: motionOK ? "smooth" : "auto" });
+    }
+    const last = state.pos === state.order.length - 1;
+    el.btnPrev.disabled = state.pos === 0;
+    el.btnNext.textContent = last ? (state.finished ? "Back to results" : "Finish quiz") : "Next question";
+    el.btnFinish.hidden = state.finished;
+    el.btnToResults.hidden = !state.finished;
+  }
+
+  function choose(id, oi) {
+    if (state.finished || isAnswered(id)) return;
+    state.answers[id] = oi;
+    renderQuestion(true);
+    el.response.focus({ preventScroll: true });
+    scrollIntoViewIfNeeded(el.response);
+    announce(oi === QUESTIONS[id].answer
+      ? "Correct."
+      : `Incorrect. The correct answer is ${letterOf(id, QUESTIONS[id].answer)}.`);
+  }
+
+  function goTo(p) {
+    if (p < 0 || p >= state.order.length) return;
+    hideConfirm();
+    state.pos = p;
+    renderQuestion(false);
+    scrollIntoViewIfNeeded(el.console);
+    announce(`Question ${p + 1} of ${state.order.length}. ${plain(QUESTIONS[current()].q)}`);
+  }
+
+  function next() {
+    if (state.pos < state.order.length - 1) goTo(state.pos + 1);
+    else if (state.finished) show("results");
+    else requestFinish();
+  }
+
+  function prev() {
+    if (state.pos > 0) goTo(state.pos - 1);
+  }
+
+  function requestFinish() {
+    const open = [];
+    state.order.forEach((id, p) => { if (!isAnswered(id)) open.push(p); });
+    if (!open.length) { finish(); return; }
+    el.confirmText.textContent = `${plural(open.length, "question is", "questions are")} still unanswered. Finish anyway?`;
+    el.confirmGoto.textContent = `Go to question ${open[0] + 1}`;
+    el.confirmGoto.dataset.pos = String(open[0]);
+    el.confirm.hidden = false;
+    el.confirm.scrollIntoView({ block: "nearest", behavior: motionOK ? "smooth" : "auto" });
+    el.confirmFinish.focus({ preventScroll: true });
+  }
+
+  function hideConfirm() {
+    el.confirm.hidden = true;
+  }
+
+  function finish() {
+    hideConfirm();
+    state.finished = true;
+    renderResults();
+    show("results");
+  }
+
+  /* ---------- results ---------- */
+  function message(pct) {
+    if (pct === 100) return "Every answer was right. You have a solid grasp of how REST APIs and HTTP work.";
+    if (pct >= 80) return "Strong result. Read the explanations for the questions you missed, then retry them to lock in the details.";
+    if (pct >= 50) return "A good foundation. Work through the missed questions and their explanations, then retry them.";
+    return "Keep practicing. Open each missed question, read why the correct answer is right, then retry the ones you missed.";
+  }
+
+  function renderResults() {
+    const total = state.order.length;
+    const perTopic = new Map();
+    const missed = [];
+    let ok = 0, bad = 0;
+
+    state.order.forEach((id, p) => {
+      const topic = QUESTIONS[id].topic;
+      const t = perTopic.get(topic) || { ok: 0, total: 0 };
+      t.total++;
+      if (!isAnswered(id)) missed.push({ id, p, kind: "skip" });
+      else if (isCorrect(id)) { ok++; t.ok++; }
+      else { bad++; missed.push({ id, p, kind: "bad" }); }
+      perTopic.set(topic, t);
+    });
+    missed.sort((a, b) => a.p - b.p);
+    state.missed = missed.map((m) => m.id);
+
+    const pct = total ? Math.round((ok / total) * 100) : 0;
+    el.resTitle.textContent = `You answered ${ok} of ${total} correctly`;
+    el.resMsg.textContent = message(pct);
+
+    el.resReq.innerHTML = highlightCode("GET /quiz/results HTTP/1.1\nHost: quiz.example.com\nAccept: application/json");
+    el.resRes.innerHTML = highlightCode(jsonResponse({
+      questions: total,
+      correct: ok,
+      incorrect: bad,
+      unanswered: total - ok - bad,
+      score: `${pct}%`,
+    }));
+
+    el.resTopics.innerHTML = "";
+    for (const topic of TOPICS) {
+      const t = perTopic.get(topic);
+      if (!t) continue;
+      const li = document.createElement("li");
+      li.innerHTML =
+        `<div class="topic__row"><span class="topic__name">${escapeHTML(topic)}</span>` +
+        `<span class="topic__score">${t.ok} of ${t.total}</span></div>` +
+        `<div class="bar" aria-hidden="true"><div class="bar__fill" style="width:${(t.ok / t.total) * 100}%"></div></div>`;
+      el.resTopics.appendChild(li);
+    }
+
+    el.resMissed.innerHTML = "";
+    for (const m of missed) {
+      const text = plain(QUESTIONS[m.id].q);
+      const short = text.length > 120 ? `${text.slice(0, 118).replace(/\s+\S*$/, "").replace(/[\s,.;:]+$/, "")}…` : text;
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "missed__item";
+      b.innerHTML =
+        `<span class="missed__num">${m.p + 1}</span>` +
+        `<span class="missed__q">${escapeHTML(short)}</span>` +
+        (m.kind === "bad"
+          ? `<span class="pill pill--bad">Incorrect</span>`
+          : `<span class="pill pill--skip">Not answered</span>`);
+      b.addEventListener("click", () => review(m.p));
+      li.appendChild(b);
+      el.resMissed.appendChild(li);
+    }
+    el.resNone.hidden = missed.length > 0;
+    el.resMissed.hidden = missed.length === 0;
+    el.btnRetry.hidden = missed.length === 0;
+    el.btnRetry.textContent = `Retry ${plural(missed.length, "missed question", "missed questions")}`;
+  }
+
+  function review(p) {
+    show("quiz");
+    state.pos = p;
+    renderQuestion(false);
+    announce(`Reviewing question ${p + 1} of ${state.order.length}.`);
+  }
+
+  /* ---------- events ---------- */
+  el.btnStart.addEventListener("click", () => startSession(QUESTIONS.map((_, i) => i)));
+  el.btnPrev.addEventListener("click", prev);
+  el.btnNext.addEventListener("click", next);
+  el.btnFinish.addEventListener("click", requestFinish);
+  el.btnToResults.addEventListener("click", () => show("results"));
+  el.confirmFinish.addEventListener("click", finish);
+  el.confirmGoto.addEventListener("click", () => goTo(Number(el.confirmGoto.dataset.pos)));
+  el.btnRetry.addEventListener("click", () => { if (state.missed.length) startSession(state.missed); });
+  el.btnReview.addEventListener("click", () => review(0));
+  el.btnRestart.addEventListener("click", () => show("start"));
+
+  document.addEventListener("keydown", (e) => {
+    if (el.quiz.hidden || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (e.key === "Escape") { hideConfirm(); return; }
+
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    let idx = -1;
+    if (/^[a-h]$/.test(key)) idx = key.charCodeAt(0) - 97;
+    else if (/^[1-8]$/.test(key)) idx = Number(key) - 1;
+    if (idx >= 0) {
+      const id = current();
+      const oi = state.opt[id][idx];
+      if (oi !== undefined && !state.finished && !isAnswered(id)) {
+        e.preventDefault();
+        choose(id, oi);
+      }
+      return;
+    }
+    if (key === "ArrowRight") { e.preventDefault(); next(); }
+    else if (key === "ArrowLeft") { e.preventDefault(); prev(); }
+    else if (key === "Enter" && tag !== "BUTTON" && tag !== "A") { e.preventDefault(); next(); }
+  });
+
+  renderStart();
+})();
+</script>
 </body>
 </html>
