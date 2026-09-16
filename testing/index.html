@@ -1077,7 +1077,7 @@
 
       <section class="panel shortcuts">
         <p>Phím tắt</p>
-        <div><kbd>A</kbd>–<kbd>D</kbd> chọn đáp án · <kbd>Enter</kbd> kiểm tra / tiếp tục</div>
+        <div><kbd>A</kbd>–<kbd>D</kbd> chọn và chấm · <kbd>Enter</kbd> sang câu tiếp</div>
       </section>
 
       <button class="reset-button" id="resetButton" type="button">Làm lại từ đầu</button>
@@ -1126,7 +1126,6 @@
           <div class="actions">
             <div class="action-group">
               <button class="button secondary" id="previousButton" type="button">Câu trước</button>
-              <button class="button primary" id="checkButton" type="button" disabled>Kiểm tra đáp án</button>
               <button class="button primary" id="nextButton" type="button" hidden>Câu tiếp theo</button>
             </div>
           </div>
@@ -1576,7 +1575,6 @@
       topicBadge: document.getElementById("topicBadge"),
       endpointNumber: document.getElementById("endpointNumber"),
       optionsGroup: document.getElementById("optionsGroup"),
-      checkButton: document.getElementById("checkButton"),
       nextButton: document.getElementById("nextButton"),
       previousButton: document.getElementById("previousButton"),
       feedbackPanel: document.getElementById("feedbackPanel"),
@@ -1666,8 +1664,6 @@
       });
 
       elements.previousButton.disabled = state.current === 0;
-      elements.checkButton.hidden = isChecked;
-      elements.checkButton.disabled = selected === null;
       elements.nextButton.hidden = !isChecked;
       elements.nextButton.textContent = state.current === questions.length - 1 ? "Xem kết quả" : "Câu tiếp theo";
 
@@ -1687,8 +1683,7 @@
     function selectOption(optionIndex) {
       if (state.checked[state.current]) return;
       state.selections[state.current] = optionIndex;
-      elements.checkButton.disabled = false;
-      renderQuestion(false);
+      checkCurrentAnswer();
     }
 
     function checkCurrentAnswer() {
@@ -1852,17 +1847,13 @@
       if (event.key === "Enter") {
         const activeTag = document.activeElement ? document.activeElement.tagName : "";
         if (activeTag === "BUTTON") return;
-        if (!state.checked[state.current] && state.selections[state.current] !== null) {
-          event.preventDefault();
-          checkCurrentAnswer();
-        } else if (state.checked[state.current]) {
+        if (state.checked[state.current]) {
           event.preventDefault();
           nextQuestion();
         }
       }
     }
 
-    elements.checkButton.addEventListener("click", checkCurrentAnswer);
     elements.nextButton.addEventListener("click", nextQuestion);
     elements.previousButton.addEventListener("click", previousQuestion);
     elements.resetButton.addEventListener("click", () => restartQuiz(true));

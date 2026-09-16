@@ -1,3 +1,7 @@
+# REST API là gì: method (GET/POST/PUT/DELETE), status code, JSON
+# Cài đặt Postman, tạo Collection, Environment
+# Thực hành: Gọi thử 1 API công khai (vd: weather API), xem response
+
 - REST API (Web API) là cách để các ứng dụng giao tiếp, trao đổi dữ liệu với nhau qua internet (bằng giao thức http/https)
 
 - REST API = URL (endpoint) + HTTP Method + dữ liệu request/response
