@@ -92,7 +92,21 @@ def frequency_sort(arr: list) -> list:
 
     # return sum([[x]*y for x, y in ans], [])
 
-    return sorted(arr, key=lambda x: (-s[x], x))
+    # return sorted(arr, key=lambda x: (-s[x], x))
+
+    res = arr.copy()
+
+    for i in range(1, len(res)):
+        key = res[i]
+        j = i - 1
+
+        while j >= 0 and (s[res[j]] < s[key] or (s[res[j]] == s[key] and res[j] > key)):
+            res[j+1] = res[j]
+            j -= 1
+
+        res[j+1] = key
+
+    return res
 
 print(frequency_sort([1, 1, 2, 2, 2, 3]))
 assert frequency_sort([1, 1, 2, 2, 2, 3]) == [2, 2, 2, 1, 1, 3]

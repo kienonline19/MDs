@@ -1,0 +1,1878 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bài trắc nghiệm tương tác 30 câu về REST API, HTTP và API Testing, có chấm điểm và giải thích từng câu.">
+  <meta name="theme-color" content="#0b1830">
+  <title>API Testing Lab — Trắc nghiệm 30 câu</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1830'/%3E%3Cpath d='M18 20h28v8H26v8h20v8H18z' fill='%232dd4bf'/%3E%3Ccircle cx='46' cy='40' r='5' fill='%23fb923c'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #12213a;
+      --muted: #61708a;
+      --navy: #0b1830;
+      --navy-2: #132747;
+      --paper: #f5f8fc;
+      --card: #ffffff;
+      --line: #dce4ef;
+      --teal: #0f9f8f;
+      --teal-soft: #e5f8f5;
+      --orange: #f07b3f;
+      --orange-soft: #fff2e9;
+      --green: #16845b;
+      --green-soft: #e8f7ef;
+      --red: #c13d4b;
+      --red-soft: #fff0f1;
+      --blue: #2764d7;
+      --blue-soft: #eaf1ff;
+      --shadow: 0 18px 48px rgba(22, 42, 76, 0.12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 8% -10%, rgba(45, 212, 191, 0.16), transparent 28rem),
+        radial-gradient(circle at 96% 12%, rgba(240, 123, 63, 0.12), transparent 24rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    code,
+    .mono {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    code {
+      padding: 0.14em 0.38em;
+      border: 1px solid #d9e2ef;
+      border-radius: 6px;
+      background: #f1f5fa;
+      color: #1c416d;
+      font-size: 0.92em;
+      overflow-wrap: anywhere;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 10px;
+      left: 10px;
+      transform: translateY(-150%);
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: white;
+      color: var(--navy);
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 76px;
+      padding: 12px clamp(18px, 4vw, 54px);
+      border-bottom: 1px solid rgba(220, 228, 239, 0.82);
+      background: rgba(245, 248, 252, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--navy);
+      color: #5eead4;
+      box-shadow: 0 8px 18px rgba(11, 24, 48, 0.18);
+      font: 800 0.78rem/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy strong {
+      display: block;
+      overflow: hidden;
+      font-size: 1rem;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .brand-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .top-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .stat-pill strong {
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: minmax(240px, 280px) minmax(0, 860px);
+      align-items: start;
+      justify-content: center;
+      gap: clamp(24px, 4vw, 52px);
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      padding: clamp(24px, 4vw, 54px);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 104px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 30px rgba(26, 45, 78, 0.07);
+    }
+
+    .progress-panel {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .progress-ring {
+      --progress: 0deg;
+      position: relative;
+      display: grid;
+      width: 88px;
+      height: 88px;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--teal) var(--progress), #e3e9f1 0);
+    }
+
+    .progress-ring::before {
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: white;
+      content: "";
+    }
+
+    .progress-ring strong {
+      position: relative;
+      z-index: 1;
+      font-size: 1.08rem;
+    }
+
+    .progress-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .progress-copy strong {
+      display: block;
+      margin: 2px 0 0;
+      font-size: 1.36rem;
+      line-height: 1.2;
+    }
+
+    .progress-copy small {
+      color: var(--muted);
+    }
+
+    .question-map-wrap {
+      padding: 18px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 12px;
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .question-map {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .map-button {
+      display: grid;
+      min-width: 0;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f8fafc;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 800;
+      transition: 160ms ease;
+    }
+
+    .map-button:hover {
+      border-color: #9eb1ca;
+      color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .map-button.current {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: white;
+      box-shadow: 0 5px 12px rgba(11, 24, 48, 0.2);
+    }
+
+    .map-button.correct:not(.current) {
+      border-color: #9dd8bd;
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .map-button.wrong:not(.current) {
+      border-color: #f0afb6;
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .shortcuts {
+      padding: 16px 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .shortcuts p {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .shortcuts kbd {
+      display: inline-grid;
+      min-width: 25px;
+      min-height: 25px;
+      margin-right: 2px;
+      place-items: center;
+      border: 1px solid #cbd6e4;
+      border-bottom-width: 2px;
+      border-radius: 6px;
+      background: white;
+      color: var(--ink);
+      font: 700 0.72rem/1 system-ui, sans-serif;
+    }
+
+    .reset-button {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .reset-button:hover {
+      border-color: #f0afb6;
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .quiz-column {
+      min-width: 0;
+    }
+
+    .quiz-card {
+      overflow: hidden;
+      border: 1px solid rgba(213, 224, 237, 0.95);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .request-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 10px 22px;
+      background: var(--navy);
+      color: #dce8fa;
+      font-size: 0.78rem;
+      overflow: hidden;
+    }
+
+    .method-badge {
+      flex: 0 0 auto;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: #2dd4bf;
+      color: #062822;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .request-path {
+      overflow: hidden;
+      color: #b9cbe5;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-light {
+      width: 8px;
+      height: 8px;
+      margin-left: auto;
+      border-radius: 50%;
+      background: #fb923c;
+      box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.14);
+    }
+
+    .quiz-body {
+      padding: clamp(22px, 5vw, 46px);
+    }
+
+    .question-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .topic-badge {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: #315ca9;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .question-title {
+      margin: 0 0 26px;
+      max-width: 760px;
+      color: var(--ink);
+      font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      min-height: 64px;
+      padding: 11px 16px 11px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 15px;
+      background: #fbfcfe;
+      cursor: pointer;
+      transition: border-color 150ms ease, background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .option:hover {
+      border-color: #9db0c8;
+      background: white;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(31, 54, 89, 0.07);
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option-key {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid #cfdae8;
+      border-radius: 10px;
+      background: white;
+      color: #52647e;
+      font-weight: 900;
+    }
+
+    .option-text {
+      min-width: 0;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+    }
+
+    .option.selected {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      box-shadow: 0 0 0 3px rgba(39, 100, 215, 0.09);
+    }
+
+    .option.selected .option-key {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
+    .option.locked {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .option.correct {
+      border-color: #6dc99f;
+      background: var(--green-soft);
+    }
+
+    .option.correct .option-key {
+      border-color: var(--green);
+      background: var(--green);
+      color: white;
+    }
+
+    .option.incorrect {
+      border-color: #e38e98;
+      background: var(--red-soft);
+    }
+
+    .option.incorrect .option-key {
+      border-color: var(--red);
+      background: var(--red);
+      color: white;
+    }
+
+    .option:focus-within {
+      outline: 3px solid rgba(39, 100, 215, 0.2);
+      outline-offset: 2px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .button {
+      min-height: 48px;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 850;
+      transition: 150ms ease;
+    }
+
+    .button:focus-visible,
+    .map-button:focus-visible,
+    .reset-button:focus-visible {
+      outline: 3px solid rgba(39, 100, 215, 0.26);
+      outline-offset: 2px;
+    }
+
+    .button.primary {
+      background: var(--navy);
+      color: white;
+      box-shadow: 0 8px 18px rgba(11, 24, 48, 0.2);
+    }
+
+    .button.primary:hover:not(:disabled) {
+      background: var(--navy-2);
+      transform: translateY(-1px);
+    }
+
+    .button.primary:disabled {
+      background: #bac4d1;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .button.secondary {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+
+    .button.secondary:hover:not(:disabled) {
+      border-color: #9db0c8;
+      background: #f8fafc;
+    }
+
+    .button.secondary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f9fbfd;
+      animation: reveal 260ms ease both;
+    }
+
+    .feedback.visible {
+      display: block;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feedback-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .feedback-icon {
+      display: grid;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: 900;
+    }
+
+    .feedback.correct-feedback .feedback-icon {
+      background: var(--green);
+    }
+
+    .feedback.wrong-feedback .feedback-icon {
+      background: var(--red);
+    }
+
+    .feedback-head strong {
+      display: block;
+      line-height: 1.25;
+    }
+
+    .feedback-head span {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .learning-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .learning-block {
+      min-width: 0;
+      padding: 20px;
+    }
+
+    .learning-block + .learning-block {
+      border-left: 1px solid var(--line);
+    }
+
+    .learning-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .learning-label::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--teal);
+      content: "";
+    }
+
+    .learning-block.example .learning-label::before {
+      background: var(--orange);
+    }
+
+    .learning-block p {
+      margin: 0;
+      color: #31415a;
+    }
+
+    .result-card {
+      display: none;
+      overflow: hidden;
+      border: 1px solid rgba(213, 224, 237, 0.95);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .result-card.visible {
+      display: block;
+      animation: reveal 300ms ease both;
+    }
+
+    .result-hero {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      align-items: center;
+      gap: clamp(24px, 5vw, 50px);
+      padding: clamp(28px, 6vw, 56px);
+      background:
+        linear-gradient(135deg, rgba(45, 212, 191, 0.12), transparent 42%),
+        var(--navy);
+      color: white;
+    }
+
+    .score-ring {
+      --score-progress: 0deg;
+      position: relative;
+      display: grid;
+      width: 170px;
+      height: 170px;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(#2dd4bf var(--score-progress), rgba(255, 255, 255, 0.13) 0);
+    }
+
+    .score-ring::before {
+      position: absolute;
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      background: var(--navy);
+      content: "";
+    }
+
+    .score-value {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .score-value strong {
+      display: block;
+      font-size: 2.6rem;
+      line-height: 1;
+    }
+
+    .score-value span {
+      color: #a9bdd9;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .result-copy .eyebrow {
+      color: #5eead4;
+    }
+
+    .result-copy h2 {
+      margin: 6px 0 10px;
+      font-size: clamp(1.65rem, 3vw, 2.3rem);
+      line-height: 1.2;
+    }
+
+    .result-copy p {
+      max-width: 560px;
+      margin: 0;
+      color: #c5d4e8;
+    }
+
+    .result-details {
+      padding: clamp(24px, 5vw, 42px);
+    }
+
+    .result-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .metric {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfcfe;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 750;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.45rem;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .noscript {
+      max-width: 760px;
+      margin: 24px auto;
+      padding: 18px;
+      border: 1px solid #e38e98;
+      border-radius: 12px;
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        padding-top: 24px;
+      }
+
+      .sidebar {
+        position: static;
+        grid-template-columns: minmax(210px, 0.8fr) minmax(280px, 1.2fr);
+      }
+
+      .shortcuts,
+      .reset-button {
+        display: none;
+      }
+
+      .question-map-wrap {
+        padding: 15px;
+      }
+
+      .question-map {
+        grid-template-columns: repeat(10, 1fr);
+        gap: 5px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar {
+        min-height: 68px;
+        padding: 10px 16px;
+      }
+
+      .brand-copy span,
+      .stat-pill:first-child {
+        display: none;
+      }
+
+      .stat-pill {
+        padding: 7px 10px;
+      }
+
+      .app-shell {
+        gap: 18px;
+        padding: 18px 14px 32px;
+      }
+
+      .sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-panel {
+        grid-template-columns: 70px 1fr;
+        padding: 14px 16px;
+      }
+
+      .progress-ring {
+        width: 64px;
+        height: 64px;
+      }
+
+      .progress-ring::before {
+        width: 50px;
+        height: 50px;
+      }
+
+      .progress-ring strong {
+        font-size: 0.9rem;
+      }
+
+      .progress-copy strong {
+        font-size: 1.12rem;
+      }
+
+      .question-map-wrap {
+        display: none;
+      }
+
+      .request-strip {
+        padding-inline: 16px;
+      }
+
+      .quiz-body {
+        padding: 22px 17px 20px;
+      }
+
+      .option {
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 10px;
+        padding-right: 12px;
+      }
+
+      .option-key {
+        width: 34px;
+        height: 34px;
+      }
+
+      .actions {
+        align-items: stretch;
+      }
+
+      .action-group {
+        display: grid;
+        grid-template-columns: 1fr 1.25fr;
+        width: 100%;
+        margin: 0;
+      }
+
+      .button {
+        padding-inline: 12px;
+      }
+
+      .learning-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .learning-block + .learning-block {
+        border-top: 1px solid var(--line);
+        border-left: 0;
+      }
+
+      .result-hero {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .score-ring {
+        width: 150px;
+        height: 150px;
+      }
+
+      .score-ring::before {
+        width: 120px;
+        height: 120px;
+      }
+
+      .result-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .result-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .sidebar,
+      .actions {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .app-shell {
+        display: block;
+        padding: 0;
+      }
+
+      .quiz-card,
+      .result-card {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#quiz">Đi tới câu hỏi</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">API</div>
+      <div class="brand-copy">
+        <strong>API Testing Lab</strong>
+        <span>30 câu thực hành nền tảng</span>
+      </div>
+    </div>
+    <div class="top-stats" aria-label="Thống kê bài làm">
+      <div class="stat-pill"><span>Đã làm</span><strong id="headerAnswered">0/30</strong></div>
+      <div class="stat-pill"><span>Điểm</span><strong id="headerScore">0</strong></div>
+    </div>
+  </header>
+
+  <noscript>
+    <div class="noscript">Trang trắc nghiệm cần JavaScript để chấm đáp án và hiển thị giải thích. Hãy bật JavaScript rồi tải lại trang.</div>
+  </noscript>
+
+  <main class="app-shell" id="quiz">
+    <aside class="sidebar" aria-label="Tiến độ bài trắc nghiệm">
+      <section class="panel progress-panel">
+        <div class="progress-ring" id="progressRing" aria-hidden="true">
+          <strong id="progressPercent">0%</strong>
+        </div>
+        <div class="progress-copy">
+          <span>Tiến độ</span>
+          <strong><span id="answeredCount">0</span> / 30 câu</strong>
+          <small id="remainingText">Còn 30 câu chưa chấm</small>
+        </div>
+      </section>
+
+      <section class="panel question-map-wrap">
+        <h2 class="panel-title">Danh sách câu <span>Chọn để xem lại</span></h2>
+        <nav class="question-map" id="questionMap" aria-label="Chọn câu hỏi"></nav>
+      </section>
+
+      <section class="panel shortcuts">
+        <p>Phím tắt</p>
+        <div><kbd>A</kbd>–<kbd>D</kbd> chọn đáp án · <kbd>Enter</kbd> kiểm tra / tiếp tục</div>
+      </section>
+
+      <button class="reset-button" id="resetButton" type="button">Làm lại từ đầu</button>
+    </aside>
+
+    <section class="quiz-column" aria-live="polite">
+      <article class="quiz-card" id="questionCard">
+        <div class="request-strip" aria-hidden="true">
+          <span class="method-badge">GET</span>
+          <span class="request-path mono">/learning/api-testing/questions/<span id="endpointNumber">1</span></span>
+          <span class="status-light"></span>
+        </div>
+
+        <div class="quiz-body">
+          <div class="question-meta">
+            <span class="eyebrow" id="questionNumber">Câu 1 / 30</span>
+            <span class="topic-badge" id="topicBadge">REST API</span>
+          </div>
+
+          <h1 class="question-title" id="questionTitle" tabindex="-1"></h1>
+
+          <fieldset class="options" id="optionsGroup">
+            <legend class="sr-only">Chọn một đáp án</legend>
+          </fieldset>
+
+          <div class="feedback" id="feedbackPanel" role="status">
+            <div class="feedback-head">
+              <div class="feedback-icon" id="feedbackIcon" aria-hidden="true"></div>
+              <div>
+                <strong id="feedbackTitle"></strong>
+                <span id="correctAnswerText"></span>
+              </div>
+            </div>
+            <div class="learning-grid">
+              <section class="learning-block">
+                <span class="learning-label">Giải thích dễ hiểu</span>
+                <p id="explanationText"></p>
+              </section>
+              <section class="learning-block example">
+                <span class="learning-label">Ví dụ thực tế</span>
+                <p id="exampleText"></p>
+              </section>
+            </div>
+          </div>
+
+          <div class="actions">
+            <div class="action-group">
+              <button class="button secondary" id="previousButton" type="button">Câu trước</button>
+              <button class="button primary" id="checkButton" type="button" disabled>Kiểm tra đáp án</button>
+              <button class="button primary" id="nextButton" type="button" hidden>Câu tiếp theo</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="result-card" id="resultCard">
+        <div class="result-hero">
+          <div class="score-ring" id="scoreRing" aria-hidden="true">
+            <div class="score-value">
+              <strong id="finalPercent">0%</strong>
+              <span id="finalFraction">0 / 30 đúng</span>
+            </div>
+          </div>
+          <div class="result-copy">
+            <span class="eyebrow">Hoàn thành bài trắc nghiệm</span>
+            <h2 id="resultTitle">Kết quả của bạn</h2>
+            <p id="resultMessage"></p>
+          </div>
+        </div>
+        <div class="result-details">
+          <div class="result-metrics">
+            <div class="metric"><span>Trả lời đúng</span><strong id="correctMetric">0</strong></div>
+            <div class="metric"><span>Trả lời sai</span><strong id="wrongMetric">0</strong></div>
+            <div class="metric"><span>Mức độ</span><strong id="levelMetric">—</strong></div>
+          </div>
+          <div class="result-actions">
+            <button class="button primary" id="reviewWrongButton" type="button">Xem lại câu sai</button>
+            <button class="button secondary" id="reviewAllButton" type="button">Xem lại từ câu 1</button>
+            <button class="button secondary" id="restartButton" type="button">Làm lại bài</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    const questions = [
+      {
+        topic: "REST API",
+        question: "Mô tả nào chính xác nhất về REST API?",
+        options: [
+          "Một cơ sở dữ liệu chuyên lưu nội dung JSON",
+          "Một phong cách thiết kế Web API, thường sử dụng HTTP/HTTPS để thao tác với tài nguyên",
+          "Một ngôn ngữ lập trình dành riêng cho backend",
+          "Một công cụ chỉ dùng để kiểm tra giao diện website"
+        ],
+        correct: 1,
+        explanation: "REST là một phong cách kiến trúc để thiết kế Web API. API thường biểu diễn dữ liệu thành các tài nguyên có URL riêng và dùng HTTP method để cho biết hành động cần thực hiện.",
+        example: "Ứng dụng bán hàng có tài nguyên <code>/products</code>. Client dùng <code>GET /products</code> để lấy sản phẩm và <code>POST /products</code> để tạo sản phẩm; REST không phải cơ sở dữ liệu hay ngôn ngữ lập trình."
+      },
+      {
+        topic: "Endpoint",
+        question: "Trong một REST API, endpoint <code>/users/15</code> thường biểu diễn điều gì?",
+        options: [
+          "Phương thức HTTP thứ 15",
+          "Header của người dùng",
+          "Tài nguyên người dùng có mã định danh 15",
+          "Status code của response"
+        ],
+        correct: 2,
+        explanation: "URL hoặc path xác định tài nguyên mà client muốn thao tác. Phần <code>15</code> thường là mã định danh của một người dùng cụ thể trong tập hợp <code>users</code>.",
+        example: "Khi mở trang hồ sơ, frontend có thể gọi <code>GET /users/15</code>. Server tìm người dùng ID 15 rồi trả JSON như <code>{&quot;id&quot;:15,&quot;name&quot;:&quot;Kien&quot;}</code>."
+      },
+      {
+        topic: "HTTP Method",
+        question: "Thành phần nào cho server biết client muốn lấy, tạo, cập nhật hay xóa tài nguyên?",
+        options: [
+          "HTTP method",
+          "Status code",
+          "Response body",
+          "Cookie expiration"
+        ],
+        correct: 0,
+        explanation: "HTTP method mô tả ý định của request: <code>GET</code> để đọc, <code>POST</code> để tạo hoặc thực hiện hành động, <code>PUT/PATCH</code> để cập nhật và <code>DELETE</code> để xóa.",
+        example: "Cùng endpoint <code>/orders/20</code>, <code>GET</code> lấy đơn hàng, <code>PATCH</code> sửa trạng thái và <code>DELETE</code> yêu cầu xóa. URL giống nhau nhưng method làm hành động khác nhau."
+      },
+      {
+        topic: "GET",
+        question: "Bạn cần lấy thông tin người dùng có ID 15 mà không thay đổi dữ liệu. Request nào phù hợp nhất?",
+        options: [
+          "<code>POST /users/15</code>",
+          "<code>DELETE /users/15</code>",
+          "<code>PATCH /users/15</code>",
+          "<code>GET /users/15</code>"
+        ],
+        correct: 3,
+        explanation: "<code>GET</code> dùng để đọc dữ liệu. Một GET request đúng thiết kế không nên tạo, sửa hay xóa trạng thái của tài nguyên trên server.",
+        example: "Mỗi lần người dùng mở trang cá nhân, ứng dụng gọi <code>GET /users/15</code>. Dù gọi lại nhiều lần, thông tin tài khoản không bị thay đổi chỉ vì request này."
+      },
+      {
+        topic: "POST",
+        question: "Bạn cần tạo một người dùng mới. Request nào phù hợp nhất theo cách thiết kế REST thông dụng?",
+        options: [
+          "<code>GET /users</code>",
+          "<code>POST /users</code>",
+          "<code>PUT /users</code>",
+          "<code>DELETE /users</code>"
+        ],
+        correct: 1,
+        explanation: "<code>POST</code> thường gửi dữ liệu của tài nguyên mới đến endpoint đại diện cho một tập hợp. Server tạo ID và trả thông tin tài nguyên vừa tạo.",
+        example: "Form đăng ký gửi <code>POST /users</code> với body <code>{&quot;name&quot;:&quot;Kien&quot;,&quot;email&quot;:&quot;kien@example.com&quot;}</code>. Server có thể trả <code>201 Created</code> cùng ID mới."
+      },
+      {
+        topic: "PUT & PATCH",
+        question: "Điểm khác nhau chính giữa <code>PUT</code> và <code>PATCH</code> là gì?",
+        options: [
+          "<code>PUT</code> chỉ lấy dữ liệu, còn <code>PATCH</code> xóa dữ liệu",
+          "<code>PUT</code> chỉ dùng cho JSON, còn <code>PATCH</code> chỉ dùng cho HTML",
+          "<code>PUT</code> thường thay thế toàn bộ tài nguyên, còn <code>PATCH</code> cập nhật một phần",
+          "Hai method luôn có ý nghĩa hoàn toàn giống nhau"
+        ],
+        correct: 2,
+        explanation: "<code>PUT</code> thường gửi biểu diễn đầy đủ để thay thế tài nguyên, còn <code>PATCH</code> chỉ gửi các trường cần đổi. Khi test phải dựa thêm vào hợp đồng cụ thể của API.",
+        example: "Hồ sơ có tên, email và địa chỉ. Đổi riêng địa chỉ có thể dùng <code>PATCH /users/15</code> với body chỉ chứa <code>address</code>; dùng PUT thường phải gửi lại cả tên và email."
+      },
+      {
+        topic: "DELETE",
+        question: "Request nào phù hợp nhất để xóa người dùng có ID 15?",
+        options: [
+          "<code>DELETE /users/15</code>",
+          "<code>POST /users/15/delete-all</code>",
+          "<code>GET /users/15/delete</code>",
+          "<code>PATCH /users</code>"
+        ],
+        correct: 0,
+        explanation: "<code>DELETE</code> là method tiêu chuẩn để yêu cầu xóa tài nguyên được xác định bởi URL. API có thể xóa thật hoặc đánh dấu đã xóa tùy quy tắc nghiệp vụ.",
+        example: "Quản trị viên xóa tài khoản ID 15 bằng <code>DELETE /users/15</code>. Sau đó tester gọi lại <code>GET /users/15</code> và mong đợi <code>404</code> nếu tài nguyên không còn truy cập được."
+      },
+      {
+        topic: "Request Header",
+        question: "Trong HTTP request, header <code>Content-Type: application/json</code> cho biết điều gì?",
+        options: [
+          "Client chỉ chấp nhận response có status code 200",
+          "Request phải được gửi bằng HTTPS",
+          "Server đang sử dụng session",
+          "Dữ liệu trong request body có định dạng JSON"
+        ],
+        correct: 3,
+        explanation: "<code>Content-Type</code> mô tả định dạng của nội dung đang được gửi trong body. Server dựa vào đó để chọn cách đọc và phân tích dữ liệu.",
+        example: "Khi gửi body <code>{&quot;name&quot;:&quot;Kien&quot;}</code>, client đặt <code>Content-Type: application/json</code>. Nếu lại khai báo form data, server có thể không parse được và trả lỗi."
+      },
+      {
+        topic: "Authorization",
+        question: "Header nào thường được dùng để gửi access token tới API?",
+        options: [
+          "<code>Content-Length: abc123</code>",
+          "<code>Authorization: Bearer abc123</code>",
+          "<code>Host: Bearer abc123</code>",
+          "<code>Accept: token/abc123</code>"
+        ],
+        correct: 1,
+        explanation: "Access token thường được đặt trong header <code>Authorization</code> theo lược đồ <code>Bearer</code>. Server đọc token để xác thực client và kiểm tra quyền.",
+        example: "Ứng dụng gọi <code>GET /profile</code> kèm <code>Authorization: Bearer eyJ...</code>. Không gửi token hoặc gửi token hết hạn thường khiến API trả <code>401 Unauthorized</code>."
+      },
+      {
+        topic: "Query Parameter",
+        question: "Với request <code>GET /products?category=coffee&amp;page=2</code>, phần <code>category=coffee&amp;page=2</code> được gọi là gì?",
+        options: [
+          "Query parameters",
+          "Response headers",
+          "Request body",
+          "Status message"
+        ],
+        correct: 0,
+        explanation: "Phần sau dấu <code>?</code> là query string, gồm các cặp key–value. Nó thường dùng để lọc, sắp xếp, tìm kiếm hoặc phân trang mà không đổi endpoint chính.",
+        example: "Trang danh sách cà phê thứ hai gọi <code>GET /products?category=coffee&amp;page=2</code>. Tester nên kiểm tra kết quả chỉ chứa đúng nhóm coffee và metadata cho đúng trang 2."
+      },
+      {
+        topic: "JSON",
+        question: "Đâu là JSON hợp lệ?",
+        options: [
+          "<code>{name: &quot;Kien&quot;, age: 25}</code>",
+          "<code>{'name': 'Kien', 'age': 25}</code>",
+          "<code>{&quot;name&quot;: &quot;Kien&quot;, &quot;age&quot;: 25}</code>",
+          "<code>{&quot;name&quot;: &quot;Kien&quot;, &quot;age&quot;: 25,}</code>"
+        ],
+        correct: 2,
+        explanation: "Trong JSON, key và giá trị chuỗi phải dùng dấu ngoặc kép. JSON cũng không cho phép dấu phẩy thừa sau phần tử cuối cùng.",
+        example: "Nếu tester gửi body có key không đặt trong ngoặc kép hoặc dùng dấu nháy đơn, JSON parser của server có thể từ chối request trước khi logic tạo người dùng được chạy."
+      },
+      {
+        topic: "JSON Type",
+        question: "Giá trị nào không được JSON hỗ trợ trực tiếp?",
+        options: [
+          "<code>null</code>",
+          "<code>undefined</code>",
+          "<code>false</code>",
+          "<code>25.5</code>"
+        ],
+        correct: 1,
+        explanation: "JSON hỗ trợ string, number, object, array, boolean và <code>null</code>. <code>undefined</code> là khái niệm của JavaScript chứ không phải một giá trị hợp lệ trong JSON.",
+        example: "Trong JavaScript, thuộc tính có giá trị <code>undefined</code> có thể bị bỏ qua khi dùng <code>JSON.stringify</code>. Nếu muốn diễn tả “chưa có giá trị” rõ ràng với API, thường dùng <code>null</code> theo đặc tả."
+      },
+      {
+        topic: "Status Code",
+        question: "API trả về <code>HTTP/1.1 200 OK</code>. Điều này thường có nghĩa gì?",
+        options: [
+          "Request đã được xử lý thành công",
+          "Một tài nguyên chắc chắn vừa được tạo",
+          "Client chưa được xác thực",
+          "Server chắc chắn không trả response body"
+        ],
+        correct: 0,
+        explanation: "<code>200 OK</code> báo request đã được xử lý thành công. Tuy nhiên tester vẫn phải kiểm tra body và nghiệp vụ vì status đúng chưa đảm bảo dữ liệu đúng.",
+        example: "<code>GET /users/15</code> trả 200 cùng hồ sơ người dùng. Nếu body lại chứa dữ liệu của user 16 thì test vẫn phải fail dù status code là 200."
+      },
+      {
+        topic: "201 Created",
+        question: "Sau khi <code>POST /users</code> tạo người dùng thành công, status code nào phù hợp nhất?",
+        options: [
+          "<code>204 No Content</code>",
+          "<code>400 Bad Request</code>",
+          "<code>404 Not Found</code>",
+          "<code>201 Created</code>"
+        ],
+        correct: 3,
+        explanation: "<code>201 Created</code> thể hiện server đã tạo một tài nguyên mới thành công. Response thường kèm dữ liệu tài nguyên và đôi khi có header <code>Location</code>.",
+        example: "Sau <code>POST /users</code>, API trả <code>201</code>, body có <code>id: 15</code> và <code>Location: /users/15</code>. Tester kiểm tra ID tồn tại và URL đó lấy được đúng user mới."
+      },
+      {
+        topic: "204 No Content",
+        question: "Một request được xử lý thành công nhưng server chủ ý không trả response body. Status code nào phù hợp nhất?",
+        options: [
+          "<code>201 Created</code>",
+          "<code>204 No Content</code>",
+          "<code>401 Unauthorized</code>",
+          "<code>500 Internal Server Error</code>"
+        ],
+        correct: 1,
+        explanation: "<code>204 No Content</code> cho biết thao tác thành công và response không có body. Client không nên cố parse JSON từ một response 204.",
+        example: "API xóa sản phẩm bằng <code>DELETE /products/20</code> rồi trả 204. Tester xác nhận body rỗng và gọi GET lại để kiểm tra sản phẩm không còn tồn tại."
+      },
+      {
+        topic: "400 Bad Request",
+        question: "Client gửi request thiếu trường bắt buộc và không đúng hợp đồng API. Trong các lựa chọn sau, status code nào phù hợp nhất?",
+        options: [
+          "<code>200 OK</code>",
+          "<code>403 Forbidden</code>",
+          "<code>400 Bad Request</code>",
+          "<code>500 Internal Server Error</code>"
+        ],
+        correct: 2,
+        explanation: "<code>400 Bad Request</code> thường báo dữ liệu request không hợp lệ. Một số API dùng <code>422</code> cho lỗi validation, vì vậy kết quả mong đợi phải theo tài liệu API.",
+        example: "Endpoint đăng ký yêu cầu email nhưng client chỉ gửi password. API có thể trả 400 cùng lỗi <code>email is required</code>; trả 500 sẽ sai vì đây là lỗi dữ liệu phía client."
+      },
+      {
+        topic: "401 Unauthorized",
+        question: "Client gọi một endpoint được bảo vệ nhưng không gửi token đăng nhập. Status code nào thường được mong đợi?",
+        options: [
+          "<code>401 Unauthorized</code>",
+          "<code>201 Created</code>",
+          "<code>404 Not Found</code>",
+          "<code>500 Internal Server Error</code>"
+        ],
+        correct: 0,
+        explanation: "<code>401 Unauthorized</code> thường có nghĩa client chưa cung cấp thông tin xác thực hợp lệ. Tên mã hơi dễ gây nhầm, nhưng trọng tâm là authentication.",
+        example: "Gọi <code>GET /profile</code> mà không có header Authorization phải bị từ chối với 401. Nếu API vẫn trả hồ sơ, đó có thể là lỗ hổng bảo mật nghiêm trọng."
+      },
+      {
+        topic: "403 Forbidden",
+        question: "Người dùng đã đăng nhập nhưng tài khoản thông thường cố truy cập chức năng chỉ dành cho quản trị viên. Status code nào phù hợp nhất?",
+        options: [
+          "<code>200 OK</code>",
+          "<code>400 Bad Request</code>",
+          "<code>401 Unauthorized</code>",
+          "<code>403 Forbidden</code>"
+        ],
+        correct: 3,
+        explanation: "<code>403 Forbidden</code> nghĩa là server đã nhận biết client nhưng client không có quyền thực hiện hành động. Đây là vấn đề authorization, không phải thiếu authentication.",
+        example: "Token của user thường gọi <code>DELETE /admin/users/15</code>. API nên trả 403; token admin có thể được phép. Tester cần thử cả hai vai trò để phát hiện lỗi phân quyền."
+      },
+      {
+        topic: "404 Not Found",
+        question: "Client gọi <code>/users/9999</code>, nhưng người dùng 9999 không tồn tại. Status code nào thường phù hợp nhất?",
+        options: [
+          "<code>201 Created</code>",
+          "<code>404 Not Found</code>",
+          "<code>401 Unauthorized</code>",
+          "<code>500 Internal Server Error</code>"
+        ],
+        correct: 1,
+        explanation: "<code>404 Not Found</code> cho biết server không tìm thấy tài nguyên tại URL được yêu cầu. Nó cũng có thể xuất hiện khi path của endpoint bị viết sai.",
+        example: "Tester gọi <code>GET /users/9999</code> bằng một ID chắc chắn không tồn tại. Response mong đợi là 404 và thông báo lỗi rõ ràng, không phải 200 với một object rỗng nếu đặc tả không nói vậy."
+      },
+      {
+        topic: "500 Server Error",
+        question: "API phát sinh lỗi không mong muốn khi xử lý request do lỗi phía server. Status code nào phù hợp nhất?",
+        options: [
+          "<code>204 No Content</code>",
+          "<code>400 Bad Request</code>",
+          "<code>500 Internal Server Error</code>",
+          "<code>403 Forbidden</code>"
+        ],
+        correct: 2,
+        explanation: "<code>500 Internal Server Error</code> biểu thị server gặp lỗi ngoài dự kiến khi xử lý request hợp lệ hoặc chưa xử lý lỗi đúng cách.",
+        example: "Database mất kết nối trong lúc API đọc đơn hàng và server không có cách xử lý phù hợp. API có thể trả 500; response không nên làm lộ stack trace, mật khẩu hay câu lệnh SQL."
+      },
+      {
+        topic: "Stateless",
+        question: "Phát biểu “HTTP là stateless” có nghĩa là gì?",
+        options: [
+          "Mỗi request độc lập và HTTP không tự ghi nhớ các request trước",
+          "HTTP luôn lưu toàn bộ lịch sử request trong cookie",
+          "Client chỉ được gửi một request trong mỗi phiên",
+          "Server không thể lưu bất kỳ dữ liệu nào"
+        ],
+        correct: 0,
+        explanation: "Bản thân HTTP không tự liên kết request hiện tại với request trước. Nếu ứng dụng muốn ghi nhớ đăng nhập hoặc giỏ hàng, nó phải bổ sung cookie, session hoặc token.",
+        example: "Sau khi đăng nhập, request <code>GET /cart</code> vẫn cần gửi session cookie hoặc token. Nếu không có dấu hiệu nhận diện này, server không tự biết request mới thuộc người vừa đăng nhập."
+      },
+      {
+        topic: "Session",
+        question: "Trong cơ chế đăng nhập bằng session, cách triển khai nào phổ biến nhất?",
+        options: [
+          "Trình duyệt lưu toàn bộ cơ sở dữ liệu người dùng trong cookie",
+          "Server lưu mật khẩu trong URL của mọi request",
+          "Server lưu dữ liệu session, còn trình duyệt giữ session ID trong cookie",
+          "Client gửi lại username và password trong mọi request"
+        ],
+        correct: 2,
+        explanation: "Server tạo một session chứa thông tin cần thiết rồi đưa session ID cho trình duyệt. Trình duyệt gửi lại ID; server dùng nó để tìm đúng phiên làm việc.",
+        example: "Sau login, server lưu <code>abc123 → user_id 15</code> trong Redis và gửi cookie <code>session_id=abc123</code>. Request tiếp theo mang cookie này nên server nhận ra user 15."
+      },
+      {
+        topic: "Cookie",
+        question: "Phát biểu nào chính xác nhất về cookie?",
+        options: [
+          "Cookie luôn là access token dạng JWT",
+          "Cookie là dữ liệu nhỏ được lưu ở trình duyệt và có thể tự động được gửi trong các request phù hợp",
+          "Cookie chỉ tồn tại ở server",
+          "Mọi cookie đều giúp server xác định chính xác danh tính người dùng"
+        ],
+        correct: 1,
+        explanation: "Cookie là dữ liệu nhỏ ở trình duyệt. Trình duyệt tự gửi cookie khi domain, path, thời hạn và các thuộc tính bảo mật phù hợp; cookie không nhất thiết dùng để đăng nhập.",
+        example: "Website có thể lưu <code>language=vi</code> để nhớ ngôn ngữ, hoặc lưu <code>session_id=abc123</code> để duy trì đăng nhập. Chỉ cookie thứ hai trong ví dụ này liên quan đến danh tính phiên."
+      },
+      {
+        topic: "Access Token",
+        question: "Vai trò chính của access token trong API là gì?",
+        options: [
+          "Chứng minh danh tính hoặc quyền truy cập của client",
+          "Thay thế URL của endpoint",
+          "Quy định định dạng JSON",
+          "Mã hóa toàn bộ cơ sở dữ liệu"
+        ],
+        correct: 0,
+        explanation: "Access token là bằng chứng mà client trình cho API. Server xác minh token còn hiệu lực và xem token có đủ phạm vi hoặc quyền để truy cập tài nguyên hay không.",
+        example: "Ứng dụng mobile nhận access token sau login rồi gửi token khi gọi API đơn hàng. Token hết hạn phải bị từ chối; client có thể dùng refresh token theo thiết kế để xin access token mới."
+      },
+      {
+        topic: "HTTPS",
+        question: "HTTPS chủ yếu bổ sung điều gì so với HTTP?",
+        options: [
+          "Tự động sửa mọi lỗi của API",
+          "Tự động cấp quyền quản trị viên cho client",
+          "Bắt buộc mọi response phải là JSON",
+          "Mã hóa và bảo vệ dữ liệu trên đường truyền bằng TLS"
+        ],
+        correct: 3,
+        explanation: "HTTPS dùng TLS để mã hóa dữ liệu khi truyền, bảo vệ tính toàn vẹn và hỗ trợ xác minh server. Nó không thay thế việc kiểm tra quyền hay validation trong ứng dụng.",
+        example: "Khi đăng nhập qua Wi-Fi công cộng, HTTPS giúp người nghe lén không đọc được password trên đường truyền. Nhưng API vẫn phải kiểm tra password đúng và user có quyền gì."
+      },
+      {
+        topic: "Positive Testing",
+        question: "Khi kiểm thử <code>POST /users</code> với dữ liệu hợp lệ, cách kiểm tra nào đầy đủ nhất?",
+        options: [
+          "Chỉ kiểm tra response trả về thật nhanh",
+          "Kiểm tra status code, headers, response body/schema và xác nhận tài nguyên được tạo đúng",
+          "Chỉ kiểm tra status code là 201",
+          "Chỉ kiểm tra response body có chứa tên người dùng"
+        ],
+        correct: 1,
+        explanation: "Một test tốt phải kiểm tra cả giao thức, hợp đồng dữ liệu và tác động nghiệp vụ. Chỉ status code đúng chưa chứng minh tài nguyên đã được lưu chính xác.",
+        example: "Sau khi POST user, tester kiểm tra 201, <code>Content-Type</code>, schema, email đúng và password không bị trả về. Sau đó gọi <code>GET /users/{id}</code> để xác nhận dữ liệu thực sự tồn tại."
+      },
+      {
+        topic: "Negative Testing",
+        question: "Bạn muốn kiểm tra validation của API tạo tài khoản. Test case nào phù hợp nhất?",
+        options: [
+          "Gửi request hợp lệ nhiều lần và chỉ nhìn thời gian phản hồi",
+          "Gọi endpoint lấy danh sách sản phẩm",
+          "Lần lượt bỏ từng trường bắt buộc, gửi dữ liệu sai định dạng và kiểm tra lỗi trả về",
+          "Chỉ kiểm tra màu sắc nút đăng ký trên giao diện"
+        ],
+        correct: 2,
+        explanation: "Negative testing cố ý gửi dữ liệu không hợp lệ để kiểm tra API từ chối an toàn và trả lỗi hữu ích. Nên tách từng trường hợp để biết chính xác quy tắc nào hỏng.",
+        example: "Với trường email, thử bỏ trống, thiếu ký tự <code>@</code>, quá dài và đã tồn tại. Mỗi request cần được so với status và error code đã nêu trong đặc tả."
+      },
+      {
+        topic: "Authorization Test",
+        question: "Cách kiểm tra phân quyền cho endpoint <code>DELETE /users/15</code> nào tốt nhất?",
+        options: [
+          "Thử không có token, token người dùng thường và token quản trị viên; đối chiếu kết quả với đặc tả",
+          "Chỉ thử bằng token quản trị viên vì trường hợp đó sẽ thành công",
+          "Đặt token trong URL để dễ quan sát",
+          "Chỉ kiểm tra response body mà bỏ qua status code"
+        ],
+        correct: 0,
+        explanation: "Kiểm thử phân quyền phải bao phủ nhiều trạng thái danh tính và vai trò. Mục tiêu là chứng minh người được phép có thể làm, còn người không được phép chắc chắn bị chặn.",
+        example: "Không token nên nhận 401, token user thường nên nhận 403 và token admin có thể nhận 204 theo đặc tả. Tester còn xác nhận user thường không bị xóa sau hai request bị từ chối."
+      },
+      {
+        topic: "Contract Testing",
+        question: "API trả <code>200 OK</code>, nhưng response body thiếu trường <code>id</code> bắt buộc theo đặc tả. Kết luận nào đúng?",
+        options: [
+          "Test vẫn pass vì status code 200 là đủ",
+          "Không thể kiểm tra response body trong API testing",
+          "Chỉ frontend mới cần quan tâm đến trường <code>id</code>",
+          "Test phải fail vì response không đúng hợp đồng dù status code thành công"
+        ],
+        correct: 3,
+        explanation: "API contract quy định không chỉ status mà còn cấu trúc, kiểu và trường dữ liệu. Thiếu trường bắt buộc có thể làm client lỗi nên test phải phát hiện.",
+        example: "Frontend dùng <code>id</code> để mở trang chi tiết. Nếu API chỉ trả tên dù status 200, nút “Xem hồ sơ” có thể tạo URL <code>/users/undefined</code>; contract test cần fail sớm."
+      },
+      {
+        topic: "Test Workflow",
+        question: "Thứ tự nào mô tả đúng nhất một quy trình API testing cơ bản?",
+        options: [
+          "Gửi request → đoán kết quả → bỏ qua đặc tả → kết thúc",
+          "Đọc đặc tả → chuẩn bị dữ liệu → gửi request → kiểm tra status, headers, body và tác động dữ liệu",
+          "Thiết kế giao diện → chọn màu → gửi request → kiểm tra ảnh",
+          "Gửi mọi method tới mọi URL và xem request nào không lỗi"
+        ],
+        correct: 1,
+        explanation: "Đặc tả cho biết đầu vào và kết quả mong đợi. Sau khi chuẩn bị dữ liệu, tester gửi request rồi so sánh toàn bộ response và trạng thái hệ thống với kỳ vọng.",
+        example: "Test tạo đơn hàng bắt đầu từ tài liệu endpoint, tạo sẵn sản phẩm và user, gửi POST, kiểm tra 201/schema/tổng tiền, rồi truy vấn database hoặc GET đơn hàng để xác nhận dữ liệu."
+      }
+    ];
+
+    const letters = ["A", "B", "C", "D"];
+    const state = {
+      current: 0,
+      selections: Array(questions.length).fill(null),
+      checked: Array(questions.length).fill(false),
+      results: Array(questions.length).fill(null),
+      showingResult: false
+    };
+
+    const elements = {
+      questionCard: document.getElementById("questionCard"),
+      resultCard: document.getElementById("resultCard"),
+      questionTitle: document.getElementById("questionTitle"),
+      questionNumber: document.getElementById("questionNumber"),
+      topicBadge: document.getElementById("topicBadge"),
+      endpointNumber: document.getElementById("endpointNumber"),
+      optionsGroup: document.getElementById("optionsGroup"),
+      checkButton: document.getElementById("checkButton"),
+      nextButton: document.getElementById("nextButton"),
+      previousButton: document.getElementById("previousButton"),
+      feedbackPanel: document.getElementById("feedbackPanel"),
+      feedbackIcon: document.getElementById("feedbackIcon"),
+      feedbackTitle: document.getElementById("feedbackTitle"),
+      correctAnswerText: document.getElementById("correctAnswerText"),
+      explanationText: document.getElementById("explanationText"),
+      exampleText: document.getElementById("exampleText"),
+      questionMap: document.getElementById("questionMap"),
+      progressRing: document.getElementById("progressRing"),
+      progressPercent: document.getElementById("progressPercent"),
+      answeredCount: document.getElementById("answeredCount"),
+      remainingText: document.getElementById("remainingText"),
+      headerAnswered: document.getElementById("headerAnswered"),
+      headerScore: document.getElementById("headerScore"),
+      resetButton: document.getElementById("resetButton"),
+      scoreRing: document.getElementById("scoreRing"),
+      finalPercent: document.getElementById("finalPercent"),
+      finalFraction: document.getElementById("finalFraction"),
+      resultTitle: document.getElementById("resultTitle"),
+      resultMessage: document.getElementById("resultMessage"),
+      correctMetric: document.getElementById("correctMetric"),
+      wrongMetric: document.getElementById("wrongMetric"),
+      levelMetric: document.getElementById("levelMetric"),
+      reviewWrongButton: document.getElementById("reviewWrongButton"),
+      reviewAllButton: document.getElementById("reviewAllButton"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function createQuestionMap() {
+      elements.questionMap.innerHTML = "";
+      questions.forEach((_, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "map-button";
+        button.textContent = String(index + 1);
+        button.setAttribute("aria-label", `Đi đến câu ${index + 1}`);
+        button.addEventListener("click", () => goToQuestion(index));
+        elements.questionMap.appendChild(button);
+      });
+    }
+
+    function renderQuestion(focusTitle = false) {
+      const question = questions[state.current];
+      const selected = state.selections[state.current];
+      const isChecked = state.checked[state.current];
+
+      state.showingResult = false;
+      elements.resultCard.classList.remove("visible");
+      elements.questionCard.hidden = false;
+      elements.questionNumber.textContent = `Câu ${state.current + 1} / ${questions.length}`;
+      elements.topicBadge.textContent = question.topic;
+      elements.endpointNumber.textContent = String(state.current + 1);
+      elements.questionTitle.innerHTML = question.question;
+      elements.optionsGroup.innerHTML = "";
+
+      question.options.forEach((option, optionIndex) => {
+        const label = document.createElement("label");
+        label.className = "option";
+        if (selected === optionIndex) label.classList.add("selected");
+        if (isChecked) {
+          label.classList.add("locked");
+          if (optionIndex === question.correct) label.classList.add("correct");
+          if (selected === optionIndex && optionIndex !== question.correct) label.classList.add("incorrect");
+        }
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `question-${state.current}`;
+        input.value = String(optionIndex);
+        input.checked = selected === optionIndex;
+        input.disabled = isChecked;
+        input.setAttribute("aria-label", `${letters[optionIndex]}. ${stripTags(option)}`);
+        input.addEventListener("change", () => selectOption(optionIndex));
+
+        const key = document.createElement("span");
+        key.className = "option-key";
+        key.textContent = letters[optionIndex];
+        key.setAttribute("aria-hidden", "true");
+
+        const text = document.createElement("span");
+        text.className = "option-text";
+        text.innerHTML = option;
+
+        label.append(input, key, text);
+        elements.optionsGroup.appendChild(label);
+      });
+
+      elements.previousButton.disabled = state.current === 0;
+      elements.checkButton.hidden = isChecked;
+      elements.checkButton.disabled = selected === null;
+      elements.nextButton.hidden = !isChecked;
+      elements.nextButton.textContent = state.current === questions.length - 1 ? "Xem kết quả" : "Câu tiếp theo";
+
+      if (isChecked) {
+        showFeedback();
+      } else {
+        elements.feedbackPanel.className = "feedback";
+      }
+
+      updateDashboard();
+      if (focusTitle) {
+        elements.questionTitle.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function selectOption(optionIndex) {
+      if (state.checked[state.current]) return;
+      state.selections[state.current] = optionIndex;
+      elements.checkButton.disabled = false;
+      renderQuestion(false);
+    }
+
+    function checkCurrentAnswer() {
+      const selected = state.selections[state.current];
+      if (selected === null || state.checked[state.current]) return;
+
+      const correct = selected === questions[state.current].correct;
+      state.checked[state.current] = true;
+      state.results[state.current] = correct;
+      renderQuestion(false);
+      elements.feedbackPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function showFeedback() {
+      const question = questions[state.current];
+      const isCorrect = state.results[state.current];
+      const answerLetter = letters[question.correct];
+      const answerText = stripTags(question.options[question.correct]);
+
+      elements.feedbackPanel.className = `feedback visible ${isCorrect ? "correct-feedback" : "wrong-feedback"}`;
+      elements.feedbackIcon.textContent = isCorrect ? "✓" : "!";
+      elements.feedbackTitle.textContent = isCorrect ? "Chính xác!" : "Chưa đúng — cùng xem lại";
+      elements.correctAnswerText.textContent = `Đáp án đúng: ${answerLetter}. ${answerText}`;
+      elements.explanationText.innerHTML = question.explanation;
+      elements.exampleText.innerHTML = question.example;
+    }
+
+    function nextQuestion() {
+      if (!state.checked[state.current]) return;
+      if (state.current === questions.length - 1) {
+        showResults();
+        return;
+      }
+      goToQuestion(state.current + 1);
+    }
+
+    function previousQuestion() {
+      if (state.current > 0) goToQuestion(state.current - 1);
+    }
+
+    function goToQuestion(index) {
+      state.current = Math.max(0, Math.min(index, questions.length - 1));
+      renderQuestion(true);
+    }
+
+    function updateDashboard() {
+      const answered = state.checked.filter(Boolean).length;
+      const score = state.results.filter(result => result === true).length;
+      const percent = Math.round((answered / questions.length) * 100);
+      const remaining = questions.length - answered;
+
+      elements.progressRing.style.setProperty("--progress", `${percent * 3.6}deg`);
+      elements.progressPercent.textContent = `${percent}%`;
+      elements.answeredCount.textContent = String(answered);
+      elements.remainingText.textContent = remaining === 0 ? "Đã chấm đủ 30 câu" : `Còn ${remaining} câu chưa chấm`;
+      elements.headerAnswered.textContent = `${answered}/${questions.length}`;
+      elements.headerScore.textContent = String(score);
+
+      Array.from(elements.questionMap.children).forEach((button, index) => {
+        button.className = "map-button";
+        if (index === state.current && !state.showingResult) button.classList.add("current");
+        if (state.results[index] === true) button.classList.add("correct");
+        if (state.results[index] === false) button.classList.add("wrong");
+        const status = state.checked[index] ? (state.results[index] ? "đúng" : "sai") : "chưa chấm";
+        button.setAttribute("aria-label", `Câu ${index + 1}, ${status}`);
+      });
+    }
+
+    function showResults() {
+      const answered = state.checked.filter(Boolean).length;
+      if (answered < questions.length) {
+        const firstUnanswered = state.checked.findIndex(value => !value);
+        goToQuestion(firstUnanswered);
+        return;
+      }
+
+      const score = state.results.filter(result => result === true).length;
+      const wrong = questions.length - score;
+      const percent = Math.round((score / questions.length) * 100);
+      const result = getResultCopy(score);
+
+      state.showingResult = true;
+      elements.questionCard.hidden = true;
+      elements.resultCard.classList.add("visible");
+      elements.scoreRing.style.setProperty("--score-progress", `${percent * 3.6}deg`);
+      elements.finalPercent.textContent = `${percent}%`;
+      elements.finalFraction.textContent = `${score} / ${questions.length} đúng`;
+      elements.resultTitle.textContent = result.title;
+      elements.resultMessage.textContent = result.message;
+      elements.correctMetric.textContent = String(score);
+      elements.wrongMetric.textContent = String(wrong);
+      elements.levelMetric.textContent = result.level;
+      elements.reviewWrongButton.textContent = wrong === 0 ? "Xem lại câu bất kỳ" : `Xem lại ${wrong} câu sai`;
+      updateDashboard();
+      elements.resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function getResultCopy(score) {
+      if (score >= 27) {
+        return {
+          level: "Rất vững",
+          title: "Bạn đã nắm rất chắc nền tảng!",
+          message: "Bạn phân biệt tốt HTTP, REST, xác thực và tư duy kiểm thử. Hãy tiếp tục thực hành trên API thật để biến kiến thức thành phản xạ."
+        };
+      }
+      if (score >= 22) {
+        return {
+          level: "Khá tốt",
+          title: "Nền tảng của bạn khá tốt",
+          message: "Bạn đã hiểu phần lớn khái niệm quan trọng. Hãy xem lại những câu sai, đặc biệt là status code, phân quyền và kiểm tra hợp đồng response."
+        };
+      }
+      if (score >= 16) {
+        return {
+          level: "Đang tiến bộ",
+          title: "Bạn đã có nền tảng cần thiết",
+          message: "Bạn hiểu luồng request–response nhưng cần luyện thêm các tình huống thực tế. Phần giải thích và ví dụ sẽ giúp bạn kết nối lý thuyết với cách test."
+        };
+      }
+      return {
+        level: "Cần ôn lại",
+        title: "Hãy củng cố từng phần một",
+        message: "Bắt đầu lại từ HTTP request/response, method và status code; sau đó học tiếp JSON, cookie, token và session. Đừng vội — hiểu chắc từng lớp sẽ dễ hơn."
+      };
+    }
+
+    function reviewWrong() {
+      const firstWrong = state.results.findIndex(result => result === false);
+      goToQuestion(firstWrong === -1 ? 0 : firstWrong);
+    }
+
+    function restartQuiz(askForConfirmation = true) {
+      const hasProgress = state.checked.some(Boolean) || state.selections.some(value => value !== null);
+      if (askForConfirmation && hasProgress && !window.confirm("Bạn muốn xóa toàn bộ kết quả và làm lại từ đầu?")) return;
+
+      state.current = 0;
+      state.selections.fill(null);
+      state.checked.fill(false);
+      state.results.fill(null);
+      state.showingResult = false;
+      renderQuestion(true);
+    }
+
+    function stripTags(html) {
+      const temporary = document.createElement("div");
+      temporary.innerHTML = html;
+      return temporary.textContent || temporary.innerText || "";
+    }
+
+    function handleKeyboard(event) {
+      if (event.altKey || event.ctrlKey || event.metaKey || state.showingResult) return;
+      const key = event.key.toUpperCase();
+
+      if (letters.includes(key) && !state.checked[state.current]) {
+        event.preventDefault();
+        selectOption(letters.indexOf(key));
+        const input = elements.optionsGroup.querySelector(`input[value="${letters.indexOf(key)}"]`);
+        if (input) input.focus();
+      }
+
+      if (event.key === "Enter") {
+        const activeTag = document.activeElement ? document.activeElement.tagName : "";
+        if (activeTag === "BUTTON") return;
+        if (!state.checked[state.current] && state.selections[state.current] !== null) {
+          event.preventDefault();
+          checkCurrentAnswer();
+        } else if (state.checked[state.current]) {
+          event.preventDefault();
+          nextQuestion();
+        }
+      }
+    }
+
+    elements.checkButton.addEventListener("click", checkCurrentAnswer);
+    elements.nextButton.addEventListener("click", nextQuestion);
+    elements.previousButton.addEventListener("click", previousQuestion);
+    elements.resetButton.addEventListener("click", () => restartQuiz(true));
+    elements.restartButton.addEventListener("click", () => restartQuiz(false));
+    elements.reviewWrongButton.addEventListener("click", reviewWrong);
+    elements.reviewAllButton.addEventListener("click", () => goToQuestion(0));
+    document.addEventListener("keydown", handleKeyboard);
+
+    createQuestionMap();
+    renderQuestion(false);
+  </script>
+</body>
+</html>
