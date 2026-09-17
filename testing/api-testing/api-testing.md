@@ -82,4 +82,6 @@
 
 - Sử dụng free online REST API: https://jsonplaceholder.typicode.com dùng cho thực hành và kiểm thử
 
+- Tài liệu hướng dẫn: https://jsonplaceholder.typicode.com/guide/
+
 ![ảnh minh họa request đầu tiên với postman](images/request00.png)
