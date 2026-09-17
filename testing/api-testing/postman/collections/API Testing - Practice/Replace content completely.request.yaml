@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{base_url}}/posts/1"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"id\": 100,\r
+
+    \    \"title\": \"one piece\",\r
+
+    \    \"body\": \"new content\",\r
+
+    \    \"userId\": 12\r
+
+    }"
+examples: .resources/Replace content completely.resources/examples
+order: 4394111395983683

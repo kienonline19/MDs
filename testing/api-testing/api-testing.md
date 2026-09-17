@@ -7,6 +7,7 @@
 - REST API = URL (endpoint) + HTTP Method + dữ liệu request/response
 
 - HTTP là bộ quy tắc giúp trình duyệt hay app trao đổi dữ liệu với máy chủ qua internet 
+* **HTTP ? => https://www.w3schools.com/whatis/whatis_http.asp**
 + Mô hình client-server
 1. Client: trình duyệt hay ứng dụng phần mềm bắn 1 request (HTTP Request) đến server
 2. Server: tiếp nhận request, xử lý và phản hồi (HTTP Response - có thể là các đoạn mã HTML, CSS, JS, JSON, ảnh, ...)
@@ -28,6 +29,8 @@
 4. PATCH: Chỉ cập nhật 1 số trường của tài nguyên, không cần gửi toàn bộ dữ liệu
 
 5. DELETE: xóa tài nguyên được chỉ định
+
+* **Tài liệu: https://www.w3schools.in/http/http-request-methods**
 
 - Cấu trúc 1 HTTP Response = trạng thái + dữ liệu kết quả server gửi về cho client
 + Status code: mã trạng thái cho biết kết quả xử lý
@@ -82,6 +85,6 @@
 
 - Sử dụng free online REST API: https://jsonplaceholder.typicode.com dùng cho thực hành và kiểm thử
 
-- Tài liệu hướng dẫn: https://jsonplaceholder.typicode.com/guide/
+- **Tài liệu hướng dẫn**: https://jsonplaceholder.typicode.com/guide/
 
 ![ảnh minh họa request đầu tiên với postman](images/request00.png)

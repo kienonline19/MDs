@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{base_url}}/posts/1"
+method: DELETE
+body:
+  type: json
+  content: ""
+order: 4452167558812235

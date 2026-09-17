@@ -1,7 +1,29 @@
 $kind: http-request
-url: ""
+url: "{{base_url}}/posts"
 method: POST
 body:
   type: json
-  content: ""
+  content: "[\r
+
+    \    {\r
+
+    \        \"title\": \"API Testing - Practice - DAY0\",\r
+
+    \        \"body\": \"Learn using Postman\",\r
+
+    \        \"userId\": 1000\r
+
+    \    },\r
+
+    \    {\r
+
+    \        \"title\": \"API Testing - Practice - DAY1\",\r
+
+    \        \"body\": \"API Request\",\r
+
+    \        \"userId\": 2200\r
+
+    \    }\r
+
+    ]"
 order: 3414292076251302

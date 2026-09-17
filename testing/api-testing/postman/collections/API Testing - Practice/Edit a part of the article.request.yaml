@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{base_url}}/posts/1"
+method: PATCH
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\": \"new title\"\r
+
+    }"
+order: 4401122892957984
