@@ -1,6 +1,6 @@
 # Python Basic Algorithm Exam — 5 Exercises (Easy → Hard)
 
-Same topic categories as v5 (math, string, list, binary search, recursion), but with different problems. Each exercise includes: problem statement, constraints, function signature, and assert-based test cases.
+Same topic categories (math, string, list, binary search, recursion), but with different problems. Each exercise includes: problem statement, constraints, function signature, and assert-based test cases.
 
 ---
 
