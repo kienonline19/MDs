@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{base_url}}/anything/1"
+method: PATCH
+headers:
+  Accept: application/json
+  Content-Type: application/json
+  X-Practice-Header: Hello-Postman
+body:
+  type: json
+  content: "{\r\n    \"job\": \"DEV\"\r\n}"
+order: 3000

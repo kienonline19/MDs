@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{base_url}}/anything?name=Kien&topic=api-testing&page=1"
+method: GET
+headers:
+  Accept: application/json
+  Content-Type: application/json
+  X-Practice-Header: Hello-Postman
+queryParams:
+  - key: name
+    value: Kien
+    disabled: false
+    description: ""
+  - key: topic
+    value: api-testing
+    disabled: false
+    description: ""
+  - key: page
+    value: "1"
+    disabled: false
+    description: ""
+body:
+  type: json
+  content: "{\r
+
+    \    \"username\": \"Kien\",\r
+
+    \    \"purpose\": \"Learning API Testing\"\r
+
+    }"
+order: 6000

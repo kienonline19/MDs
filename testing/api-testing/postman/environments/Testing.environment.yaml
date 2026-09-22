@@ -1,2 +1,4 @@
 name: Testing
-values: []
+values:
+  - key: base_url
+    value: ''

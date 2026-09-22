@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{base_url}}/anything/1"
+method: DELETE
+headers:
+  Accept: application/json
+  Content-Type: application/json
+  X-Practice-Header: Hello-Postman
+body:
+  type: json
+  content: ""
+order: 2000

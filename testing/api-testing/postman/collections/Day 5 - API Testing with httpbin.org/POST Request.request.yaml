@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{base_url}}/anything"
+method: POST
+headers:
+  Accept: application/json
+  Content-Type: application/json
+  X-Practice-Header: Hello-Postman
+body:
+  type: json
+  content: "{\r
+
+    \    \"id\": 1,\r
+
+    \    \"name\": \"Kien\",\r
+
+    \    \"job\": \"API Tester\"\r
+
+    }"
+order: 5000
