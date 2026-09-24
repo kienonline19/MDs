@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/posts"
+method: GET
+order: 1790213578489

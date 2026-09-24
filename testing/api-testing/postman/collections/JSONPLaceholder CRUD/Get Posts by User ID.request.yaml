@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/posts?userId=2&_limit=3"
+method: GET
+queryParams:
+  userId: "2"
+  _limit: "3"
+order: 4348825653682809

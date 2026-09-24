@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/1"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\": \"Java\",\r
+
+    \    \"body\": \"awesome\",\r
+
+    \    \"userId\": 100\r
+
+    }"
+order: 4478397894285362

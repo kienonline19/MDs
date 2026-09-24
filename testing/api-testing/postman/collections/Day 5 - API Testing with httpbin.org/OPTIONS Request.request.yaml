@@ -1,6 +1,6 @@
 $kind: http-request
-url: "{{base_url}}/anything/1"
-method: DELETE
+url: "{{base_url}}/anything"
+method: OPTIONS
 headers:
   Accept: application/json
   Content-Type: application/json

@@ -1,9 +1,15 @@
-# Use this workspace to collaborate
 workspace:
   id: 6d630732-37c1-49f9-80b7-6ccf403b572e
-
-# All resources in the `postman/` folder are automatically registered in Local View.
-# Point to additional files outside the `postman/` folder to register them individually. Example:
-#localResources:
-#  collections:
-#    - ../tests/E2E Test Collection/
+cloudResources:
+  collections:
+    ../postman/collections/API Testing - Practice: 58272286-3ef97aab-744c-4946-afce-dd0ba4692d25
+    ../postman/collections/Day 5 - API Testing with httpbin.org: 58272286-29e6f6ef-f677-46de-969f-041ba140cbf8
+    ../postman/collections/JSONPLaceholder CRUD: 58272286-db10fa92-e28f-4e4b-9f50-c8e335b8a868
+  environments:
+    ../postman/environments/DEV.environment.yaml: 58272286-c188f7a1-404b-48a9-9cee-3048577264b8
+    ../postman/environments/Practice.environment.yaml: 58272286-4078d615-c809-4056-a748-7dee4b911b38
+    ../postman/environments/QA.environment.yaml: 58272286-9a8cd5cf-bd76-4cb6-aea5-8c7805a50964
+    ../postman/environments/STAGING.environment.yaml: 58272286-1b8cef5e-3df0-47cb-908a-a897a412e39a
+    ../postman/environments/Testing.environment.yaml: 58272286-874758f7-a3a9-4b47-8f7e-d5962c464931
+  globals:
+    ../postman/globals/workspace.globals.yaml: 86f39b7c-814c-487c-8f7d-c5e757b4a83f

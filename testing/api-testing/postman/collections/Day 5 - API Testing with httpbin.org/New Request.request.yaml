@@ -1,4 +1,4 @@
 $kind: http-request
-url: ""
-method: GET
+url: example.com/api/users
+method: OPTIONS
 order: 4089503720407591

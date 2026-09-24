@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/1"
+method: PATCH
+body:
+  type: json
+  content: "{\r\n    \"title\": \"Pandas\"\r\n}"
+order: 4482361320023435

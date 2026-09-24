@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{baseUrl}}/posts"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\": \"Python\",\r
+
+    \    \"body\": \"very nice\",\r
+
+    \    \"userId\": 2\r
+
+    }"
+order: 4476930426010032

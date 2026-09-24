@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/:postId/comments?_limit=5"
+method: GET
+headers:
+  Content-Type: application//json
+queryParams:
+  _limit: "5"
+pathVariables:
+  - key: postId
+    value: "1"
+order: 4161127856574915
