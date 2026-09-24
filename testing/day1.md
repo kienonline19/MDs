@@ -103,7 +103,7 @@ Một bộ test API tốt thường kiểm tra 5 tầng:
 
 ### 2.5. Lưu ý quan trọng về JSONPlaceholder
 
-JSONPlaceholder là API **giả lập**: POST/PUT/PATCH/DELETE trả về response như thật nhưng **không lưu thay đổi** vào server. Tức là tạo bài viết mới xong, GET lại sẽ không thấy. Đây không phải lỗi mà là đặc điểm của API mẫu; ta sẽ tận dụng điều này để hiểu rõ hơn ở Bài 5.
+JSONPlaceholder là API **giả lập**: GET/POST/PUT/PATCH/DELETE trả về response như thật nhưng **không lưu thay đổi** vào server. Tức là tạo bài viết mới xong, GET lại sẽ không thấy. Đây không phải lỗi mà là đặc điểm của API mẫu; ta sẽ tận dụng điều này để hiểu rõ hơn ở Bài 5.
 
 Dữ liệu có sẵn: 100 `posts`, 500 `comments`, 100 `albums`, 5000 `photos`, 200 `todos`, 10 `users`.
 
