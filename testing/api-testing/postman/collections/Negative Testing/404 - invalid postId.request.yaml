@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/99999"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 404 Not Found\", () => {\r
+
+      \tpm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"No data returned\", () => {\r
+
+      \tpm.expect(pm.response.json()).to.eql({});\r
+
+      });"
+    language: text/javascript
+order: 1790380441535

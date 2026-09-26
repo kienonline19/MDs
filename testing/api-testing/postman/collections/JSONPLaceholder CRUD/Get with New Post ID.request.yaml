@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/{{newPostId}}"
+method: GET
+order: 15000

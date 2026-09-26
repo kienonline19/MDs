@@ -1,0 +1,39 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/posts/1"
+method: PATCH
+body:
+  type: json
+  content: "{\r
+
+    \t\"title\": \"Only modify the title using PATCH\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "const patched = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      pm.test(\"Title changed\", () => {\r
+
+      \tpm.expect(patched.title).to.eql(\"Only modify the title using
+      PATCH\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Fields that don't submit remain unaffected\", () => {\r
+
+      \tpm.expect(patched).to.have.property(\"body\");\r
+
+      \tpm.expect(patched).to.have.property(\"userId\", 1);\r
+
+      });"
+    language: text/javascript
+order: 18000

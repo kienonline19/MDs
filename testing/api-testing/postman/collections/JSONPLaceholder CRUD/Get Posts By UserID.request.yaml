@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/posts?userId=999&_limit=3"
+method: GET
+queryParams:
+  userId: "999"
+  _limit: "3"
+scripts:
+  - type: afterResponse
+    code: "const data = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      pm.test(\"Return 10 posts by user 1\", () => {\r
+
+      \tpm.expect(data).to.have.lengthOf(0);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"All posts belong to userId = 1\", () => {\r
+
+      \tdata.forEach(post => pm.expect(post.userId).to.eql(1))\r
+
+      });"
+    language: text/javascript
+order: 10000

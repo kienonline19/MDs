@@ -1,0 +1,30 @@
+$kind: http-request
+name: "DELETE: Delete a post"
+description: ""
+url: "{{baseUrl}}/posts/1"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 200 or 204\", () => {\r
+
+      \tpm.expect(pm.response.code).to.be.oneOf([200, 204]);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Empty body\", () => {\r
+
+      \tif (pm.response.code === 204){\r
+
+      \t\tpm.expect(pm.response.text()).to.be.empty;\r
+
+      \t} else {\r
+
+      \t\tpm.expect(pm.response.json()).to.be.empty;\r
+
+      \t}\r
+
+      });"
+    language: text/javascript
+order: 2207600421643224

@@ -1,0 +1,65 @@
+$kind: http-request
+url: "{{baseUrl}}/posts"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \t\"title\": \"{{postTitle}}\",\r
+
+    \t\"body\": \"Nội dung bài viết được tạo từ Postman\",\r
+
+    \t\"userId\": 1\r
+
+    }"
+scripts:
+  - type: beforeRequest
+    code: "const title = \"Bài test \" + Date.now();\r
+
+      \r
+
+      pm.collectionVariables.set(\"postTitle\", title);"
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Status 201 Created\", () => {\r
+
+      \tpm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      const created = pm.response.json();\r
+
+      \r
+
+      const sentBody = JSON.parse(pm.request.body.raw.replace(\"{{postTitle}}\",
+      pm.collectionVariables.get(\"postTitle\")));\r
+
+      \r
+
+      pm.test(\"Server trả về id mới (kiểu number)\", () => {\r
+
+      \tpm.expect(created.id).to.be.a(\"number\")\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Dữ liệu trả về khớp dữ liệu đã gửi\", () => {\r
+
+      \tpm.expect(created.title).to.eql(sentBody.title);\r
+
+      \tpm.expect(created.body).to.eql(sentBody.body);\r
+
+      \tpm.expect(created.userId).to.eql(sentBody.userId);\r
+
+      });\r
+
+      \r
+
+      pm.collectionVariables.set(\"newPostId\", created.id);\r
+
+      console.log(\"Đã tạo post id:\", created.id);\r\n"
+    language: text/javascript
+order: 14000

@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/:id/comments"
+method: GET
+pathVariables:
+  - key: id
+    value: "1"
+    description: ""
+scripts:
+  - type: afterResponse
+    code: "const comments = pm.response.json();\r
+
+      \r
+
+      pm.test(\"There are 5 comments\", () => {\r
+
+      \tpm.expect(comments).to.have.lengthOf(5);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"All comments belong to postId = 1\", () => {\r
+
+      \tcomments.forEach(c => pm.expect(c.postId).to.eql(1));\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Email in the correct basic format\", () => {\r
+
+      \tconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\r
+
+      \tcomments.forEach(c => pm.expect(c.email).to.match(emailRegex));\r
+
+      });"
+    language: text/javascript
+order: 12000

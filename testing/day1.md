@@ -253,7 +253,7 @@ pm.test("Email đúng định dạng cơ bản", () => {
 });
 ```
 
-**Giải thích:** Path variable dùng để **định danh** tài nguyên (`/posts/1`), còn query param dùng để **lọc/tùy chọn** (`/posts?userId=1`). Hai cách viết `/posts/1/comments` và `/comments?postId=1` cho ra cùng kết quả; hãy thử cả hai.
+**Giải thích:** Path variable dùng để **định danh** tài nguyên (`/posts/1`), còn query param dùng để **lọc/tùy chọn** (`/posts?userId=1`). 
 
 ---
 
@@ -299,7 +299,7 @@ console.log("Tên user:", user.name);
 **Giải thích**
 
 - Header **gửi đi** (request headers) báo cho server biết client muốn gì; header **nhận về** (response headers) cho biết server trả gì.
-- Header xác thực (`Authorization: Bearer <token>`) là loại header quan trọng nhất khi test API thật. JSONPlaceholder không yêu cầu xác thực, nhưng hãy mở tab **Authorization → Bearer Token** để làm quen; ta sẽ dùng nó ở Buổi 6.
+- Header xác thực (`Authorization: Bearer <token>`) là loại header quan trọng nhất khi test API thật. JSONPlaceholder không yêu cầu xác thực, nhưng hãy mở tab **Authorization → Bearer Token** để làm quen; ta sẽ dùng nó ở Buổi 2.
 - **Postman Console** là công cụ debug quan trọng: xem chính xác request đã gửi đi (URL sau khi thay biến, header, body).
 
 ---
@@ -508,8 +508,7 @@ const postSchema = {
         id:     { type: "integer", minimum: 1 },
         title:  { type: "string", minLength: 1 },
         body:   { type: "string", minLength: 1 }
-    },
-    additionalProperties: false
+    }
 };
 
 pm.test("Response đúng schema của Post", () => {

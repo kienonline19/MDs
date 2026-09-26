@@ -1,4 +1,6 @@
 name: Testing
 values:
+  - key: base_url
+    value: ''
   - key: baseUrl
     value: ''

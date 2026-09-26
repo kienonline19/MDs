@@ -1,0 +1,40 @@
+$kind: http-request
+name: "PUT: Replace all data"
+url: "{{baseUrl}}/posts/1"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \t\"title\": \"new title\",\r
+
+    \t\"body\": \"new body\",\r
+
+    \t\"userId\": 1\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 200\", () => {\r
+
+      \tpm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const updated = pm.response.json();\r
+
+      \r
+
+      pm.test(\"The fields have been updated\", () => {\r
+
+      \tpm.expect(updated.id).to.eql(1);\r
+
+      \tpm.expect(updated.title).to.eql(\"new title\");\r
+
+      \tpm.expect(updated.body).to.eql(\"new body\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 17000

@@ -6,7 +6,45 @@ body:
   content: ""
 scripts:
   - type: afterResponse
-    code: "pm.test(\"Status code is 200\", function(){\r
+    code: "const postListSchema = {\r
+
+      \ttype: \"array\",\r
+
+      \tminItems: 1,\r
+
+      \titems: {\r
+
+      \t\ttype: \"object\",\r
+
+      \t\trequired: [\"userId\", \"id\", \"title\", \"body\"],\r
+
+      \t\tproperties: {\r
+
+      \t\t\tuserId: { type: \"integer\" },\r
+
+      \t\t\tid: { type: \"integer\" },\r
+
+      \t\t\ttitle: { type: \"string\" },\r
+
+      \t\t\tbody: { type: \"string\" }\r
+
+      \t\t}\r
+
+      \t}\r
+
+      }\r
+
+      \r
+
+      pm.test(\"List matching the schema\", () => {\r
+
+      \tpm.response.to.have.jsonSchema(postListSchema);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Status code is 200\", function(){\r
 
       \    pm.response.to.have.status(200)\r
 
@@ -31,6 +69,8 @@ scripts:
       \r
 
       const data = pm.response.json();\r
+
+      console.log(typeof data);\r
 
       \r
 
@@ -64,4 +104,4 @@ scripts:
 
       });\r\n"
     language: text/javascript
-order: 4503376588494312
+order: 9000

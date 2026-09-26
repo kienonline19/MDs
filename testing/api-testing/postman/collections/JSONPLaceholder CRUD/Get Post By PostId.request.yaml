@@ -1,0 +1,34 @@
+$kind: http-request
+url: "{{baseUrl}}/posts/:id"
+method: GET
+pathVariables:
+  id: "1"
+scripts:
+  - type: afterResponse
+    code: "const post = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      pm.test(\"Returns the correct post with ID = 1\", () => {\r
+
+      \tpm.expect(post).to.be.an(\"object\");\r
+
+      \tpm.expect(post.id).to.eql(1);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"The title and body are non-empty strings\", () => {\r
+
+      \tpm.expect(post.title).to.be.a(\"string\").and.not.empty;\r
+
+      \tpm.expect(post.body).to.be.a(\"string\").and.not.empty;\r
+
+      });"
+    language: text/javascript
+order: 11000

@@ -1,0 +1,37 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/posts/1"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "const postSchema = {\r
+
+      \ttype: \"object\",\r
+
+      \trequired: [\"userId\", \"id\", \"title\", \"body\"],\r
+
+      \tproperties: {\r
+
+      \t\tuserId: { type: \"integer\", minimum: 1 },\r
+
+      \t\tis: { type: \"integer\", minimum: 1 },\r
+
+      \t\ttitle: { type: \"string\", minLength: 1 },\r
+
+      \t\tbody: { type: \"string\", minLength: 1 }\r
+
+      \t},\r
+
+      \t// additionalProperties: false\r
+
+      };\r
+
+      \r
+
+      pm.test(\"Response matching the Post schema\", () => {\r
+
+      \tpm.response.to.have.jsonSchema(postSchema);\r
+
+      });\r\n"
+    language: text/javascript
+order: 3097031565335695
