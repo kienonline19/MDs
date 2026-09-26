@@ -589,6 +589,10 @@ pm.test(`userId=${pm.iterationData.get("userId")} có ${expected} bài viết`, 
 
 Trong Runner: chọn **Data → Select File → users_data.csv**. Postman tự chạy 4 vòng (iteration), mỗi vòng lấy 1 dòng.
 
+```bash
+newman run "JSONPLaceholder CRUD.postman_collection.json" --env-var "baseUrl=https://jsonplaceholder.typicode.com" -d users_data.csv -r cli,htmlextra
+```
+
 > **Giải thích:** Data-driven testing tách *dữ liệu test* khỏi *logic test*. Muốn thêm test case chỉ cần thêm dòng CSV, không cần viết thêm code.
 
 **11c. Chạy bằng Newman (dòng lệnh)**

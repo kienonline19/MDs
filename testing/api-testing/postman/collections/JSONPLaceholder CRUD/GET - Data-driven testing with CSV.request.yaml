@@ -6,7 +6,7 @@ queryParams:
   userId: "{{userId}}"
 scripts:
   - type: afterResponse
-    code: "const data = pm.response.json();\r
+    code: "const posts = pm.response.json();\r
 
       console.log(pm.iterationData.toObject());\r
 
@@ -20,7 +20,7 @@ scripts:
 
       \t\t\"url:\", pm.request.url.toString(),\r
 
-      \t\t\"actual count:\", data.length,\r
+      \t\t\"actual count:\", posts.length,\r
 
       \t\t\"expected count:\", expected);\r
 
@@ -30,7 +30,7 @@ scripts:
 
       pm.test(`userId=${userId} have ${expected} posts`, () => {\r
 
-      \tpm.expect(data).to.have.lengthOf(expected);\r
+      \tpm.expect(posts).to.have.lengthOf(expected);\r
 
       });"
     language: text/javascript

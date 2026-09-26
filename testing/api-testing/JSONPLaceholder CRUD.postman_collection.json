@@ -248,7 +248,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const data = pm.response.json();\r\n\r\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Return 10 posts by user 1\", () => {\r\n\tpm.expect(data).to.have.lengthOf(0);\r\n});\r\n\r\npm.test(\"All posts belong to userId = 1\", () => {\r\n\tdata.forEach(post => pm.expect(post.userId).to.eql(1))\r\n});"
+              "const posts = pm.response.json();\r\n\r\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Return 10 posts by user 1\", () => {\r\n\tpm.expect(posts).to.have.lengthOf(0);\r\n});\r\n\r\npm.test(\"All posts belong to userId = 1\", () => {\r\n\tposts.forEach(post => pm.expect(post.userId).to.eql(1))\r\n});"
             ]
           }
         }
@@ -591,7 +591,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const postSchema = {\r\n\ttype: \"object\",\r\n\trequired: [\"userId\", \"id\", \"title\", \"body\"],\r\n\tproperties: {\r\n\t\tuserId: { type: \"integer\", minimum: 1 },\r\n\t\tis: { type: \"integer\", minimum: 1 },\r\n\t\ttitle: { type: \"string\", minLength: 1 },\r\n\t\tbody: { type: \"string\", minLength: 1 }\r\n\t},\r\n\t// additionalProperties: false\r\n};\r\n\r\npm.test(\"Response matching the Post schema\", () => {\r\n\tpm.response.to.have.jsonSchema(postSchema);\r\n});\r\n"
+              "const postSchema = {\r\n\ttype: \"object\",\r\n\trequired: [\"userId\", \"id\", \"title\", \"body\"],\r\n\tproperties: {\r\n\t\tuserId: { type: \"integer\", minimum: 1 },\r\n\t\tid: { type: \"integer\", minimum: 1 },\r\n\t\ttitle: { type: \"string\", minLength: 1 },\r\n\t\tbody: { type: \"string\", minLength: 1 }\r\n\t},\r\n\t// additionalProperties: false\r\n};\r\n\r\npm.test(\"Response matching the Post schema\", () => {\r\n\tpm.response.to.have.jsonSchema(postSchema);\r\n});\r\n"
             ]
           }
         }
@@ -620,7 +620,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "const data = pm.response.json();\r\nconsole.log(pm.iterationData.toObject());\r\nconst userId = pm.iterationData.get(\"userId\");\r\nconst expected = Number(pm.iterationData.get(\"expectedCount\"));\r\n\r\nconsole.log(\"status:\", pm.response.code,\r\n\t\t\"url:\", pm.request.url.toString(),\r\n\t\t\"actual count:\", data.length,\r\n\t\t\"expected count:\", expected);\r\n\r\n\r\npm.test(`userId=${userId} have ${expected} posts`, () => {\r\n\tpm.expect(data).to.have.lengthOf(expected);\r\n});"
+              "const posts = pm.response.json();\r\nconsole.log(pm.iterationData.toObject());\r\nconst userId = pm.iterationData.get(\"userId\");\r\nconst expected = Number(pm.iterationData.get(\"expectedCount\"));\r\n\r\nconsole.log(\"status:\", pm.response.code,\r\n\t\t\"url:\", pm.request.url.toString(),\r\n\t\t\"actual count:\", posts.length,\r\n\t\t\"expected count:\", expected);\r\n\r\n\r\npm.test(`userId=${userId} have ${expected} posts`, () => {\r\n\tpm.expect(posts).to.have.lengthOf(expected);\r\n});"
             ]
           }
         }

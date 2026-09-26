@@ -186,6 +186,58 @@ draw_square(120)
 turtle.done()
 ```
 
+```python
+import turtle
+
+screen = turtle.Screen()
+
+screen.setup(900, 700)
+screen.bgcolor("#0B1220")
+
+pen = turtle.Turtle()
+
+pen.speed(0)
+pen.hideturtle()
+
+def draw_square(side, x, y, fill_color, border_color, border_width=2):
+    pen.penup()
+
+    pen.goto(x, y)
+
+    pen.setheading(0)
+
+    pen.pendown()
+
+    pen.pensize(border_width)
+    pen.pencolor(border_color)
+    pen.fillcolor(fill_color)
+
+    pen.begin_fill()
+
+    for _ in range(4):
+        pen.forward(side)
+        pen.left(90)
+
+    pen.end_fill()
+
+
+draw_square(260, -118, -142, "#050810", "#050810")
+draw_square(260, -130, -130, "#38BDF8", "#38BDF8")
+draw_square(244, -122, -122, "#16324F", "#16324F")
+draw_square(200, -100, -100, "#16234F", "#7DD3FC", 2)
+
+pen.penup()
+
+pen.pencolor("#FACC15")
+
+for x, y in [(-100, -100), (100, -100), (100, 100), (-100, 100)]:
+    pen.goto(x, y)
+    pen.dot(10)
+
+turtle.done()
+
+```
+
 **Giải thích:** Mỗi vòng lặp vẽ một cạnh. Tổng góc quay là `4 × 90° = 360°`, nên rùa trở về đúng hướng ban đầu.
 
 ## Lời giải bài 2

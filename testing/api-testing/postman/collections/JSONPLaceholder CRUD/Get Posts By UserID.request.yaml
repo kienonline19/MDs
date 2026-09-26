@@ -6,7 +6,7 @@ queryParams:
   _limit: "3"
 scripts:
   - type: afterResponse
-    code: "const data = pm.response.json();\r
+    code: "const posts = pm.response.json();\r
 
       \r
 
@@ -16,7 +16,7 @@ scripts:
 
       pm.test(\"Return 10 posts by user 1\", () => {\r
 
-      \tpm.expect(data).to.have.lengthOf(0);\r
+      \tpm.expect(posts).to.have.lengthOf(0);\r
 
       });\r
 
@@ -24,7 +24,7 @@ scripts:
 
       pm.test(\"All posts belong to userId = 1\", () => {\r
 
-      \tdata.forEach(post => pm.expect(post.userId).to.eql(1))\r
+      \tposts.forEach(post => pm.expect(post.userId).to.eql(1))\r
 
       });"
     language: text/javascript
