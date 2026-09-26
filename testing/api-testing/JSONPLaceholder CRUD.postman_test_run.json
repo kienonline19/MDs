@@ -1,0 +1,87 @@
+{
+	"id": "6ab729299a3fa3bf93dadd20",
+	"name": "JSONPLaceholder CRUD",
+	"timestamp": "2026-09-26T02:09:00.183Z",
+	"collection_id": "88E40530ADdcA4Da04ed6c5B",
+	"folder_id": 0,
+	"environment_id": "254643c6-dd0d-43cd-9a85-6300914db1e1",
+	"totalPass": 128,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-09-26T02:08:41.505Z",
+	"totalFail": 0,
+	"results": [],
+	"count": 4,
+	"totalTime": 0,
+	"collection": {
+		"requests": [
+			{
+				"id": "37C74dBCc0940b525FAdc1C2"
+			},
+			{
+				"id": "Bec2289A9A94A69436bF2d95"
+			},
+			{
+				"id": "28f0Fbac78DA93BD93ec14BE"
+			},
+			{
+				"id": "4e9F87837eFa9ec4cBFFa753"
+			},
+			{
+				"id": "8C70C5c59cD5Dd7E2E42d1bC"
+			},
+			{
+				"id": "B2a55eadE2B7Af1ABFBf5F0a"
+			},
+			{
+				"id": "390cEC5D4229FE30DDa502fb"
+			},
+			{
+				"id": "dEEe9b9ec8D76Ce0Dc38Ea3A"
+			},
+			{
+				"id": "c4EAF3bd6b5De87b62E7e03e"
+			},
+			{
+				"id": "e24074Aff48E7e2e3Cef9e5a"
+			},
+			{
+				"id": "2f64a2cA7dEeDFD7f80cEc1f"
+			},
+			{
+				"id": "9b066eA9a6bD35Ff2937CFe8"
+			},
+			{
+				"id": "66BB92de27aE8eAb014EF2B7"
+			},
+			{
+				"id": "AbCD6a13ECBbE2b43F59AFaC"
+			},
+			{
+				"id": "FAabD6F4cfB3F25Ac92faEe9"
+			},
+			{
+				"id": "72C7CadacCEB5aCDE0Cfddde"
+			},
+			{
+				"id": "Cc7df38f4A1cFbAC7b1b87b7"
+			},
+			{
+				"id": "F6a9B7A09dbcB80c9FADF02F"
+			},
+			{
+				"id": "aAcdEa88405ea4ec8eAAfFBA"
+			},
+			{
+				"id": "Bbb34d7870cf9d8d731f0641"
+			},
+			{
+				"id": "AA3d09DAD7DB6F55BDc86f5f"
+			},
+			{
+				"id": "AA3d09DAD7DB6F55BDc86f5f"
+			}
+		]
+	}
+}

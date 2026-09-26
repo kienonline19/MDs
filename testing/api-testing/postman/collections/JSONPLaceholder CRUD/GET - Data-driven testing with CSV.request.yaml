@@ -1,0 +1,37 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/posts?userId={{userId}}"
+method: GET
+queryParams:
+  userId: "{{userId}}"
+scripts:
+  - type: afterResponse
+    code: "const data = pm.response.json();\r
+
+      console.log(pm.iterationData.toObject());\r
+
+      const userId = pm.iterationData.get(\"userId\");\r
+
+      const expected = Number(pm.iterationData.get(\"expectedCount\"));\r
+
+      \r
+
+      console.log(\"status:\", pm.response.code,\r
+
+      \t\t\"url:\", pm.request.url.toString(),\r
+
+      \t\t\"actual count:\", data.length,\r
+
+      \t\t\"expected count:\", expected);\r
+
+      \r
+
+      \r
+
+      pm.test(`userId=${userId} have ${expected} posts`, () => {\r
+
+      \tpm.expect(data).to.have.lengthOf(expected);\r
+
+      });"
+    language: text/javascript
+order: 3534923719184660

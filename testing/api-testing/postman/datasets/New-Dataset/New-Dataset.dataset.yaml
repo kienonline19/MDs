@@ -1,0 +1,22 @@
+type: dataset
+name: New Dataset
+id: 99d35917-a3a7-437c-8980-2a0e6020cab4
+data_dir: .resources
+sources:
+  - from: embedded_datasource
+    datasource:
+      name: source_users_data
+      id: 49aa5657-2c3f-4139-8560-1d4dff43684c
+      dsKey: source_users_data
+      format: csv
+      source_type: static
+      location:
+        type: local_filesystem
+        value: C:\Users\kieno\Downloads\Files\Documents\MD\testing\api-testing\users_data.csv
+views:
+  - from: embedded_view
+    view:
+      name: 'source_users_data_default_view'
+      id: 'fb8eb89c-3bab-4e02-8fe1-8f59fba511b3'
+      query: |-
+        SELECT * FROM source_users_data

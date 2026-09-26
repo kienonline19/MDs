@@ -68,17 +68,17 @@ scripts:
 
       \r
 
-      const data = pm.response.json();\r
+      const posts = pm.response.json();\r
 
-      console.log(typeof data);\r
+      console.log(typeof posts);\r
 
       \r
 
       pm.test(\"The body section consists of 100 posts\", function(){\r
 
-      \    pm.expect(data).to.be.an(\"array\");\r
+      \    pm.expect(posts).to.be.an(\"array\");\r
 
-      \    pm.expect(data).to.have.lengthOf(100);\r
+      \    pm.expect(posts).to.have.lengthOf(100);\r
 
       });\r
 
@@ -86,7 +86,7 @@ scripts:
 
       pm.test(\"Each post contains all 4 fields userId, id, title, and body\", function(){\r
 
-      \    data.forEach(function(post){\r
+      \    posts.forEach(function(post){\r
 
       \        pm.expect(post).to.have.all.keys('userId', 'id', 'title', 'body')\r
 
@@ -98,7 +98,7 @@ scripts:
 
       pm.test(\"The ID is unique\", function(){\r
 
-      \    const ids = data.map(post => post.id);\r
+      \    const ids = posts.map(post => post.id);\r
 
       \    pm.expect(new Set(ids).size).to.eql(ids.length);\r
 

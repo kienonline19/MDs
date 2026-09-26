@@ -1,0 +1,679 @@
+{
+  "info": {
+    "_postman_id": "db10fa92-e28f-4e4b-9f50-c8e335b8a868",
+    "name": "JSONPLaceholder CRUD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58272286",
+    "_collection_link": "https://go.postman.co/collection/58272286-db10fa92-e28f-4e4b-9f50-c8e335b8a868?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Posts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Comments By PostId With Limit",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application//json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/posts/:postId/comments?_limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            ":postId",
+            "comments"
+          ],
+          "query": [
+            {
+              "key": "_limit",
+              "value": "5"
+            }
+          ],
+          "variable": [
+            {
+              "key": "postId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Posts by User ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts?userId=2&_limit=3",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "2"
+            },
+            {
+              "key": "_limit",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Create a Post",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Python\",\r\n    \"body\": \"very nice\",\r\n    \"userId\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - Update all content of Post",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Java\",\r\n    \"body\": \"awesome\",\r\n    \"userId\": 100\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PATCH - Change a part of Post",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Pandas\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE - Delete a Post",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "HEAD & OPTIONS",
+      "request": {
+        "method": "HEAD",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Posts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const postListSchema = {\r\n\ttype: \"array\",\r\n\tminItems: 1,\r\n\titems: {\r\n\t\ttype: \"object\",\r\n\t\trequired: [\"userId\", \"id\", \"title\", \"body\"],\r\n\t\tproperties: {\r\n\t\t\tuserId: { type: \"integer\" },\r\n\t\t\tid: { type: \"integer\" },\r\n\t\t\ttitle: { type: \"string\" },\r\n\t\t\tbody: { type: \"string\" }\r\n\t\t}\r\n\t}\r\n}\r\n\r\npm.test(\"List matching the schema\", () => {\r\n\tpm.response.to.have.jsonSchema(postListSchema);\r\n});\r\n\r\npm.test(\"Status code is 200\", function(){\r\n    pm.response.to.have.status(200)\r\n});\r\n\r\npm.test(\"Content-Type is application/json\", function(){\r\n    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\")\r\n});\r\n\r\npm.test(\"Reponse time is less than 2000ms\", function(){\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});\r\n\r\nconst posts = pm.response.json();\r\nconsole.log(typeof posts);\r\n\r\npm.test(\"The body section consists of 100 posts\", function(){\r\n    pm.expect(posts).to.be.an(\"array\");\r\n    pm.expect(posts).to.have.lengthOf(100);\r\n});\r\n\r\npm.test(\"Each post contains all 4 fields userId, id, title, and body\", function(){\r\n    posts.forEach(function(post){\r\n        pm.expect(post).to.have.all.keys('userId', 'id', 'title', 'body')\r\n    });\r\n});\r\n\r\npm.test(\"The ID is unique\", function(){\r\n    const ids = posts.map(post => post.id);\r\n    pm.expect(new Set(ids).size).to.eql(ids.length);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Posts By UserID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const data = pm.response.json();\r\n\r\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Return 10 posts by user 1\", () => {\r\n\tpm.expect(data).to.have.lengthOf(0);\r\n});\r\n\r\npm.test(\"All posts belong to userId = 1\", () => {\r\n\tdata.forEach(post => pm.expect(post.userId).to.eql(1))\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts?userId=999&_limit=3",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "999"
+            },
+            {
+              "key": "_limit",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Post By PostId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const post = pm.response.json();\r\n\r\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Returns the correct post with ID = 1\", () => {\r\n\tpm.expect(post).to.be.an(\"object\");\r\n\tpm.expect(post.id).to.eql(1);\r\n});\r\n\r\npm.test(\"The title and body are non-empty strings\", () => {\r\n\tpm.expect(post.title).to.be.a(\"string\").and.not.empty;\r\n\tpm.expect(post.body).to.be.a(\"string\").and.not.empty;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Comments From PostID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const comments = pm.response.json();\r\n\r\npm.test(\"There are 5 comments\", () => {\r\n\tpm.expect(comments).to.have.lengthOf(5);\r\n});\r\n\r\npm.test(\"All comments belong to postId = 1\", () => {\r\n\tcomments.forEach(c => pm.expect(c.postId).to.eql(1));\r\n});\r\n\r\npm.test(\"Email in the correct basic format\", () => {\r\n\tconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\r\n\tcomments.forEach(c => pm.expect(c.email).to.match(emailRegex));\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/:id/comments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            ":id",
+            "comments"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Info From UserId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response có header Content-Type\", () => {\r\n\tpm.response.to.have.header(\"Content-Type\");\r\n});\r\n\r\npm.test(\"Content-Type chứa charset utf-8\", () => {\r\n\tpm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"utf-8\");\r\n});\r\n\r\nconst user = pm.response.json();\r\n\r\npm.test(\"User có địa chỉ và công ty (object lồng nhau)\", () => {\r\n\tpm.expect(user).to.have.nested.property(\"address.city\");\r\n\tpm.expect(user).to.have.nested.property(\"address.geo.lat\");\r\n\tpm.expect(user).to.have.nested.property(\"company.name\");\r\n});\r\n\r\nconsole.log(\"Request id đã gửi:\", pm.request.headers.get(\"X-Request-Id\"));\r\n\r\nconsole.log(\"Tên user:\", user.name);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Request-Id",
+            "value": "{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create new Post",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const title = \"Bài test \" + Date.now();\r\n\r\npm.collectionVariables.set(\"postTitle\", title);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201 Created\", () => {\r\n\tpm.response.to.have.status(201);\r\n});\r\n\r\nconst created = pm.response.json();\r\n\r\nconst sentBody = JSON.parse(pm.request.body.raw.replace(\"{{postTitle}}\", pm.collectionVariables.get(\"postTitle\")));\r\n\r\npm.test(\"Server trả về id mới (kiểu number)\", () => {\r\n\tpm.expect(created.id).to.be.a(\"number\")\r\n});\r\n\r\npm.test(\"Dữ liệu trả về khớp dữ liệu đã gửi\", () => {\r\n\tpm.expect(created.title).to.eql(sentBody.title);\r\n\tpm.expect(created.body).to.eql(sentBody.body);\r\n\tpm.expect(created.userId).to.eql(sentBody.userId);\r\n});\r\n\r\npm.collectionVariables.set(\"newPostId\", created.id);\r\nconsole.log(\"Đã tạo post id:\", created.id);\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"title\": \"{{postTitle}}\",\r\n\t\"body\": \"Nội dung bài viết được tạo từ Postman\",\r\n\t\"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get with New Post ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/{{newPostId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "{{newPostId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT: Replace only Title",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"title\": \"new title\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT: Replace all data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => {\r\n\tpm.response.to.have.status(200);\r\n});\r\n\r\nconst updated = pm.response.json();\r\n\r\npm.test(\"The fields have been updated\", () => {\r\n\tpm.expect(updated.id).to.eql(1);\r\n\tpm.expect(updated.title).to.eql(\"new title\");\r\n\tpm.expect(updated.body).to.eql(\"new body\");\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"title\": \"new title\",\r\n\t\"body\": \"new body\",\r\n\t\"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PATCH - Partial update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const patched = pm.response.json();\r\n\r\npm.test(\"Status 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Title changed\", () => {\r\n\tpm.expect(patched.title).to.eql(\"Only modify the title using PATCH\");\r\n});\r\n\r\npm.test(\"Fields that don't submit remain unaffected\", () => {\r\n\tpm.expect(patched).to.have.property(\"body\");\r\n\tpm.expect(patched).to.have.property(\"userId\", 1);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"title\": \"Only modify the title using PATCH\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE: Delete a post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200 or 204\", () => {\r\n\tpm.expect(pm.response.code).to.be.oneOf([200, 204]);\r\n});\r\n\r\npm.test(\"Empty body\", () => {\r\n\tif (pm.response.code === 204){\r\n\t\tpm.expect(pm.response.text()).to.be.empty;\r\n\t} else {\r\n\t\tpm.expect(pm.response.json()).to.be.empty;\r\n\t}\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - get post by postid=1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const postSchema = {\r\n\ttype: \"object\",\r\n\trequired: [\"userId\", \"id\", \"title\", \"body\"],\r\n\tproperties: {\r\n\t\tuserId: { type: \"integer\", minimum: 1 },\r\n\t\tis: { type: \"integer\", minimum: 1 },\r\n\t\ttitle: { type: \"string\", minLength: 1 },\r\n\t\tbody: { type: \"string\", minLength: 1 }\r\n\t},\r\n\t// additionalProperties: false\r\n};\r\n\r\npm.test(\"Response matching the Post schema\", () => {\r\n\tpm.response.to.have.jsonSchema(postSchema);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - Data-driven testing with CSV",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const data = pm.response.json();\r\nconsole.log(pm.iterationData.toObject());\r\nconst userId = pm.iterationData.get(\"userId\");\r\nconst expected = Number(pm.iterationData.get(\"expectedCount\"));\r\n\r\nconsole.log(\"status:\", pm.response.code,\r\n\t\t\"url:\", pm.request.url.toString(),\r\n\t\t\"actual count:\", data.length,\r\n\t\t\"expected count:\", expected);\r\n\r\n\r\npm.test(`userId=${userId} have ${expected} posts`, () => {\r\n\tpm.expect(data).to.have.lengthOf(expected);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts?userId={{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const postSchema = {\r\n    type: \"object\",\r\n    required: [\"userId\", \"id\", \"title\", \"body\"],\r\n    properties: {\r\n        userId: { type: \"integer\", minimum: 1 },\r\n        id:     { type: \"integer\", minimum: 1 },\r\n        title:  { type: \"string\", minLength: 1 },\r\n        body:   { type: \"string\", minLength: 1 }\r\n    }\r\n}\r\n\r\npm.collectionVariables.set(\"postSchema\", JSON.stringify(postSchema));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "postTitle",
+      "value": ""
+    },
+    {
+      "key": "newPostId",
+      "value": ""
+    },
+    {
+      "key": "postSchema",
+      "value": ""
+    }
+  ]
+}
