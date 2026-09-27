@@ -1,0 +1,46 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos/1"
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \t\"userId\": 1,\r
+
+    \t\"id\": 1,\r
+
+    \t\"title\": \"Practice PUT request\",\r
+
+    \t\"completed\": true\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      const todo = pm.response.json();\r
+
+      \r
+
+      const requestBody =
+      JSON.parse(pm.variables.replaceIn(pm.request.body.raw));\r
+
+      \r
+
+      console.log(requestBody);\r
+
+      console.log(todo);\r
+
+      \r
+
+      pm.test(\"Todo ID is 1\", () => pm.expect(todo.id).to.equal(1));\r
+
+      \r
+
+      pm.test(\"Response data matches the request body\", () =>
+      pm.expect(todo).to.deep.equal(requestBody));"
+    language: text/javascript
+order: 4469126119733818

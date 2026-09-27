@@ -1,0 +1,359 @@
+{
+  "info": {
+    "_postman_id": "7803faf8-7453-4177-9db0-21d1a650eae1",
+    "name": "Day1 - Todos CRUD - NXK",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58272286",
+    "_collection_link": "https://go.postman.co/collection/58272286-7803faf8-7453-4177-9db0-21d1a650eae1?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "get todos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => {\r\n\tpm.response.to.have.status(200)\r\n});\r\n\r\nconst todoSchema = {\r\n\ttype: \"object\",\r\n\trequired: [\"userId\", \"id\", \"title\", \"completed\"],\r\n\tproperties: {\r\n\t\tuserId: { type: \"integer\" },\r\n\t\tid: { type: \"integer\" },\r\n\t\ttitle: { type: \"string\" },\r\n\t\tcompleted: { type: \"boolean\" }\r\n\t}\r\n}\r\n\r\npm.test(\"Response matching the Todo schema\", () => {\r\n\tpm.response.to.have.jsonSchema({\r\n\t\ttype: \"array\",\r\n\t\titems: todoSchema\r\n\t});\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get todo with completed is true",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => {\r\n\tpm.response.to.have.status(200);\r\n});\r\n\r\nconst todos = pm.response.json();\r\n\r\npm.test(\"Every todo has completed set to true\", () => {\r\n\ttodos.forEach(t => pm.expect(t.completed).to.eql(true));\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos?completed=true",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos"
+          ],
+          "query": [
+            {
+              "key": "completed",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get todo with user id = 1 and completed = false",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => {\r\n\tpm.response.to.have.status(200);\r\n});\r\n\r\nconst todos = pm.response.json();\r\n\r\npm.test(\"Response is a non-empty array\", () => {\r\n\tpm.expect(todos).to.be.an(\"array\").that.is.not.empty;\r\n});\r\n\r\npm.test(\"Every todo has userId = 1 and completed = false\", () => {\r\n\ttodos.forEach((todo, index) => {\r\n\t\tconsole.log(`Todo at index ${index}:`, todo);\r\n\t\tpm.expect(todo.userId, `Todo at index ${index}: userId`).to.equal(1);\r\n\r\n\t\tpm.expect(todo.completed, `Todo at index ${index}: completed`).to.equal(false);\r\n\t});\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos/?userId=1&completed=false",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            ""
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "1"
+            },
+            {
+              "key": "completed",
+              "value": "false"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create new todo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 201 Created\", () => {\r\n\tpm.response.to.have.status(201);\r\n});\r\n\r\nconst created = pm.response.json();\r\nconst requestBody = JSON.parse(pm.request.body.raw.replace(\"{{todoTitle}}\", pm.collectionVariables.get(\"todoTitle\")))\r\n\r\npm.test(\"Response data matches the request body\", () => {\r\n\tpm.expect(created.userId).to.equal(requestBody.userId);\r\n\tpm.expect(created.title).to.equal(requestBody.title);\r\n\tpm.expect(created.completed).to.equal(requestBody.completed);\r\n});\r\n\r\npm.test(\"Response has a valid ID and saves it as todoId\", () => {\r\n\tpm.expect(created.id).to.be.a(\"number\");\r\n\tpm.expect(Number.isInteger(created.id)).to.equal(true);\r\n\tpm.expect(created.id).to.be.above(0);\r\n\r\n\tpm.collectionVariables.set(\"todoId\", created.id);\r\n});\r\n\r\nconsole.log(\"Created todo:\", created);\r\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const title = \"Test \" + Date.now();\r\n\r\npm.collectionVariables.set(\"todoTitle\", title);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"userId\": 1,\r\n\t\"title\": \"Learn API testing\",\r\n\t\"completed\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/todos",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "partial change",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r\n\r\nconst todo = pm.response.json();\r\n\r\npm.test(\"Todo ID is 1\", () => {\r\n\tpm.expect(todo.id).to.equal(1);\r\n});\r\n\r\npm.test(\"Todo is marked as completed\", () => {\r\n\tpm.expect(todo.completed).to.equal(true);\r\n});\r\n\r\nconsole.log(\"Updated todo:\", todo);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"completed\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/todos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "replace all",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r\n\r\nconst todo = pm.response.json();\r\n\r\nconst requestBody = JSON.parse(pm.variables.replaceIn(pm.request.body.raw));\r\n\r\nconsole.log(requestBody);\r\nconsole.log(todo);\r\n\r\npm.test(\"Todo ID is 1\", () => pm.expect(todo.id).to.equal(1));\r\n\r\npm.test(\"Response data matches the request body\", () => pm.expect(todo).to.deep.equal(requestBody));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"userId\": 1,\r\n\t\"id\": 1,\r\n\t\"title\": \"Practice PUT request\",\r\n\t\"completed\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/todos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete todo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r\n\r\npm.test(\"Response body is an empty object\", () => pm.expect(pm.response.json()).to.deep.equal({}));\r\n\r\nconsole.log(\"Delete response:\", pm.response.json());"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "neg get todo not exists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Non-existent todo returns 404\", () => pm.response.to.have.status(404));\r\n\r\npm.test(\"Response body is an empty object\", () => {\r\n\tpm.expect(pm.response.json()).to.deep.equal({});\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos/9999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            "9999999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get todo with alphabet id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Non-existent todo ID returns 404\", () => {\r\n\tpm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response body is an empty object\", () => {\r\n\tpm.expect(pm.response.json()).to.deep.equal({});\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/todos/abc",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "todos",
+            "abc"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "todoTitle",
+      "value": ""
+    },
+    {
+      "key": "todoId",
+      "value": ""
+    }
+  ]
+}

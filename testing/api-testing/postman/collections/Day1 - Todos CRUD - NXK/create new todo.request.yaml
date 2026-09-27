@@ -1,0 +1,71 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \t\"userId\": 1,\r
+
+    \t\"title\": \"Learn API testing\",\r
+
+    \t\"completed\": false\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 201 Created\", () => {\r
+
+      \tpm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      const created = pm.response.json();\r
+
+      const requestBody =
+      JSON.parse(pm.request.body.raw.replace(\"{{todoTitle}}\",
+      pm.collectionVariables.get(\"todoTitle\")))\r
+
+      \r
+
+      pm.test(\"Response data matches the request body\", () => {\r
+
+      \tpm.expect(created.userId).to.equal(requestBody.userId);\r
+
+      \tpm.expect(created.title).to.equal(requestBody.title);\r
+
+      \tpm.expect(created.completed).to.equal(requestBody.completed);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response has a valid ID and saves it as todoId\", () => {\r
+
+      \tpm.expect(created.id).to.be.a(\"number\");\r
+
+      \tpm.expect(Number.isInteger(created.id)).to.equal(true);\r
+
+      \tpm.expect(created.id).to.be.above(0);\r
+
+      \r
+
+      \tpm.collectionVariables.set(\"todoId\", created.id);\r
+
+      });\r
+
+      \r
+
+      console.log(\"Created todo:\", created);\r\n"
+    language: text/javascript
+  - type: beforeRequest
+    code: "const title = \"Test \" + Date.now();\r
+
+      \r
+
+      pm.collectionVariables.set(\"todoTitle\", title);"
+    language: text/javascript
+order: 4463860464523907

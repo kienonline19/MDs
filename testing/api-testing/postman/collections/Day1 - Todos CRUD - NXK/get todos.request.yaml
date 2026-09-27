@@ -1,0 +1,62 @@
+$kind: http-request
+url: "{{baseUrl}}/todos"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "console.log(pm.response.code);\r
+
+      console.log(pm.response.status);\r
+
+      console.log(pm.response.responseTime);\r
+
+      console.log(pm.response.json());\r
+
+      console.log(pm.response.text());\r
+
+      console.log(pm.response.headers.get(\"Content-Type\"));\r
+
+      \r
+
+      pm.test(\"Status 200\", () => {\r
+
+      \tpm.response.to.have.status(200)\r
+
+      });\r
+
+      \r
+
+      const todoSchema = {\r
+
+      \ttype: \"object\",\r
+
+      \trequired: [\"userId\", \"id\", \"title\", \"completed\"],\r
+
+      \tproperties: {\r
+
+      \t\tuserId: { type: \"integer\" },\r
+
+      \t\tid: { type: \"integer\" },\r
+
+      \t\ttitle: { type: \"string\" },\r
+
+      \t\tcompleted: { type: \"boolean\" }\r
+
+      \t}\r
+
+      }\r
+
+      \r
+
+      pm.test(\"Response matching the Todo schema\", () => {\r
+
+      \tpm.response.to.have.jsonSchema({\r
+
+      \t\ttype: \"array\",\r
+
+      \t\titems: todoSchema\r
+
+      \t});\r
+
+      });\r\n"
+    language: text/javascript
+order: 1644681483767929

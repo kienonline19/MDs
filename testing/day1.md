@@ -600,7 +600,7 @@ newman run "JSONPLaceholder CRUD.postman_collection.json" --env-var "baseUrl=htt
 1. Chuột phải Collection → **Export** → lưu `Day1.postman_collection.json`.
 2. Chạy:
 
-```bash
+```bash 
 newman run Day1.postman_collection.json
 
 # Chạy kèm dữ liệu CSV

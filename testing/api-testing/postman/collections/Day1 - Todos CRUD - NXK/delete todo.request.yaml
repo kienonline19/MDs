@@ -1,0 +1,18 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos/1"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      pm.test(\"Response body is an empty object\", () =>
+      pm.expect(pm.response.json()).to.deep.equal({}));\r
+
+      \r
+
+      console.log(\"Delete response:\", pm.response.json());"
+    language: text/javascript
+order: 4474216243329998

@@ -1,0 +1,52 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos/?userId=1&completed=false"
+method: GET
+queryParams:
+  - key: userId
+    value: "1"
+    disabled: false
+    description: ""
+  - key: completed
+    value: "false"
+    disabled: false
+    description: ""
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 200\", () => {\r
+
+      \tpm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const todos = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response is a non-empty array\", () => {\r
+
+      \tpm.expect(todos).to.be.an(\"array\").that.is.not.empty;\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Every todo has userId = 1 and completed = false\", () => {\r
+
+      \ttodos.forEach((todo, index) => {\r
+
+      \t\tconsole.log(`Todo at index ${index}:`, todo);\r
+
+      \t\tpm.expect(todo.userId, `Todo at index ${index}: userId`).to.equal(1);\r
+
+      \r
+
+      \t\tpm.expect(todo.completed, `Todo at index ${index}: completed`).to.equal(false);\r
+
+      \t});\r
+
+      });"
+    language: text/javascript
+order: 4173844238093106

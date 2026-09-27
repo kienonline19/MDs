@@ -1,0 +1,36 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos/1"
+method: PATCH
+body:
+  type: json
+  content: "{\r\n\t\"completed\": true\r\n}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r
+
+      \r
+
+      const todo = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Todo ID is 1\", () => {\r
+
+      \tpm.expect(todo.id).to.equal(1);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Todo is marked as completed\", () => {\r
+
+      \tpm.expect(todo.completed).to.equal(true);\r
+
+      });\r
+
+      \r
+
+      console.log(\"Updated todo:\", todo);"
+    language: text/javascript
+order: 4464127571141804

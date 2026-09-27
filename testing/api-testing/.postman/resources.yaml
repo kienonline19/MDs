@@ -6,6 +6,7 @@ cloudResources:
     ../postman/collections/Day 5 - API Testing with httpbin.org: 58272286-29e6f6ef-f677-46de-969f-041ba140cbf8
     ../postman/collections/JSONPLaceholder CRUD: 58272286-db10fa92-e28f-4e4b-9f50-c8e335b8a868
     ../postman/collections/Negative Testing: 58272286-da418c5e-825a-48a9-bcfc-af938140d7d8
+    ../postman/collections/Day1 - Todos CRUD - NXK: 58272286-7803faf8-7453-4177-9db0-21d1a650eae1
   environments:
     ../postman/environments/DEV.environment.yaml: 58272286-c188f7a1-404b-48a9-9cee-3048577264b8
     ../postman/environments/Practice.environment.yaml: 58272286-4078d615-c809-4056-a748-7dee4b911b38

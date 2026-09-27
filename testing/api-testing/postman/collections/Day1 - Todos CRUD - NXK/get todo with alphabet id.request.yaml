@@ -1,0 +1,21 @@
+$kind: http-request
+description: ""
+url: "{{baseUrl}}/todos/abc"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Non-existent todo ID returns 404\", () => {\r
+
+      \tpm.response.to.have.status(404);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body is an empty object\", () => {\r
+
+      \tpm.expect(pm.response.json()).to.deep.equal({});\r
+
+      });"
+    language: text/javascript
+order: 4499964203793891
