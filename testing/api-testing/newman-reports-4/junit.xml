@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="JSONPLaceholder CRUD" tests="84" time="3.402">
+  <testsuite name="Get Posts" id="b7ebf649-7853-4041-a1e2-c1eeccc2e2b6" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.038"/>
+  <testsuite name="Get Comments By PostId With Limit" id="f75ec765-bc12-4aeb-875f-7427fc2aa1e0" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.051"/>
+  <testsuite name="Get Posts by User ID" id="ae8fe157-b7ee-4528-b9b3-0d63bd0f138a" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.048"/>
+  <testsuite name="POST - Create a Post" id="4d8bed0e-d307-4edc-92d1-a2036e172eba" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.058"/>
+  <testsuite name="PUT - Update all content of Post" id="30c2da65-6942-49b9-839b-8ffde9aec85b" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.064"/>
+  <testsuite name="PATCH - Change a part of Post" id="c970721b-bc48-4f3e-bbb1-595e4610b015" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.047"/>
+  <testsuite name="DELETE - Delete a Post" id="db2ba141-19de-4a08-be81-1d30500947ee" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.045"/>
+  <testsuite name="HEAD &amp; OPTIONS" id="e5ec27e9-792d-439d-ba1c-6c40c21e2f41" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.019"/>
+  <testsuite name="Get All Posts" id="504a2e17-3f13-4fdf-b116-8e950b421b87" timestamp="2026-09-27T03:11:33.525Z" tests="7" failures="0" errors="0" time="0.051">
+    <testcase name="List matching the schema" time="0.047" classname="GetAllPosts"/>
+    <testcase name="Status code is 200" time="0.047" classname="GetAllPosts"/>
+    <testcase name="Content-Type is application/json" time="0.047" classname="GetAllPosts"/>
+    <testcase name="Reponse time is less than 2000ms" time="0.047" classname="GetAllPosts"/>
+    <testcase name="The body section consists of 100 posts" time="0.047" classname="GetAllPosts"/>
+    <testcase name="Each post contains all 4 fields userId, id, title, and body" time="0.047" classname="GetAllPosts"/>
+    <testcase name="The ID is unique" time="0.047" classname="GetAllPosts"/>
+  </testsuite>
+  <testsuite name="Get Posts By UserID" id="aa73407a-8618-40f9-8b56-7647b9ef984b" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.044">
+    <testcase name="Status 200" time="0.017" classname="GetPostsByUserId"/>
+    <testcase name="Return 10 posts by user 1" time="0.017" classname="GetPostsByUserId"/>
+    <testcase name="All posts belong to userId = 1" time="0.017" classname="GetPostsByUserId"/>
+  </testsuite>
+  <testsuite name="Get Post By PostId" id="afe9f5e0-cad4-4a9b-8d1a-3e929dd3bd0c" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.019">
+    <testcase name="Status 200" time="0.018" classname="GetPostByPostId"/>
+    <testcase name="Returns the correct post with ID = 1" time="0.018" classname="GetPostByPostId"/>
+    <testcase name="The title and body are non-empty strings" time="0.018" classname="GetPostByPostId"/>
+  </testsuite>
+  <testsuite name="Get Comments From PostID" id="ba90e37f-50b0-497a-a562-cd482b81f484" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.021">
+    <testcase name="There are 5 comments" time="0.019" classname="GetCommentsFromPostId"/>
+    <testcase name="All comments belong to postId = 1" time="0.019" classname="GetCommentsFromPostId"/>
+    <testcase name="Email in the correct basic format" time="0.019" classname="GetCommentsFromPostId"/>
+  </testsuite>
+  <testsuite name="Get Info From UserId" id="bba75ceb-924d-4c9d-b2ad-0faf3cd68810" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.022">
+    <testcase name="Response có header Content-Type" time="0.019" classname="GetInfoFromUserId"/>
+    <testcase name="Content-Type chứa charset utf-8" time="0.019" classname="GetInfoFromUserId"/>
+    <testcase name="User có địa chỉ và công ty (object lồng nhau)" time="0.019" classname="GetInfoFromUserId"/>
+  </testsuite>
+  <testsuite name="Create new Post" id="aeecb71f-6f4f-4d3f-9769-2d416db548b4" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.056">
+    <testcase name="Status 201 Created" time="0.087" classname="CreateNewPost"/>
+    <testcase name="Server trả về id mới (kiểu number)" time="0.087" classname="CreateNewPost"/>
+    <testcase name="Dữ liệu trả về khớp dữ liệu đã gửi" time="0.087" classname="CreateNewPost"/>
+  </testsuite>
+  <testsuite name="Get with New Post ID" id="48b5dd69-4655-4948-9a18-41437472d98a" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.021"/>
+  <testsuite name="PUT: Replace only Title" id="90926149-821f-4969-af43-13f28e209ad3" timestamp="2026-09-27T03:11:33.525Z" tests="0" failures="0" errors="0" time="0.046"/>
+  <testsuite name="PUT: Replace all data" id="126c5570-dc76-401c-9ac5-76798c31a0d7" timestamp="2026-09-27T03:11:33.525Z" tests="2" failures="0" errors="0" time="0.046">
+    <testcase name="Status 200" time="0.044" classname="PutReplaceAllData"/>
+    <testcase name="The fields have been updated" time="0.044" classname="PutReplaceAllData"/>
+  </testsuite>
+  <testsuite name="PATCH - Partial update" id="1aa1793d-4dc9-464d-97c2-bc937cfba73e" timestamp="2026-09-27T03:11:33.525Z" tests="3" failures="0" errors="0" time="0.045">
+    <testcase name="Status 200" time="0.042" classname="PatchPartialUpdate"/>
+    <testcase name="Title changed" time="0.042" classname="PatchPartialUpdate"/>
+    <testcase name="Fields that don't submit remain unaffected" time="0.042" classname="PatchPartialUpdate"/>
+  </testsuite>
+  <testsuite name="DELETE: Delete a post" id="a0d3cbaf-1874-45ef-a62a-478448138da3" timestamp="2026-09-27T03:11:33.525Z" tests="2" failures="0" errors="0" time="0.045">
+    <testcase name="Status 200 or 204" time="0.040" classname="DeleteDeleteAPost"/>
+    <testcase name="Empty body" time="0.040" classname="DeleteDeleteAPost"/>
+  </testsuite>
+  <testsuite name="GET - get post by postid=1" id="1081dc19-ad45-4268-a10c-eec63bf78c9b" timestamp="2026-09-27T03:11:33.525Z" tests="1" failures="0" errors="0" time="0.021">
+    <testcase name="Response matching the Post schema" time="0.021" classname="GetGetPostByPostid1"/>
+  </testsuite>
+  <testsuite name="GET - Data-driven testing with CSV" id="567438a7-468f-4c26-9328-66d725051c6c" timestamp="2026-09-27T03:11:33.525Z" tests="1" failures="0" errors="0" time="0.044">
+    <testcase name="userId=1 have 10 posts" time="0.104" classname="GetDataDrivenTestingWithCsv"/>
+    <testcase name="userId=2 have 10 posts" time="0.104" classname="GetDataDrivenTestingWithCsv"/>
+    <testcase name="userId=5 have 10 posts" time="0.104" classname="GetDataDrivenTestingWithCsv"/>
+    <testcase name="userId=11 have 0 posts" time="0.104" classname="GetDataDrivenTestingWithCsv"/>
+  </testsuite>
+</testsuites>
