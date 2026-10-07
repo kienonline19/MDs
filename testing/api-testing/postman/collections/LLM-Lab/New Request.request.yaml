@@ -1,0 +1,25 @@
+$kind: http-request
+url: https://blockrun.ai/api/v1/chat/completions
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"model\": \"nvidia/nemotron-3.5-lightning\",\r
+
+    \  \"messages\": [\r
+
+    \    {\r
+
+    \      \"role\": \"user\",\r
+
+    \      \"content\": \"Explain what an API is in Vietnamese.\"\r
+
+    \    }\r
+
+    \  ],\r
+
+    \  \"stream\": true\r
+
+    }"
+order: 3070864449370262
