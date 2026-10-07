@@ -1,0 +1,4 @@
+$kind: http-request
+url: "{{base_url}}/api/tags"
+method: GET
+order: 1791337250516

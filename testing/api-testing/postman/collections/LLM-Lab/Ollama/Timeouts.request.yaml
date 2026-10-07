@@ -1,0 +1,15 @@
+$kind: http-request
+url: "{{base_url}}/api/chat"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \t\"model\": \"{{model}}\",\r
+
+    \t\"prompt\": \"Explain how HTTP works in detail.\",\r
+
+    \t\"stream\": false\r
+
+    }\r\n"
+order: 4501812046485603

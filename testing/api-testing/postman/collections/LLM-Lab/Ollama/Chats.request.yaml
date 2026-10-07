@@ -1,0 +1,56 @@
+$kind: http-request
+description: ""
+url: "{{base_url}}/api/chat"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \t\"model\": \"{{model}}\",\r
+
+    \t\"messages\": [\r
+
+    \t\t{\r
+
+    \t\t\t\"role\": \"system\",\r
+
+    \t\t\t\"content\": \"You are a helpful programming teacher. Keep answers short.\"\r
+
+    \t\t},\r
+
+    \t\t{\r
+
+    \t\t\t\"role\": \"user\",\r
+
+    \t\t\t\"content\": \"What is a Python list?\"\r
+
+    \t\t}\r
+
+    \t],\r
+
+    \t\"stream\": false\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Chat returns an answer\", () => {\r
+
+      \tpm.response.to.have.status(200);\r
+
+      \r
+
+      \tconst data = pm.response.json();\r
+
+      \r
+
+      \tpm.expect(data.message.role).to.equal(\"assistant\");\r
+
+      \tpm.expect(data.message.content).to.be.a(\"string\");\r
+
+      \tpm.expect(data.message.content.trim().length).to.be.above(0);\r
+
+      \tpm.expect(data.done).to.equal(true);\r
+
+      });"
+    language: text/javascript
+order: 2657242662241944

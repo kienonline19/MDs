@@ -1,0 +1,41 @@
+$kind: http-request
+url: "{{base_url}}/api/chat"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \t\"model\": \"{{model}}\",\r
+
+    \t\"messages\": [\r
+
+    \t\t{\r
+
+    \t\t\t\"role\": \"user\",\r
+
+    \t\t\t\"content\": \"My name is Kien.\"\r
+
+    \t\t},\r
+
+    \t\t{\r
+
+    \t\t\t\"role\": \"assistant\",\r
+
+    \t\t\t\"content\": \"Hello, Kien!\"\r
+
+    \t\t},\r
+
+    \t\t{\r
+
+    \t\t\t\"role\": \"user\",\r
+
+    \t\t\t\"content\": \"What is my name?\"\r
+
+    \t\t}\r
+
+    \t],\r
+
+    \t\"stream\": false\r
+
+    }"
+order: 4387111156912948

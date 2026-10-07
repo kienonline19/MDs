@@ -1,5 +1,8 @@
 workspace:
   id: 6d630732-37c1-49f9-80b7-6ccf403b572e
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
     ../postman/collections/API Testing - Practice: 58272286-3ef97aab-744c-4946-afce-dd0ba4692d25
