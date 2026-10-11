@@ -1,4 +1,4 @@
-# Buổi 6: Test API cho hệ thống AI (LLM API)
+# Buổi 3: Test API cho hệ thống AI (LLM API)
 
 ## 1. LLM API khác API thường ở đâu?
 
