@@ -1,3 +1,4 @@
+## Tổng quan về Cypress
 - Cypress là một công cụ (framework viết bằng JS) kiểm thử web tự động (end-to-end testing) (test được cả hai API và giao diện)
 - Viết test bằng JS hay Typescript (không phải Python/Java/C#) sử dụng các hàm/lệnh của Cypress Framework
 - Code test viết bằng js sử dụng cypress được chạy trong trình duyệt qua sự điều phối của nodejs (nodejs làm nhiều việc chứ không phải chỉ chuyển tiếp code test lên trình duyệt)
@@ -26,3 +27,37 @@
 + Khi cửa sổ Cypress hiện lên, chọn E2E Testing => bấm Continue.
 + Chọn trình duyệt muốn chạy (như Chrome) => bấm Start E2E Testing.
 + Chọn Create new spec để tạo file test mẫu (ví dụ: ai-chat.cy.js). Toàn bộ code test của bạn sẽ nằm trong thư mục cypress/e2e/.
+
+## Thực hành viết test với cypress để kiểm thử web AI chat
+
+- Các trang web có thể dùng cypress test:
+1. https://duck.ai/
+2. https://chat.webllm.ai/
+3. https://zalt.me/tools/free-ai-chat-online
+4. https://github.com/mckaywrigley/chatbot-ui
+5. https://github.com/ChatGPTNextWeb/NextChat
+
+- Sử dụng vscode với extension và comment đặc biệt sau để chạy cypress test:
+1. Cypress Test Explorer
+
+- Ô Tests Directory: gõ vào cypress-ai-test/cypress/e2e
+- Ô Cypress Project: gõ vào cypress-ai-test
+- Các ô khác để nguyên
+
+- Run test mặc định chạy ngầm ở chế độ ẩn trình duyệt (headless), muốn mở trình duyệt nhìn thấy từng thao tác thì bấm Debug Test
+
+2. comment ở đầu mỗi file js viết cypress test bên trong (để tự động gợi ý trong vscode cho cypress):
+```js
+/// <reference types="cypress" />
+```
+3. Cấu hình gợi ý code cypress không cần nhớ cú pháp bằng cách tạo file jsconfig.json trong thư mục cypress project rồi dán đoạn cấu hình sau vào file đó
+- tự động bật gợi ý câu lệnh của cypress trong các file js ở thư mục hiện tại và các thư mục con bên trong
+```json
+{
+  "compilerOptions": {
+    "types": ["cypress"]
+  },
+  "include": ["**/*.js"]
+}
+```
+
