@@ -2,11 +2,15 @@
 - Cypress là một công cụ (framework viết bằng JS) kiểm thử web tự động (end-to-end testing) (test được cả hai API và giao diện)
 - Viết test bằng JS hay Typescript (không phải Python/Java/C#) sử dụng các hàm/lệnh của Cypress Framework
 - Code test viết bằng js sử dụng cypress được chạy trong trình duyệt qua sự điều phối của nodejs (nodejs làm nhiều việc chứ không phải chỉ chuyển tiếp code test lên trình duyệt)
-
-- [Trang chủ](https://www.cypress.io/#create)
 - Cypress rất phù hợp để test Web AI Chat
 - Cypress chủ yếu làm việc trên 1 tab
 
+#### Tài liệu tham khảo về Cypress 
+1. [Trang chủ](https://www.cypress.io/#create)
+2. https://learn.cypress.io/real-world-examples
+3. https://docs.cypress.io/app/get-started/why-cypress
+
+#### Cài đặt và thực hành bài test đầu tiên
 - Các bước cài đặt Cypress:
 1. Cài Node.JS (https://nodejs.org/en/download)
 
@@ -27,6 +31,23 @@
 + Khi cửa sổ Cypress hiện lên, chọn E2E Testing => bấm Continue.
 + Chọn trình duyệt muốn chạy (như Chrome) => bấm Start E2E Testing.
 + Chọn Create new spec để tạo file test mẫu (ví dụ: ai-chat.cy.js). Toàn bộ code test của bạn sẽ nằm trong thư mục cypress/e2e/.
+
+#### Thực hành tìm hiểu dự án mẫu của cypress team trên github:
+- Link: https://github.com/cypress-io/cypress-realworld-app/
+
+1. git clone https://github.com/cypress-io/cypress-realworld-app.git
+2. cd cypress-realworld-app
+3. npm install -g yarn
+4. yarn install
+5. yarn dev (để nó chạy không tắt và mở thêm 1 terminal mới gõ lệnh)
+6. yarn cypress:open (password của hầu hết các user: s3cret - xem users ở data/database.json)
+7. yarn cypress:run (chạy ngầm toàn bộ test)
+
+- Chạy với extension Cypress Test Explorer với cấu hình sau:
++ Tests Directory: cypress/tests
++ Cypress Command: yarn cypress
++ Các ô khác để trống
+
 
 ## Thực hành viết test với cypress để kiểm thử web AI chat
 
