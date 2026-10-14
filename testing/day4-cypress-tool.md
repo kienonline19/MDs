@@ -48,6 +48,9 @@
 + Cypress Command: yarn cypress
 + Các ô khác để trống
 
+- Fix lỗi + cảnh báo (nếu có):
+1. Thêm "ignoreDeprecations": "6.0" vào tsconfig.json (thư mục root)
+2. Kill port bị chiếm dụng khi backend gặp lỗi => run: npx kill-port 3001 
 
 ## Thực hành viết test với cypress để kiểm thử web AI chat
 
@@ -82,3 +85,209 @@
 }
 ```
 
+## Thực hành với duck.ai
+
+### Khung sườn của bài Test (`describe` và `it`)
+
+```javascript
+describe('Duck.ai', () => {
+    it('Select a model, submits a question, and verifies the answer', () => { 
+        // ... (các bước test sẽ nằm ở đây)
+    })
+})
+
+```
+
+* **Giải thích:** `describe` gom nhóm toàn bộ các bài test liên quan đến trang Duck.ai. Hàm `it` đại diện cho một kịch bản test cụ thể (chọn model, hỏi và xác nhận câu trả lời).
+* **Tài liệu tham khảo:** [Writing Your First End-to-End Test](https://docs.cypress.io/guides/end-to-end-testing/writing-your-first-end-to-end-test)
+
+---
+
+### Bước 1: Mở trang web (`cy.visit`)
+
+```javascript
+        // 1. Open the website 
+        /* cy.visit('https://duck.ai/', { -- Ghi đè biến webdriver ngay trước khi web chạy
+            onBeforeLoad(win) {
+                Object.defineProperty(win.navigator, 'webdriver', {
+                    get: () => undefined,
+                });
+            },
+        }); */
+        cy.visit('https://duck.ai/');
+
+```
+
+* **Giải thích:** Lệnh `cy.visit` điều khiển trình duyệt truy cập vào URL được chỉ định. Phần comment nhiều dòng `/* ... */` của bạn lưu lại kỹ thuật dùng `onBeforeLoad` can thiệp vào đối tượng `window` (`win`) của trình duyệt để xóa dấu vết `webdriver` trước khi trang kịp tải (giúp qua mặt CAPTCHA chống Bot). Lệnh `cy.visit` đang mở bên dưới là cách truy cập thông thường.
+* **Tài liệu tham khảo:** [cy.visit()](https://docs.cypress.io/api/commands/visit) | [Catalog of Events (onBeforeLoad)](https://www.google.com/search?q=https://docs.cypress.io/api/events/catalog-of-events%23Window-Before-Load)
+
+---
+
+### Bước 2 & 3: Tương tác với danh sách Dropdown (`cy.get`, `cy.contains`, `.click`)
+
+```javascript
+        // 2. Open the model list
+        cy.get('[data-testid="model-picker-button"]').should('be.visible').click();
+
+        // 3. Select Mistral Small 4
+        cy.contains('[role="menuitemradio"]', 'Mistral').click();
+
+```
+
+* **Giải thích:**
+* Bước 2 dùng `cy.get` để tìm nút bấm theo thuộc tính `data-testid` (đây là thực hành tốt nhất trong Cypress), kiểm tra nút đã hiển thị (`be.visible`) rồi click để mở menu thả xuống.
+* Bước 3 dùng `cy.contains` để tìm một phần tử có thuộc tính `role="menuitemradio"` và hiển thị chính xác chữ `Mistral` trên màn hình rồi click vào nó.
+
+
+* **Tài liệu tham khảo:** [cy.get()](https://docs.cypress.io/api/commands/get) | [cy.contains()](https://docs.cypress.io/api/commands/contains) | [Best Practices: Selecting Elements](https://www.google.com/search?q=https://docs.cypress.io/guides/references/best-practices%23Selecting-Elements)
+
+---
+
+### Bước 4: Kiểm tra trạng thái UI - Assertion (`.should`)
+
+```javascript
+        // 4. Verify the correct model is selected
+        cy.get('[data-testid="model-picker-button"]').should('contain.text', 'Mistral');
+
+```
+
+* **Giải thích:** Sau khi chọn model ở bước 3, lệnh `.should('contain.text', 'Mistral')` hoạt động như một "trạm kiểm soát" để đảm bảo rằng tên model đã được cập nhật thành công trên chính nút bấm đó. Test sẽ thất bại (đỏ) nếu chữ Mistral không xuất hiện.
+* **Tài liệu tham khảo:** [cy.should()](https://docs.cypress.io/api/commands/should) | [Assertions Reference (Chai)](https://docs.cypress.io/guides/references/assertions)
+
+---
+
+### Bước 5: Gõ văn bản mô phỏng người thật (`.type`)
+
+```javascript
+        // 5. Enter question
+        /*
+            <textarea name="user-prompt" aria-label="Ask anything privately" class="Pjdc_gGEjnjd_NraQ4DV ir13N7GbOMQ1hsegKnJz" rows="1" inputmode="text" autocomplete="off" placeholder="Ask anything privately" style="height: 56px;"></textarea>
+        */
+        cy.get('textarea[name="user-prompt"]')
+            .should('be.visible')
+            .type(
+                'Join the words CYPRESS and OK with an underscore. ' +
+                'Reply with only the result, without formatting.', { delay: 50 } // ms - giống người thật 10ms: giống máy
+            );
+
+```
+
+* **Giải thích:** Đoạn HTML trong comment cho thấy bạn phân tích thẻ `<textarea>` rất chuẩn xác để lấy ra thuộc tính `name="user-prompt"`. Lệnh `.type()` sẽ tiến hành gõ đoạn text vào ô này. Tham số `{ delay: 50 }` bắt trình duyệt nghỉ 50ms giữa mỗi lần gõ phím đúng như comment của bạn đã ghi, giúp tránh bị hệ thống chặn vì gõ quá nhanh.
+* **Tài liệu tham khảo:** [cy.type() Options](https://www.google.com/search?q=https://docs.cypress.io/api/commands/type%23Arguments)
+
+---
+
+### Bước 6: Bấm nút Gửi an toàn
+
+```javascript
+        // 6. Click Send Button
+        cy.get('button[aria-label="Ask"]')
+            .should('not.be.disabled')
+            .click();
+
+```
+
+* **Giải thích:** Tìm nút bấm bằng thuộc tính `aria-label`. Việc chèn thêm `.should('not.be.disabled')` là rất cẩn thận, nó buộc Cypress phải chờ cho đến khi ô nhập liệu nhận diện được chữ đã gõ và mở khóa nút Gửi thì mới thực hiện lệnh `.click()`.
+* **Tài liệu tham khảo:** [State Assertions (disabled / enabled)](https://www.google.com/search?q=https://docs.cypress.io/guides/references/assertions%23State)
+
+---
+
+### Bước 7: Chờ phản hồi từ AI (`timeout` và `Regex`)
+
+```javascript
+        // 7. Wait up to 60 seconds to see the answer
+        cy.contains(/^CYPRESS_OK$/, { timeout: 60000 }).should('be.visible'); // timeout (ms) 1s = 1000ms
+
+```
+
+* **Giải thích:** Khối lệnh này sử dụng Biểu thức chính quy (Regex: `/^CYPRESS_OK$/`) để yêu cầu Cypress tìm một thành phần trên trang chứa nội dung khớp 100% với chuỗi "CYPRESS_OK" (không thừa, không thiếu ký tự nào). Vì AI cần thời gian phản hồi, `{ timeout: 60000 }` ghi đè thời gian chờ mặc định (4s) thành 60 giây, giúp bài test không bị báo lỗi vội vàng.
+* **Tài liệu tham khảo:** [Timeouts in Cypress](https://www.google.com/search?q=https://docs.cypress.io/guides/core-concepts/time-out) | [Regular Expressions with cy.contains](https://www.google.com/search?q=https://docs.cypress.io/api/commands/contains%23Regular-Expression)
+
+### Giải thích thêm về code trong comment
+
+### Mục đích của đoạn code này là gì?
+
+Khi Cypress (hay bất kỳ công cụ test tự động nào) mở trình duyệt lên, nó sẽ tự động gắn một "cái mác" vào trình duyệt có tên là biến `navigator.webdriver = true`.
+Các trang web như Duck.ai lập trình sẵn một lớp bảo vệ: Ngay khi web vừa tải, nó sẽ kiểm tra biến này. Nếu thấy `true`, nó biết ngay đây là Bot và sẽ chặn lại (bắt giải CAPTCHA con vịt). Đoạn code này dùng để **giấu cái mác đó đi** trước khi trang web kịp kiểm tra.
+
+---
+
+### Phân tích chi tiết từng dòng lệnh
+
+```javascript
+cy.visit('https://duck.ai/', { 
+    onBeforeLoad(win) {
+        Object.defineProperty(win.navigator, 'webdriver', {
+            get: () => undefined,
+        });
+    },
+});
+
+```
+
+#### 1. Mở rộng tùy chọn của lệnh `cy.visit`
+
+```javascript
+cy.visit('https://duck.ai/', { ... });
+
+```
+
+* **Giải thích:** Bình thường `cy.visit('URL')` chỉ nhận 1 tham số là đường dẫn. Tuy nhiên, nó có thể nhận tham số thứ 2 là một `{ object }` chứa các tùy chọn cài đặt (options). Ở đây, ta mở ra một object để thêm kịch bản can thiệp vào quá trình tải trang.
+
+#### 2. Sự kiện `onBeforeLoad(win)`
+
+```javascript
+    onBeforeLoad(win) { ... }
+
+```
+
+* **Giải thích:** Đây là một hàm (function) đặc biệt của Cypress. Nó sẽ được kích hoạt vào khoảnh khắc **màn hình trình duyệt vừa mở ra, nhưng CHƯA CÓ một dòng code JavaScript nào của trang Duck.ai kịp chạy**.
+* Tham số `win`: Đại diện cho đối tượng `window` của trình duyệt đang mở (chứa toàn bộ thông tin về trình duyệt, tab hiện tại).
+
+
+* **Ví dụ thực tế:** Giống như việc bạn (trình duyệt) bước vào cửa một tòa nhà (trang web). `onBeforeLoad` là khoảnh khắc bạn vừa đẩy cửa bước vào, còn bảo vệ (code của web) thì chưa kịp nhìn thấy bạn.
+
+#### 3. Can thiệp biến hệ thống bằng `Object.defineProperty`
+
+```javascript
+        Object.defineProperty(win.navigator, 'webdriver', { ... });
+
+```
+
+* **Giải thích:** Bạn không thể viết lệnh đơn giản như `win.navigator.webdriver = undefined` được, vì biến `webdriver` được trình duyệt khóa lại ở chế độ **chỉ đọc (read-only)**. Hàm `Object.defineProperty` là lệnh quyền năng nhất trong JavaScript dùng để **cưỡng chế định nghĩa lại** một thuộc tính, bất chấp việc nó bị khóa.
+* Tham số 1 (`win.navigator`): Đối tượng chứa biến cần sửa (thông tin nhân trình duyệt).
+* Tham số 2 (`'webdriver'`): Tên của biến muốn sửa.
+* Tham số 3 (`{ ... }`): Cấu hình mới cho biến đó.
+
+
+
+#### 4. Đánh lừa bằng hàm `get` (Getter)
+
+```javascript
+            get: () => undefined,
+
+```
+
+* **Giải thích:** Thay vì gán một giá trị tĩnh, ta định nghĩa một hàm `get` (getter). Mỗi khi trang Duck.ai hỏi: *"Này trình duyệt, biến webdriver của mày đang là gì thế?"*, hàm `get` này sẽ được gọi và lập tức trả lời là `undefined` (Không có).
+* **Ví dụ thực tế:**
+* **Bình thường Cypress:** Bị dán sẵn cái băng rôn trên trán ghi "TÔI LÀ ROBOT" (`true`). Bảo vệ web nhìn thấy -> Chặn.
+* **Dùng đoạn code này:** Ngay trước khi bảo vệ kịp nhìn (`onBeforeLoad`), ta gắn một máy phản hồi tự động (`Object.defineProperty`). Khi bảo vệ hỏi "Có phải robot không?", máy tự động trả lời "Không biết, không thấy gì cả" (`undefined`). Bảo vệ web tưởng là người thật -> Cho qua.
+
+
+
+---
+
+### Tóm tắt lại quá trình thực thi:
+
+1. Cypress ra lệnh truy cập Duck.ai.
+2. Duck.ai trả về khung HTML trắng.
+3. **Cypress nhảy vào chặn lại (`onBeforeLoad`), lén sửa thông tin trình duyệt (`undefined`).**
+4. Duck.ai bắt đầu chạy JavaScript để kiểm tra.
+5. Duck.ai thấy biến webdriver là `undefined` (giống y hệt một người dùng lướt web bình thường).
+6. Duck.ai tải giao diện chat mà không hiện CAPTCHA.
+
+### Tài liệu tham khảo để đọc thêm
+
+* **Về `onBeforeLoad` trong Cypress:** [cy.visit() Options - onBeforeLoad](https://www.google.com/search?q=https://docs.cypress.io/api/commands/visit%23Arguments)
+* **Về `Object.defineProperty` (JavaScript cơ bản):** [MDN Web Docs - Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+* **Về cách hoạt động của biến `webdriver`:** [MDN Web Docs - Navigator: webdriver](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver)
