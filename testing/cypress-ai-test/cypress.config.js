@@ -12,5 +12,7 @@ module.exports = defineConfig({
       //   return launchOptions;
       // });
     },
+    // áp dụng cho format cũ .spec.ts|js mới .cy.js|ts 
+    specPattern: 'cypress/e2e/**/*.{cy,spec}.{js,jsx,ts,tsx}'
   },
 });
