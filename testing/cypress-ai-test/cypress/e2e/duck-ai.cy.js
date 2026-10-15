@@ -1,14 +1,14 @@
 describe('Duck.ai', () => {
 	it('Select a model, submits a question, and verifies the answer', () => {
 		// 1. Open the website 
-		/* cy.visit('https://duck.ai/', { -- Ghi đè biến webdriver ngay trước khi web chạy
+		cy.visit('https://duck.ai/', { // Ghi đè biến webdriver ngay trước khi web chạy
 			onBeforeLoad(win) {
 				Object.defineProperty(win.navigator, 'webdriver', {
 					get: () => undefined,
 				});
 			},
-		}); */
-		cy.visit('https://duck.ai/');
+		});
+		// cy.visit('https://duck.ai/');
 
 		// 2. Open the model list
 		cy.get('[data-testid="model-picker-button"]').should('be.visible').click();
