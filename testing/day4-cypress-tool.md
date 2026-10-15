@@ -27,9 +27,10 @@
    - `-y` = `--yes` (bỏ qua các câu hỏi về tên dự án, phiên bản, mô tả để điền mặc định)
    - `npm`: công cụ quản lý, cài đặt các gói/thư viện/framework js khi cài NodeJS có sẵn luôn npm (Node Package Manager)
 
-3. Cài cypress vào dự án bằng npm
+3. Cài cypress và typescript vào dự án bằng npm
 
    - `npm install cypress --save-dev`
+   - `npm install typescript --save-dev`
 
 4. Mở giao diện Cypress và tạo bài test đầu tiên:
 
