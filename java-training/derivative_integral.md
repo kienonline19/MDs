@@ -30,7 +30,7 @@ Tài liệu đi từ cài đặt đến giải bài từng bước, theo đúng 
 | | Symja | Apache Commons Math |
 |---|---|---|
 | Kết quả | Công thức: `2*x*Cos(x)` | Con số: `1.0806...` |
-| Đạo hàm | Ra công thức $y'$ | Giá trị $y'(x_0)$ tại một điểm |
+| Đạo hàm | Ra công thức $`y'`$ | Giá trị $`y'(x_0)`$ tại một điểm |
 | Tích phân | Nguyên hàm và tích phân chính xác | Tích phân xác định gần đúng |
 | Kích thước | Lớn (nhiều MB, nhiều thư viện phụ) | Nhỏ (1 file .jar) |
 | Tốc độ | Khởi động chậm vài giây | Gần như tức thì |
@@ -47,7 +47,7 @@ Tài liệu đi từ cài đặt đến giải bài từng bước, theo đúng 
 
 ## 2. Cài đặt trong Eclipse
 
-Symja kéo theo nhiều thư viện phụ, **nên dùng Maven Project**. Thêm từng file .jar bằng tay rất dễ thiếu.
+Symja kéo theo nhiều thư viện phụ, nên **nên dùng Maven Project**. Thêm từng file .jar bằng tay rất dễ thiếu.
 
 ### Cách 1: Maven Project (khuyên dùng)
 
@@ -86,7 +86,7 @@ Tải lẻ `matheclipse-core-3.0.0.jar` là **không đủ**, chạy sẽ báo `
 3. Mở thư mục `target/dependency`: ở đó có đầy đủ mọi file .jar Symja cần.
 4. Copy cả thư mục vào `lib` của project bài tập → chọn tất cả → chuột phải → **Build Path → Add to Build Path**.
 
-Bộ .jar này dùng lại được !
+Bộ .jar này dùng lại được, có thể phát cho cả lớp.
 
 **Link tham khảo:**
 - Maven Central: https://central.sonatype.com/artifact/org.matheclipse/matheclipse-core
@@ -97,7 +97,7 @@ Bộ .jar này dùng lại được !
 
 ## 3. Chương trình đầu tiên
 
-Tính đạo hàm của $y = \ln(x^2 + 3x)$:
+Tính đạo hàm của $`y = \ln(x^2 + 3x)`$:
 
 ```java
 package com.example.DerivativeIntegral;
@@ -116,15 +116,15 @@ public class TestDerivative {
 |---|---|
 | `import ...ExprEvaluator;` | Nạp bộ tính toán của Symja |
 | `new ExprEvaluator()` | Tạo bộ tính toán. Lần đầu mất vài giây để nạp quy tắc toán học |
-| `"Log(x^2 + 3*x)"` | Hàm $\ln(x^2 + 3x)$ viết bằng cú pháp Symja |
-| `D(..., x)` | Đạo hàm theo biến $x$ |
+| `"Log(x^2 + 3*x)"` | Hàm $`\ln(x^2 + 3x)`$ viết bằng cú pháp Symja |
+| `D(..., x)` | Đạo hàm theo biến $`x`$ |
 | `expr.eval(...)` | Tính và trả về biểu thức kết quả (kiểu `IExpr`) |
 
 **Kết quả:**
 ```
 (3+2*x)/(3*x+x^2)
 ```
-Tức là $y' = \dfrac{2x + 3}{x^2 + 3x}$. Symja tự sắp xếp số hạng theo thứ tự riêng, nên `3+2*x` chính là $2x + 3$.
+Tức là $`y' = \dfrac{2x + 3}{x^2 + 3x}`$. Symja tự sắp xếp số hạng theo thứ tự riêng, nên `3+2*x` chính là $`2x + 3`$.
 
 ---
 
@@ -171,17 +171,17 @@ Phải đặt trước, vì Log4j khởi động ngay khi Symja được tạo. 
 
 | Toán | Symja | Ghi chú |
 |---|---|---|
-| $2x$ | `2*x` | **Bắt buộc có dấu `*`** |
-| $x^n$ | `x^n` | |
-| $\sqrt{x}$ | `Sqrt(x)` | |
-| $\sin x$, $\cos x$, $\tan x$ | `Sin(x)`, `Cos(x)`, `Tan(x)` | Viết hoa chữ đầu |
-| $\cos^3 x$ | `Cos(x)^3` | Không viết `Cos^3(x)` |
-| $\arctan x$ | `ArcTan(x)` | |
-| $e^x$ | `Exp(x)` hoặc `E^x` | |
-| $\ln x$ | `Log(x)` | `Log` là logarit **tự nhiên** |
-| $\log_a x$ | `Log(a, x)` | **Cơ số đứng trước** |
-| $\pi$ | `Pi` | |
-| $e$ | `E` | |
+| $`2x`$ | `2*x` | **Bắt buộc có dấu `*`** |
+| $`x^n`$ | `x^n` | |
+| $`\sqrt{x}`$ | `Sqrt(x)` | |
+| $`\sin x`$, $`\cos x`$, $`\tan x`$ | `Sin(x)`, `Cos(x)`, `Tan(x)` | Viết hoa chữ đầu |
+| $`\cos^3 x`$ | `Cos(x)^3` | Không viết `Cos^3(x)` |
+| $`\arctan x`$ | `ArcTan(x)` | |
+| $`e^x`$ | `Exp(x)` hoặc `E^x` | |
+| $`\ln x`$ | `Log(x)` | `Log` là logarit **tự nhiên** |
+| $`\log_a x`$ | `Log(a, x)` | **Cơ số đứng trước** |
+| $`\pi`$ | `Pi` | |
+| $`e`$ | `E` | |
 
 ### Quy tắc cần nhớ
 
@@ -193,11 +193,11 @@ Phải đặt trước, vì Log4j khởi động ngay khi Symja được tạo. 
 
 | Symja in | Nghĩa là |
 |---|---|
-| `3+2*x` | $2x + 3$ (thứ tự đảo) |
-| `E^x` | $e^x$ |
-| `Log(x)` | $\ln x$ |
-| `Sec(x)` | $\dfrac{1}{\cos x}$ |
-| `x^(1/2)` | $\sqrt{x}$ |
+| `3+2*x` | $`2x + 3`$ (thứ tự đảo) |
+| `E^x` | $`e^x`$ |
+| `Log(x)` | $`\ln x`$ |
+| `Sec(x)` | $`\dfrac{1}{\cos x}`$ |
+| `x^(1/2)` | $`\sqrt{x}`$ |
 
 ---
 
@@ -208,8 +208,8 @@ Phải đặt trước, vì Log4j khởi động ngay khi Symja được tạo. 
 | Muốn | Lệnh | Ví dụ |
 |---|---|---|
 | Đạo hàm cấp 1 | `D(f, x)` | `D(x^2*Sin(x), x)` |
-| Đạo hàm cấp $n$ | `D(f, {x, n})` | `D(x*Exp(x), {x, 2})` |
-| Giá trị tại $x = a$ | `D(f, x) /. x -> a` | `D(Log(x^2+3*x), x) /. x -> 1` |
+| Đạo hàm cấp $`n`$ | `D(f, {x, n})` | `D(x*Exp(x), {x, 2})` |
+| Giá trị tại $`x = a`$ | `D(f, x) /. x -> a` | `D(Log(x^2+3*x), x) /. x -> 1` |
 
 Lệnh cuối in ra `5/4`, là **phân số chính xác**, không phải `1.25` như Commons Math.
 
@@ -222,33 +222,33 @@ Lệnh cuối in ra `5/4`, là **phân số chính xác**, không phải `1.25` 
 | `Together(e)` | Gộp thành một phân thức | `Together(1 - 3/(x-1)^2)` |
 | `Factor(e)` | Phân tích thành nhân tử | `Factor(x^2 - 1)` → `(-1+x)*(1+x)` |
 | `Cancel(e)` | Rút gọn tử và mẫu | `Cancel((x^2-1)/(x-1))` → `1+x` |
-| `PowerExpand(e)` | Áp dụng $\ln(a^b) = b\ln a$, $\sqrt{a^2} = a$ (coi biến dương) | `PowerExpand(Log(x^x))` → `x*Log(x)` |
-| `e /. a -> b` | Thay $a$ bằng $b$ | `Sin(x)^2 /. Sin(x)^2 -> 1 - Cos(x)^2` |
+| `PowerExpand(e)` | Áp dụng $`\ln(a^b) = b\ln a`$, $`\sqrt{a^2} = a`$ (coi biến dương) | `PowerExpand(Log(x^x))` → `x*Log(x)` |
+| `e /. a -> b` | Thay $`a`$ bằng $`b`$ | `Sin(x)^2 /. Sin(x)^2 -> 1 - Cos(x)^2` |
 
 ### Ví dụ 20 loại hàm
 
 | Loại | Hàm | Lệnh Symja |
 |---|---|---|
-| Đa thức | $2x^5 - 3x^3 + x - 4$ | `D(2*x^5 - 3*x^3 + x - 4, x)` |
-| Tích | $(x^2+1)(x^3-2x)$ | `D((x^2 + 1)*(x^3 - 2*x), x)` |
-| Hàm hợp | $(2x+3)^5$ | `D((2*x + 3)^5, x)` |
-| Thương | $\dfrac{3x-2}{x+1}$ | `D((3*x - 2)/(x + 1), x)` |
-| Căn | $\sqrt{3x^2-2x+5}$ | `D(Sqrt(3*x^2 - 2*x + 5), x)` |
-| Lượng giác | $\sin 3x + \cos 2x$ | `D(Sin(3*x) + Cos(2*x), x)` |
-| Hàm hợp 2 lớp | $\cos^3 x$ | `D(Cos(x)^3, x)` |
-| Hàm mũ | $e^{x^2-2x}$ | `D(Exp(x^2 - 2*x), x)` |
-| Mũ cơ số $a$ | $2^x + 3^{2x}$ | `D(2^x + 3^(2*x), x)` |
-| Logarit | $\ln(x^2+3x)$ | `D(Log(x^2 + 3*x), x)` |
-| Logarit cơ số $a$ | $\log_2(5x)$ | `D(Log(2, 5*x), x)` |
-| Lượng giác ngược | $\arctan 2x$ | `D(ArcTan(2*x), x)` |
-| Cơ số và mũ đều là biến | $x^x$ | `D(x^x, x)` |
-| Cấp hai | $(xe^x)''$ | `D(x*Exp(x), {x, 2})` |
+| Đa thức | $`2x^5 - 3x^3 + x - 4`$ | `D(2*x^5 - 3*x^3 + x - 4, x)` |
+| Tích | $`(x^2+1)(x^3-2x)`$ | `D((x^2 + 1)*(x^3 - 2*x), x)` |
+| Hàm hợp | $`(2x+3)^5`$ | `D((2*x + 3)^5, x)` |
+| Thương | $`\dfrac{3x-2}{x+1}`$ | `D((3*x - 2)/(x + 1), x)` |
+| Căn | $`\sqrt{3x^2-2x+5}`$ | `D(Sqrt(3*x^2 - 2*x + 5), x)` |
+| Lượng giác | $`\sin 3x + \cos 2x`$ | `D(Sin(3*x) + Cos(2*x), x)` |
+| Hàm hợp 2 lớp | $`\cos^3 x`$ | `D(Cos(x)^3, x)` |
+| Hàm mũ | $`e^{x^2-2x}`$ | `D(Exp(x^2 - 2*x), x)` |
+| Mũ cơ số $`a`$ | $`2^x + 3^{2x}`$ | `D(2^x + 3^(2*x), x)` |
+| Logarit | $`\ln(x^2+3x)`$ | `D(Log(x^2 + 3*x), x)` |
+| Logarit cơ số $`a`$ | $`\log_2(5x)`$ | `D(Log(2, 5*x), x)` |
+| Lượng giác ngược | $`\arctan 2x`$ | `D(ArcTan(2*x), x)` |
+| Cơ số và mũ đều là biến | $`x^x`$ | `D(x^x, x)` |
+| Cấp hai | $`(xe^x)''`$ | `D(x*Exp(x), {x, 2})` |
 
 ---
 
 ## 7. Kiểm tra đáp án
 
-Không nên so sánh **chuỗi** kết quả, vì cùng một công thức có nhiều cách viết. Ví dụ $\cos 2x$ và $\cos^2 x - \sin^2 x$ là một, nhưng chuỗi khác nhau.
+Không nên so sánh **chuỗi** kết quả, vì cùng một công thức có nhiều cách viết. Ví dụ $`\cos 2x`$ và $`\cos^2 x - \sin^2 x`$ là một, nhưng chuỗi khác nhau.
 
 Dùng `PossibleZeroQ`: lấy hiệu hai biểu thức, nếu bằng 0 thì chúng bằng nhau.
 
@@ -275,7 +275,7 @@ Symja **không có sẵn** chế độ giải từng bước. Cách làm là t�
 
 ### 8.1. Gán biến trong Symja
 
-Symja nhớ biến giữa các lần gọi `eval`, nên có thể đặt $u$, $v$ như giải tay:
+Symja nhớ biến giữa các lần gọi `eval`, nên có thể đặt $`u`$, $`v`$ như giải tay:
 
 ```java
 util.eval("u = x^2 + 1");
@@ -288,7 +288,7 @@ Hết mỗi bài phải **xóa biến** để bài sau không bị dính giá tr
 util.eval("Clear(u, v, du, dv)");
 ```
 
-### 8.2. Ví dụ: quy tắc tích $y = (x^2 + 1)(x^3 - 2x)$
+### 8.2. Ví dụ: quy tắc tích $`y = (x^2 + 1)(x^3 - 2x)`$
 
 ```java
 System.out.println("u  = " + util.eval("u = x^2 + 1"));
@@ -309,13 +309,13 @@ u'v + uv' = 2*x*(-2*x+x^3)+(1+x^2)*(-2+3*x^2)
 Khai triển: -2-3*x^2+5*x^4
 ```
 
-### 8.3. Ví dụ: lấy logarit hai vế $y = x^x$
+### 8.3. Ví dụ: lấy logarit hai vế $`y = x^x`$
 
 | Bước | Toán | Symja |
 |---|---|---|
-| 1 | $\ln y = x \ln x$ | `PowerExpand(Log(x^x))` |
-| 2 | $\dfrac{y'}{y} = (x\ln x)' = \ln x + 1$ | `D(x*Log(x), x)` |
-| 3 | $y' = x^x(\ln x + 1)$ | `x^x*D(x*Log(x), x)` |
+| 1 | $`\ln y = x \ln x`$ | `PowerExpand(Log(x^x))` |
+| 2 | $`\dfrac{y'}{y} = (x\ln x)' = \ln x + 1`$ | `D(x*Log(x), x)` |
+| 3 | $`y' = x^x(\ln x + 1)`$ | `x^x*D(x*Log(x), x)` |
 | Kiểm tra | | `D(x^x, x)` |
 
 ```java
@@ -325,11 +325,11 @@ System.out.println("Bước 3: y' = " + util.eval("x^x*D(x*Log(x), x)"));
 System.out.println("Kiểm tra: " + util.eval("D(x^x, x)"));
 ```
 
-**Vì sao cần `PowerExpand`:** Symja không tự biến $\ln(x^x)$ thành $x \ln x$, vì công thức $\ln(a^b) = b\ln a$ chỉ đúng khi $a > 0$. `PowerExpand` cho phép áp dụng công thức này.
+**Vì sao cần `PowerExpand`:** Symja không tự biến $`\ln(x^x)`$ thành $`x \ln x`$, vì công thức $`\ln(a^b) = b\ln a`$ chỉ đúng khi $`a > 0`$. `PowerExpand` cho phép áp dụng công thức này.
 
-### 8.4. Ví dụ: dùng hằng đẳng thức $y = \dfrac{\sin x}{1 + \cos x}$
+### 8.4. Ví dụ: dùng hằng đẳng thức $`y = \dfrac{\sin x}{1 + \cos x}`$
 
-Dùng phép thay `/.` để làm đúng bước "thay $\sin^2 x + \cos^2 x = 1$" như giải tay:
+Dùng phép thay `/.` để làm đúng bước "thay $`\sin^2 x + \cos^2 x = 1`$" như giải tay:
 
 ```java
 util.eval("u = Sin(x)");  util.eval("v = 1 + Cos(x)");
@@ -342,7 +342,7 @@ System.out.println(util.eval("Expand(du*v - u*dv) /. Sin(x)^2 -> 1 - Cos(x)^2"))
 // 1+Cos(x)
 ```
 
-### 8.5. Ví dụ: chia đa thức trước $y = \dfrac{x^2 + x + 1}{x - 1}$
+### 8.5. Ví dụ: chia đa thức trước $`y = \dfrac{x^2 + x + 1}{x - 1}`$
 
 ```java
 util.eval("PolynomialQuotient(x^2 + x + 1, x - 1, x)");   // thương: 2+x
@@ -408,7 +408,7 @@ static void bai05() {
 
 ### Lưu ý
 
-- Symja **không ghi hằng số $C$** trong nguyên hàm. Khi chép đáp án phải tự thêm $+ C$.
+- Symja **không ghi hằng số $`C`$** trong nguyên hàm. Khi chép đáp án phải tự thêm $`+ C`$.
 - Tích phân xác định ra **giá trị chính xác** (`2`, `Pi/4`), không có sai số như Commons Math.
 - Nếu Symja không tính được, nó **in lại nguyên lệnh** `Integrate(...)` chứ không báo lỗi. Khi đó với tích phân xác định thì chuyển sang `NIntegrate`.
 
@@ -416,11 +416,11 @@ static void bai05() {
 
 | Toán | Lệnh | Kết quả |
 |---|---|---|
-| $\int \dfrac{1}{x}\,dx$ | `Integrate(1/x, x)` | $\ln x$ |
-| $\int e^{2x}\,dx$ | `Integrate(Exp(2*x), x)` | $\dfrac{e^{2x}}{2}$ |
-| $\int x\cos x\,dx$ | `Integrate(x*Cos(x), x)` | $\cos x + x\sin x$ |
-| $\int_1^e \ln x\,dx$ | `Integrate(Log(x), {x, 1, E})` | $1$ |
-| $\int_0^1 \dfrac{1}{1+x^2}\,dx$ | `Integrate(1/(1+x^2), {x, 0, 1})` | $\dfrac{\pi}{4}$ |
+| $`\int \dfrac{1}{x}\,dx`$ | `Integrate(1/x, x)` | $`\ln x`$ |
+| $`\int e^{2x}\,dx`$ | `Integrate(Exp(2*x), x)` | $`\dfrac{e^{2x}}{2}`$ |
+| $`\int x\cos x\,dx`$ | `Integrate(x*Cos(x), x)` | $`\cos x + x\sin x`$ |
+| $`\int_1^e \ln x\,dx`$ | `Integrate(Log(x), {x, 1, E})` | $`1`$ |
+| $`\int_0^1 \dfrac{1}{1+x^2}\,dx`$ | `Integrate(1/(1+x^2), {x, 0, 1})` | $`\dfrac{\pi}{4}`$ |
 
 ### Kiểm tra nguyên hàm bằng đạo hàm
 
@@ -446,8 +446,8 @@ public static void main(String[] args) throws Exception {
 
 | Phần | Ý nghĩa |
 |---|---|
-| `{hàm1, hàm2}` | Vẽ nhiều hàm trên cùng một hình, ở đây là $y$ và $y'$ |
-| `{x, 0.1, 5}` | Khoảng vẽ. Chọn $0.1$ vì hàm không xác định tại $0$ |
+| `{hàm1, hàm2}` | Vẽ nhiều hàm trên cùng một hình, ở đây là $`y`$ và $`y'`$ |
+| `{x, 0.1, 5}` | Khoảng vẽ. Chọn $`0.1`$ vì hàm không xác định tại $`0`$ |
 | `F.show(...)` | Tạo file HTML tạm và mở bằng trình duyệt |
 | `throws Exception` | Vì `show` có thể ném lỗi khi ghi file |
 
@@ -458,7 +458,7 @@ public static void main(String[] args) throws Exception {
 | Mặt 3D | `Plot3D(Sin(x*y), {x, 0, 3}, {y, 0, 3})` |
 | Kéo, phóng to được | `JSXGraph(Plot(Sin(x), {x, 0, 2*Pi}))` |
 
-**Gợi ý khi dạy:** vẽ $y$ và $y'$ cùng một hình. Chỗ $y'$ cắt trục hoành chính là chỗ $y$ đạt cực trị.
+**Gợi ý khi dạy:** vẽ $`y`$ và $`y'`$ cùng một hình. Chỗ $`y'`$ cắt trục hoành chính là chỗ $`y`$ đạt cực trị.
 
 **Lưu ý:** các kiểu vẽ dùng JavaScript có thể cần thêm module `matheclipse-jsgraphics`. Muốn đồ thị hiện trong cửa sổ Java thì dùng **XChart** hoặc **JFreeChart**, lấy giá trị từ Symja hoặc Commons Math để vẽ.
 
@@ -510,9 +510,9 @@ Khi dạy, nên báo trước cho học sinh là lần chạy đầu phải ch�
 | Kết quả in nguyên lệnh `D(...)` hoặc `Integrate(...)` | Sai cú pháp hoặc Symja không tính được | Kiểm tra dấu `*`, chữ hoa; tích phân thì thử `NIntegrate` |
 | `2x` bị hiểu sai | Thiếu dấu nhân | Viết `2*x` |
 | `sin(x)` không tính | Tên hàm viết thường | Viết `Sin(x)` |
-| Bài sau ra kết quả lạ | Biến $u$, $v$ của bài trước còn nhớ | `util.eval("Clear(u, v, du, dv)")` đầu mỗi bài |
-| `Log(x^x)` không thành `x*Log(x)` | Symja không tự giả định $x > 0$ | Dùng `PowerExpand(...)` |
-| Kết quả có `NaN` (Commons Math) | Điểm $x_0$ ngoài tập xác định | Chọn $x_0$ khác |
+| Bài sau ra kết quả lạ | Biến $`u`$, $`v`$ của bài trước còn nhớ | `util.eval("Clear(u, v, du, dv)")` đầu mỗi bài |
+| `Log(x^x)` không thành `x*Log(x)` | Symja không tự giả định $`x > 0`$ | Dùng `PowerExpand(...)` |
+| Kết quả có `NaN` (Commons Math) | Điểm $`x_0`$ ngoài tập xác định | Chọn $`x_0`$ khác |
 | Chạy rất chậm | Tạo `ExprEvaluator` nhiều lần | Tạo một lần, dùng lại (mục 11) |
 
 ---
@@ -571,8 +571,8 @@ public class MauSymja {
 | Nhóm | Lệnh | Tác dụng |
 |---|---|---|
 | **Đạo hàm** | `D(f, x)` | Đạo hàm cấp 1 |
-| | `D(f, {x, n})` | Đạo hàm cấp $n$ |
-| **Tích phân** | `Integrate(f, x)` | Nguyên hàm (không có $+C$) |
+| | `D(f, {x, n})` | Đạo hàm cấp $`n`$ |
+| **Tích phân** | `Integrate(f, x)` | Nguyên hàm (không có $`+C`$) |
 | | `Integrate(f, {x, a, b})` | Tích phân xác định, chính xác |
 | | `NIntegrate(f, {x, a, b})` | Tích phân xác định, tính số |
 | **Biến đổi** | `Simplify(e)` | Rút gọn |
@@ -583,10 +583,10 @@ public class MauSymja {
 | | `PowerExpand(e)` | Khai triển lũy thừa, logarit (coi biến dương) |
 | **Đa thức** | `PolynomialQuotient(p, q, x)` | Thương phép chia đa thức |
 | | `PolynomialRemainder(p, q, x)` | Dư phép chia đa thức |
-| **Thay thế** | `e /. x -> a` | Thay $x$ bằng $a$ |
+| **Thay thế** | `e /. x -> a` | Thay $`x`$ bằng $`a`$ |
 | **Biến** | `u = ...` | Gán biến |
 | | `Clear(u, v)` | Xóa biến |
-| **So sánh** | `PossibleZeroQ(a - b)` | Kiểm tra $a = b$ |
+| **So sánh** | `PossibleZeroQ(a - b)` | Kiểm tra $`a = b`$ |
 | **Vẽ** | `Plot(f, {x, a, b})` | Đồ thị 2D |
 | | `Plot3D(f, {x, a, b}, {y, c, d})` | Mặt 3D |
 | | `F.show(...)` (Java) | Mở đồ thị trong trình duyệt |
