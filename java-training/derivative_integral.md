@@ -47,7 +47,7 @@ Tài liệu đi từ cài đặt đến giải bài từng bước, theo đúng 
 
 ## 2. Cài đặt trong Eclipse
 
-Symja kéo theo nhiều thư viện phụ, nên **nên dùng Maven Project**. Thêm từng file .jar bằng tay rất dễ thiếu.
+Symja kéo theo nhiều thư viện phụ, **nên dùng Maven Project**. Thêm từng file .jar bằng tay rất dễ thiếu.
 
 ### Cách 1: Maven Project (khuyên dùng)
 
@@ -86,7 +86,7 @@ Tải lẻ `matheclipse-core-3.0.0.jar` là **không đủ**, chạy sẽ báo `
 3. Mở thư mục `target/dependency`: ở đó có đầy đủ mọi file .jar Symja cần.
 4. Copy cả thư mục vào `lib` của project bài tập → chọn tất cả → chuột phải → **Build Path → Add to Build Path**.
 
-Bộ .jar này dùng lại được, có thể phát cho cả lớp.
+Bộ .jar này dùng lại được.
 
 **Link tham khảo:**
 - Maven Central: https://central.sonatype.com/artifact/org.matheclipse/matheclipse-core
